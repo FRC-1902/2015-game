@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 
 import org.usfirst.frc.team1902.robot.commands.AutonomousCommand;
+import org.usfirst.frc.team1902.robot.commands.CommandBase;
 import org.usfirst.frc.team1902.robot.subsystems.CompressorSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.DriveSubsystem;
 
@@ -19,9 +20,8 @@ import org.usfirst.frc.team1902.robot.subsystems.DriveSubsystem;
  */
 public class Robot extends IterativeRobot {
 
-	public static DriveSubsystem drive;
-	public static CompressorSubsystem compressor;
 	public static OI oi;
+	public static CommandBase commandBase;
 
     Command autonomous;
 
@@ -30,11 +30,10 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+    	System.out.println("Initializing OI");
 		oi = new OI();
-		System.out.println("Initializing Drive Subsystem");
-        drive = new DriveSubsystem();
-        //System.out.println("Initilizing Compressor Subsystem");
-        //compressor = new CompressorSubsystem();
+		System.out.println("Initiliazing CommandBase");
+		commandBase = new CommandBase();
 		System.out.println("Initializing Autonomous Command");
         autonomous = new AutonomousCommand();        
     }

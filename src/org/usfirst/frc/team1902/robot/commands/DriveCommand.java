@@ -7,13 +7,13 @@ import javax.swing.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1902.robot.Robot;
 
-public class DriveCommand extends Command implements ActionListener {
+public class DriveCommand extends CommandBase implements ActionListener {
 	
 	public Timer timer;
 	public boolean timerOver = false;
 
     public DriveCommand() {
-        requires(Robot.drive);
+        requires(drive);
     }
 
     protected void initialize() {
@@ -33,8 +33,8 @@ public class DriveCommand extends Command implements ActionListener {
     }
     
     public void drive(double left, double right) {
-    	Robot.drive.left.set(left);
-    	Robot.drive.right.set(right);
+    	drive.left.set(left);
+    	drive.right.set(right);
     }
     
     public void drive(double left, double right, double time) {
