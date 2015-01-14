@@ -14,6 +14,8 @@ public class TankDriveCommand extends Command {
 	protected void initialize() {	
 	}
 
+	//Switch which line is commented out to switch between Tank Drive and Arcade Drive.
+	//The top line is Tank Drive, the bottom line is Arcade Drive.
 	@Override
 	public void execute() {
 		//Robot.drive.tankDrive(Robot.oi.left.getX(), Robot.oi.right.getX());
