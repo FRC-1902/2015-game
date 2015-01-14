@@ -1,7 +1,5 @@
 package org.usfirst.frc.team1902.robot.subsystems;
 
-import org.usfirst.frc.team1902.robot.commands.CompressorCommand;
-
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -11,6 +9,6 @@ public class CompressorSubsystem extends Subsystem {
 	
 	@Override
 	protected void initDefaultCommand() {
-		setDefaultCommand(new CompressorCommand());
+		//setDefaultCommand(new CompressorCommand());
 	}
 }

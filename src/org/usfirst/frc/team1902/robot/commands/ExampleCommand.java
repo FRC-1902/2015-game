@@ -1,12 +1,16 @@
 
 package org.usfirst.frc.team1902.robot.commands;
 
+import org.usfirst.frc.team1902.robot.Robot;
+
+import edu.wpi.first.wpilibj.command.Command;
+
 //This command is temporary until we implement autonomous
-public class ExampleCommand extends CommandBase {
+public class ExampleCommand extends Command {
 
     public ExampleCommand() {
         // Use requires() here to declare subsystem dependencies
-        requires(drive);
+        requires(Robot.drive);
     }
 
     // Called just before this Command runs the first time

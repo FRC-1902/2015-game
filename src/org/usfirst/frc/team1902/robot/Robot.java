@@ -5,9 +5,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-
 import org.usfirst.frc.team1902.robot.commands.AutonomousCommand;
-import org.usfirst.frc.team1902.robot.commands.CommandBase;
 import org.usfirst.frc.team1902.robot.subsystems.CompressorSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.DriveSubsystem;
 
@@ -21,7 +19,8 @@ import org.usfirst.frc.team1902.robot.subsystems.DriveSubsystem;
 public class Robot extends IterativeRobot {
 
 	public static OI oi;
-	public static CommandBase commandBase;
+	public static DriveSubsystem drive;
+	public static CompressorSubsystem compressor;
 
     Command autonomous;
 
@@ -32,10 +31,13 @@ public class Robot extends IterativeRobot {
     public void robotInit() {
     	System.out.println("Initializing OI");
 		oi = new OI();
-		System.out.println("Initiliazing CommandBase");
-		commandBase = new CommandBase();
-		System.out.println("Initializing Autonomous Command");
-        autonomous = new AutonomousCommand();        
+		System.out.println("Initilizing Compressor Subsystem");
+        compressor = new CompressorSubsystem();
+		System.out.println("Initializing Drive Subsystem");
+        drive = new DriveSubsystem(); 
+		System.out.println("Initializing Autonomous");
+        autonomous = new AutonomousCommand();   
+        System.out.println("Robot initialized!");
     }
 	
 	public void disabledPeriodic() {
@@ -43,7 +45,6 @@ public class Robot extends IterativeRobot {
 	}
 
     public void autonomousInit() {
-        // schedule the autonomous command (example)
         if (autonomous != null) autonomous.start();
     }
 
@@ -55,10 +56,6 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to 
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
         if (autonomous != null) autonomous.cancel();
     }
 
