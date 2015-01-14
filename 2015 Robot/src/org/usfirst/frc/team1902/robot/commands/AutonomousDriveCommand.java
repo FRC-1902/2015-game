@@ -1,22 +1,31 @@
-
 package org.usfirst.frc.team1902.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
-
 import org.usfirst.frc.team1902.robot.Robot;
+
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class ExampleCommand extends Command {
+public class AutonomousDriveCommand extends Command {
 
-    public ExampleCommand() {
-        // Use requires() here to declare subsystem dependencies
-        requires(Robot.exampleSubsystem);
+	public double left;
+	public double right;
+	public double time;
+	
+    public AutonomousDriveCommand(double left, double right, double time) {
+        requires(Robot.drive);
+        this.left = left;
+        this.right = right;
+        this.time = time;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.drive.tankDrive(left, right);
+    	Timer.delay(time);
+    	Robot.drive.tankDrive(0, 0);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -25,7 +34,7 @@ public class ExampleCommand extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return true;
     }
 
     // Called once after isFinished returns true

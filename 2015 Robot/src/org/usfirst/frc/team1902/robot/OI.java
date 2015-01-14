@@ -1,13 +1,27 @@
 package org.usfirst.frc.team1902.robot;
 
-import edu.wpi.first.wpilibj.buttons.Button;
-import org.usfirst.frc.team1902.robot.commands.ExampleCommand;
+import org.usfirst.frc.team1902.robot.commands.IntakeArmsToggleCommand;
+import org.usfirst.frc.team1902.robot.commands.IntakeToggleCommand;
 
-/**
- * This class is the glue that binds the controls on the physical operator
- * interface to the commands and command groups that allow control of the robot.
- */
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+
+
 public class OI {
+	//ANYTHING with the value 9001 is a placeholder ID
+	public static Joystick left = new Joystick(0);
+	public static Joystick right = new Joystick(1);
+	
+	Button intake = new JoystickButton(right, 9001);
+	Button intakeArms = new JoystickButton(right, 9001);
+	
+	public OI() {
+		intake.whenPressed(new IntakeToggleCommand());
+		intake.whenReleased(new IntakeToggleCommand());
+		intakeArms.whenPressed(new IntakeArmsToggleCommand());
+	}
+	
     //// CREATING BUTTONS
     // One type of button is a joystick button which is any button on a joystick.
     // You create one by telling it which joystick it's on and which button
