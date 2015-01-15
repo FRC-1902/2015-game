@@ -5,12 +5,19 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class IntakeArmsToggleCommand extends Command {
 	
+	public Boolean state = null;
+	
     public IntakeArmsToggleCommand() {
         requires(Robot.intake);
     }
     
+    public IntakeArmsToggleCommand(boolean state) {
+        requires(Robot.intake);
+        this.state = state;
+    }
+    
     protected void initialize() {
-    	Robot.intake.arms.set(!Robot.intake.arms.get());
+    	Robot.intake.setArms(state == null ? !Robot.intake.arms.get() : state);
     }
 
     protected void execute() {

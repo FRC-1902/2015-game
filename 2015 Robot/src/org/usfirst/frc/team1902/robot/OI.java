@@ -1,12 +1,13 @@
-package org.usfirst.frc.team1902.robot;
+ package org.usfirst.frc.team1902.robot;
 
+import org.usfirst.frc.team1902.robot.commands.CanGrabberToggleCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeArmsToggleCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleCommand;
+import org.usfirst.frc.team1902.robot.commands.RecordAutonomousToggleCommand;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
-
 
 public class OI {
 	//ANYTHING with the value 9001 is a placeholder ID
@@ -15,11 +16,15 @@ public class OI {
 	
 	Button intake = new JoystickButton(right, 9001);
 	Button intakeArms = new JoystickButton(right, 9001);
+	Button canGrabber = new JoystickButton(right, 9001);
+	Button recordAutonomous = new JoystickButton(right, 9001);
 	
 	public OI() {
-		intake.whenPressed(new IntakeToggleCommand());
-		intake.whenReleased(new IntakeToggleCommand());
+		intake.whenPressed(new IntakeToggleCommand(true));
+		intake.whenReleased(new IntakeToggleCommand(false));
 		intakeArms.whenPressed(new IntakeArmsToggleCommand());
+		canGrabber.whenPressed(new CanGrabberToggleCommand());
+		recordAutonomous.whenPressed(new RecordAutonomousToggleCommand());
 	}
 	
     //// CREATING BUTTONS

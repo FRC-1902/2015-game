@@ -2,12 +2,9 @@ package org.usfirst.frc.team1902.robot.commands;
 
 import org.usfirst.frc.team1902.robot.OI;
 import org.usfirst.frc.team1902.robot.Robot;
-
+import org.usfirst.frc.team1902.robot.RobotMap;
 import edu.wpi.first.wpilibj.command.Command;
 
-/**
- *
- */
 public class DriveCommand extends Command {
 
     public DriveCommand() {
@@ -17,10 +14,12 @@ public class DriveCommand extends Command {
     protected void initialize() {
     }
 
-    //Just change which line is commented out to change whether we use Arcade Drive or Tank Drive
     protected void execute() {
-    	Robot.drive.arcadeDrive(OI.left);
-    	//Robot.drive.tankDrive(OI.left.getY(), OI.right.getY());
+    	if (RobotMap.arcadeDrive) {
+    		Robot.drive.arcadeDrive(OI.left);
+    	} else {
+    		Robot.drive.tankDrive(OI.left.getY(), OI.right.getY());
+    	}
     }
 
     protected boolean isFinished() {
