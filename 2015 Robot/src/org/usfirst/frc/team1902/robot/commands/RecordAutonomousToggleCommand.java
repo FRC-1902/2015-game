@@ -23,7 +23,6 @@ public class RecordAutonomousToggleCommand extends Command {
     	} else {
     		Robot.recordedAutonomous.disable();
     	}
-    	Robot.recordAutonomous = state == null ? !Robot.recordAutonomous : state;
     }
 
     protected void execute() {

@@ -3,24 +3,25 @@ package org.usfirst.frc.team1902.robot.commands;
 import org.usfirst.frc.team1902.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class IntakeArmsToggleCommand extends Command {
+public class IntakeToggleRotateCommand extends Command {
+
+	Boolean rotate = null;
 	
-	public Boolean state = null;
-	
-    public IntakeArmsToggleCommand() {
+    public IntakeToggleRotateCommand() {
         requires(Robot.intake);
     }
     
-    public IntakeArmsToggleCommand(boolean state) {
+    public IntakeToggleRotateCommand(boolean rotate) {
         requires(Robot.intake);
-        this.state = state;
-    }
-    
-    protected void initialize() {
-    	Robot.intake.setArms(state == null ? !Robot.intake.arms.get() : state);
+        this.rotate = rotate;
+        
     }
 
-    protected void execute() {
+    protected void initialize() {
+    	Robot.intake.setRotated(rotate == null ? !Robot.intake.rotate : rotate);
+    }
+
+    protected void execute() { 	
     }
 
     protected boolean isFinished() {

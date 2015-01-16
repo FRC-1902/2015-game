@@ -1,30 +1,78 @@
- package org.usfirst.frc.team1902.robot;
+package org.usfirst.frc.team1902.robot;
 
 import org.usfirst.frc.team1902.robot.commands.CanGrabberToggleCommand;
-import org.usfirst.frc.team1902.robot.commands.IntakeArmsToggleCommand;
+import org.usfirst.frc.team1902.robot.commands.DriveTypeToggleCommand;
+import org.usfirst.frc.team1902.robot.commands.IntakeToggleArmsCommand;
+import org.usfirst.frc.team1902.robot.commands.IntakeToggleReverseCommand;
+import org.usfirst.frc.team1902.robot.commands.IntakeToggleRotateCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleCommand;
+import org.usfirst.frc.team1902.robot.commands.LiftCommand;
+import org.usfirst.frc.team1902.robot.commands.PushToteCommand;
 import org.usfirst.frc.team1902.robot.commands.RecordAutonomousToggleCommand;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class OI {
-	//ANYTHING with the value 9001 is a placeholder ID
 	public static Joystick left = new Joystick(0);
 	public static Joystick right = new Joystick(1);
+	public static Joystick three = new Joystick(2);
 	
-	Button intake = new JoystickButton(right, 9001);
-	Button intakeArms = new JoystickButton(right, 9001);
-	Button canGrabber = new JoystickButton(right, 9001);
-	Button recordAutonomous = new JoystickButton(right, 9001);
+	Button driveToggle;
+	Button intake;
+	Button reverseIntake;
+	Button rotateIntake;
+	Button intakeArms;
+	Button canGrabber;
+	Button liftUp;
+	Button liftDown;
+	Button pushTote;
+	Button recordAutonomous;		
+	
+	//Anything with the value of 9001 is a placeholder.
+	public void init() {		
+		Joystick action = three; //Joystick action = RobotMap.arcadeDrive ? right : three; - Don't uncomment this unless you know what it does.
+		//Define buttons
+		driveToggle = new JoystickButton(action, 8);
+		intake = new JoystickButton(action, 3);
+		reverseIntake = new JoystickButton(action, 2);
+		rotateIntake = new JoystickButton(action, 9001);
+		intakeArms = new JoystickButton(action, 1);
+		canGrabber = new JoystickButton(action, 9001);
+		liftUp = new JoystickButton(action, 4);
+		liftDown = new JoystickButton(action, 5);
+		pushTote = new JoystickButton(action, 9001);
+		recordAutonomous = new JoystickButton(action, 9);
+		
+		//Define what happens when the buttons are pressed
+		driveToggle.whenPressed(new DriveTypeToggleCommand());
+		
+		intake.whenPressed(new IntakeToggleCommand());
+		
+		reverseIntake.whenPressed(new IntakeToggleReverseCommand(true));
+		reverseIntake.whenReleased(new IntakeToggleReverseCommand(false));
+		
+		rotateIntake.whenPressed(new IntakeToggleRotateCommand(true));
+		rotateIntake.whenReleased(new IntakeToggleRotateCommand(false));
+		
+		intakeArms.whenPressed(new IntakeToggleArmsCommand(true));
+		intakeArms.whenReleased(new IntakeToggleArmsCommand(false));
+		
+		canGrabber.whenPressed(new CanGrabberToggleCommand());
+		
+		liftUp.whenPressed(new LiftCommand(1));
+		liftUp.whenReleased(new LiftCommand(0));
+		
+		liftDown.whenPressed(new LiftCommand(-1));
+		liftDown.whenReleased(new LiftCommand(0));
+		
+		pushTote.whenPressed(new PushToteCommand());
+		
+		recordAutonomous.whenPressed(new RecordAutonomousToggleCommand());
+	}
 	
 	public OI() {
-		intake.whenPressed(new IntakeToggleCommand(true));
-		intake.whenReleased(new IntakeToggleCommand(false));
-		intakeArms.whenPressed(new IntakeArmsToggleCommand());
-		canGrabber.whenPressed(new CanGrabberToggleCommand());
-		recordAutonomous.whenPressed(new RecordAutonomousToggleCommand());
+		init();
 	}
 	
     //// CREATING BUTTONS
@@ -54,4 +102,3 @@ public class OI {
     // until it is finished as determined by it's isFinished method.
     // button.whenReleased(new ExampleCommand());
 }
-

@@ -8,8 +8,6 @@
   
   Written for FIRST's 2015 FRC game "Recycle Rush"!
   
-  Written by Ryan Shavell & Dominic Canora.
-  
   All code is either sample code provided by FIRST or is hand-written by team 1902.
 
 */
@@ -24,6 +22,7 @@ import org.usfirst.frc.team1902.robot.commands.AutonomousCommand;
 import org.usfirst.frc.team1902.robot.subsystems.CanGrabberSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.IntakeSubsystem;
+import org.usfirst.frc.team1902.robot.subsystems.LiftSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.RecordedAutonomousSubsystem;
                                                                              
 public class Robot extends IterativeRobot {
@@ -31,11 +30,9 @@ public class Robot extends IterativeRobot {
 	public static DriveSubsystem drive;
 	public static IntakeSubsystem intake;
 	public static CanGrabberSubsystem canGrabber;
+	public static LiftSubsystem lift;
 	public static RecordedAutonomousSubsystem recordedAutonomous;
 	public static OI oi;
-	
-	public static boolean recordAutonomous = false;
-	public static String recordedAutonomousString = "";
 
     Command autonomousCommand;
 
@@ -45,8 +42,9 @@ public class Robot extends IterativeRobot {
 		drive = new DriveSubsystem();
 		intake = new IntakeSubsystem();
 		canGrabber = new CanGrabberSubsystem();
+		lift = new LiftSubsystem();
 		recordedAutonomous = new RecordedAutonomousSubsystem();
-        autonomousCommand = new AutonomousCommand("hi");
+        autonomousCommand = new AutonomousCommand("this should be replaced with real autonomous data before you try running this");
     }
 	
 	public void disabledPeriodic() {
@@ -67,6 +65,7 @@ public class Robot extends IterativeRobot {
 
     public void teleopInit() {
         if (autonomousCommand != null) autonomousCommand.cancel();
+        
     }
 
     /**
@@ -91,8 +90,8 @@ public class Robot extends IterativeRobot {
     }
     
     public static void addToAuto(String add) {
-    	if (Robot.recordAutonomous) {
-			Robot.recordedAutonomousString = Robot.recordedAutonomousString + add;
+    	if (recordedAutonomous.recording) {
+			recordedAutonomous.data = recordedAutonomous.data + add + "]";
 		}
     }
 }
