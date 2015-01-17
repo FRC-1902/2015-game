@@ -17,8 +17,6 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-
-import org.usfirst.frc.team1902.robot.commands.AutonomousCommand;
 import org.usfirst.frc.team1902.robot.subsystems.CanGrabberSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.IntakeSubsystem;
@@ -34,17 +32,17 @@ public class Robot extends IterativeRobot {
 	public static RecordedAutonomousSubsystem recordedAutonomous;
 	public static OI oi;
 
-    Command autonomousCommand;
+    Command autonomousCommand = null;
 
     //Initialize our subsystems, autonomous, and Operator Interface (OI)
     public void robotInit() {
-		oi = new OI();
 		drive = new DriveSubsystem();
 		intake = new IntakeSubsystem();
-		canGrabber = new CanGrabberSubsystem();
-		lift = new LiftSubsystem();
+		//canGrabber = new CanGrabberSubsystem();
+		//lift = new LiftSubsystem();
 		recordedAutonomous = new RecordedAutonomousSubsystem();
-        autonomousCommand = new AutonomousCommand("this should be replaced with real autonomous data before you try running this");
+        //autonomousCommand = new AutonomousCommand("this should be replaced with real autonomous data before you try running this");
+		oi = new OI();
     }
 	
 	public void disabledPeriodic() {
@@ -64,8 +62,7 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopInit() {
-        if (autonomousCommand != null) autonomousCommand.cancel();
-        
+        if (autonomousCommand != null) autonomousCommand.cancel();        
     }
 
     /**

@@ -11,7 +11,8 @@ public class IntakeInitializeCommand extends Command {
     }
 
     protected void initialize() {
-    	Robot.intake.roller.set(1);
+    	//Robot.intake.roller.set(1);
+    	Robot.intake.setArms(true);
     }
 
     protected void execute() {

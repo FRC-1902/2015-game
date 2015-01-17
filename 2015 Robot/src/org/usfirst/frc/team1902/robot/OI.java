@@ -1,13 +1,10 @@
 package org.usfirst.frc.team1902.robot;
 
-import org.usfirst.frc.team1902.robot.commands.CanGrabberToggleCommand;
 import org.usfirst.frc.team1902.robot.commands.DriveTypeToggleCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleArmsCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleReverseCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleRotateCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleCommand;
-import org.usfirst.frc.team1902.robot.commands.LiftCommand;
-import org.usfirst.frc.team1902.robot.commands.PushToteCommand;
 import org.usfirst.frc.team1902.robot.commands.RecordAutonomousToggleCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -17,6 +14,7 @@ public class OI {
 	public static Joystick left = new Joystick(0);
 	public static Joystick right = new Joystick(1);
 	public static Joystick three = new Joystick(2);
+	public static Joystick action = null;
 	
 	Button driveToggle;
 	Button intake;
@@ -30,17 +28,18 @@ public class OI {
 	Button recordAutonomous;		
 	
 	//Anything with the value of 9001 is a placeholder.
-	public void init() {		
-		Joystick action = three; //Joystick action = RobotMap.arcadeDrive ? right : three; - Don't uncomment this unless you know what it does.
+	public void init() {
+		//Use "action = three;" if you actually have three joysticks available
+		action = right;
 		//Define buttons
 		driveToggle = new JoystickButton(action, 8);
-		intake = new JoystickButton(action, 3);
-		reverseIntake = new JoystickButton(action, 2);
+		intake = new JoystickButton(action, 4);
+		reverseIntake = new JoystickButton(action, 5);
 		rotateIntake = new JoystickButton(action, 9001);
 		intakeArms = new JoystickButton(action, 1);
 		canGrabber = new JoystickButton(action, 9001);
-		liftUp = new JoystickButton(action, 4);
-		liftDown = new JoystickButton(action, 5);
+		liftUp = new JoystickButton(action, 3);
+		liftDown = new JoystickButton(action, 2);
 		pushTote = new JoystickButton(action, 9001);
 		recordAutonomous = new JoystickButton(action, 9);
 		
@@ -55,18 +54,18 @@ public class OI {
 		rotateIntake.whenPressed(new IntakeToggleRotateCommand(true));
 		rotateIntake.whenReleased(new IntakeToggleRotateCommand(false));
 		
-		intakeArms.whenPressed(new IntakeToggleArmsCommand(true));
-		intakeArms.whenReleased(new IntakeToggleArmsCommand(false));
+		intakeArms.whenPressed(new IntakeToggleArmsCommand(false));
+		intakeArms.whenReleased(new IntakeToggleArmsCommand(true));
 		
-		canGrabber.whenPressed(new CanGrabberToggleCommand());
+		//canGrabber.whenPressed(new CanGrabberToggleCommand());
 		
-		liftUp.whenPressed(new LiftCommand(1));
-		liftUp.whenReleased(new LiftCommand(0));
+		//liftUp.whenPressed(new LiftCommand(1));
+		//liftUp.whenReleased(new LiftCommand(0));
 		
-		liftDown.whenPressed(new LiftCommand(-1));
-		liftDown.whenReleased(new LiftCommand(0));
+		//liftDown.whenPressed(new LiftCommand(-1));
+		//liftDown.whenReleased(new LiftCommand(0));
 		
-		pushTote.whenPressed(new PushToteCommand());
+		//pushTote.whenPressed(new PushToteCommand());
 		
 		recordAutonomous.whenPressed(new RecordAutonomousToggleCommand());
 	}

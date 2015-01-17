@@ -1,37 +1,41 @@
 package org.usfirst.frc.team1902.robot.subsystems;
 
+import org.usfirst.frc.team1902.robot.OI;
 import org.usfirst.frc.team1902.robot.Robot;
 import org.usfirst.frc.team1902.robot.RobotMap;
-
+import org.usfirst.frc.team1902.robot.commands.IntakeInitializeCommand;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class IntakeSubsystem extends Subsystem {
     
-    public Talon left = new Talon(RobotMap.leftIntakeTalon);
-    public Talon right = new Talon(RobotMap.rightIntakeTalon);
-    public Talon roller = new Talon(RobotMap.rollerTalon);
+    //public Talon left = new Talon(RobotMap.leftIntakeTalon);
+	public Talon left = new Talon(2);
+    //public Talon right = new Talon(RobotMap.rightIntakeTalon);
+	public Talon right = new Talon(3);
+    //public Talon roller = new Talon(RobotMap.rollerTalon);
     public Solenoid arms = new Solenoid(RobotMap.intakeArmsSolenoid);
     public boolean motorStatus = false;
     public boolean reverse = false;
     public boolean rotate = false;
 
 	public void setMotors(boolean status) {
+		double value = OI.action.getZ();
 		if (status == false) {
 			left.set(0);
 			right.set(0);
 		} else {
 			if (rotate) {
-				left.set(1);
-				right.set(-1);
+				left.set(value);
+				right.set(-value);
 			} else {
 				if (reverse) {
-					left.set(-1);
-					right.set(-1);
+					left.set(-value);
+					right.set(-value);
 				} else {
-					left.set(1);
-					right.set(1);
+					left.set(value);
+					right.set(value);
 				}
 			}
 		}
@@ -61,6 +65,7 @@ public class IntakeSubsystem extends Subsystem {
     }
     
     public void initDefaultCommand() {
+    	setDefaultCommand(new IntakeInitializeCommand());
     }
 }
 
