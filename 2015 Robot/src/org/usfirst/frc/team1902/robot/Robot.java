@@ -39,10 +39,12 @@ public class Robot extends IterativeRobot {
 		drive = new DriveSubsystem();
 		intake = new IntakeSubsystem();
 		//canGrabber = new CanGrabberSubsystem();
-		//lift = new LiftSubsystem();
+		lift = new LiftSubsystem();
 		recordedAutonomous = new RecordedAutonomousSubsystem();
         //autonomousCommand = new AutonomousCommand("this should be replaced with real autonomous data before you try running this");
 		oi = new OI();
+		intake.setArms(true);
+		//intak.roller.set(true);
     }
 	
 	public void disabledPeriodic() {

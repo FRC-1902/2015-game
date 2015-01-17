@@ -2,15 +2,14 @@ package org.usfirst.frc.team1902.robot.subsystems;
 
 import org.usfirst.frc.team1902.robot.Robot;
 import org.usfirst.frc.team1902.robot.RobotMap;
-import org.usfirst.frc.team1902.robot.commands.IntakeInitializeCommand;
-
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class LiftSubsystem extends Subsystem {
     
-    public Talon lift = new Talon(RobotMap.liftTalon);
+    //public Talon lift = new Talon(RobotMap.liftTalon);
+	public Talon lift = new Talon(4);
     public Solenoid totePusher = new Solenoid(RobotMap.totePusherSolenoid);
     
     public void lift(int motorValue) {
@@ -25,7 +24,6 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public void initDefaultCommand() {
-    	setDefaultCommand(new IntakeInitializeCommand());
     }
 }
 

@@ -8,14 +8,16 @@ public class RecordedAutonomousSubsystem extends Subsystem {
     
 	public String data = "";
 	public boolean recording = false;
-    NetworkTable table = null;
+    public NetworkTable table = null;
     
     public void enable() {
     	try {
-    		NetworkTable.setTeam(1902);
-    		NetworkTable.setServerMode();
-			NetworkTable.initialize();		
-			table = NetworkTable.getTable("recordedAutonomous");
+    		if (table == null) {
+    			NetworkTable.setTeam(1902);
+    			NetworkTable.setServerMode();
+				NetworkTable.initialize();	
+				table = NetworkTable.getTable("recordedAutonomous");
+    		}
 			recording = true;
 			data = "";
     	} catch (IOException e) {

@@ -20,7 +20,6 @@ public class DriveTypeToggleCommand extends Command {
 
     protected void initialize() {
     	RobotMap.arcadeDrive = status == null? !RobotMap.arcadeDrive : status;
-    	//Robot.oi.init();
     }
 
     protected void execute() {

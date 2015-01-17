@@ -5,6 +5,7 @@ import org.usfirst.frc.team1902.robot.commands.IntakeToggleArmsCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleReverseCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleRotateCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleCommand;
+import org.usfirst.frc.team1902.robot.commands.LiftCommand;
 import org.usfirst.frc.team1902.robot.commands.RecordAutonomousToggleCommand;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -59,11 +60,11 @@ public class OI {
 		
 		//canGrabber.whenPressed(new CanGrabberToggleCommand());
 		
-		//liftUp.whenPressed(new LiftCommand(1));
-		//liftUp.whenReleased(new LiftCommand(0));
+		liftUp.whenPressed(new LiftCommand(1));
+		liftUp.whenReleased(new LiftCommand(0));
 		
-		//liftDown.whenPressed(new LiftCommand(-1));
-		//liftDown.whenReleased(new LiftCommand(0));
+		liftDown.whenPressed(new LiftCommand(-1));
+		liftDown.whenReleased(new LiftCommand(0));
 		
 		//pushTote.whenPressed(new PushToteCommand());
 		

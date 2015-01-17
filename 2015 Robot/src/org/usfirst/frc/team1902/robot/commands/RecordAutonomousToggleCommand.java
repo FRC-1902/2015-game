@@ -17,11 +17,19 @@ public class RecordAutonomousToggleCommand extends Command {
     	this.state = state;
     }
 
-    protected void initialize() {    	
-    	if (state == true) {
-    		Robot.recordedAutonomous.enable();
+    protected void initialize() { 
+    	if (state != null) {
+    		if (state == true) {
+    			Robot.recordedAutonomous.enable();
+    		} else {
+    			Robot.recordedAutonomous.disable();
+    		}
     	} else {
-    		Robot.recordedAutonomous.disable();
+    		if (Robot.recordedAutonomous.recording) {
+    			Robot.recordedAutonomous.disable();
+    		} else {
+    			Robot.recordedAutonomous.enable();
+    		}
     	}
     }
 

@@ -17,16 +17,16 @@ public class DriveSubsystem extends Subsystem {
 	
 	//Tank drive. Uses left and right inputs ranging from -1 to 1 to move the robot.
 	public void tankDrive(double left, double right) {
-		this.left1.set(-left);
+		this.left1.set(left);
 		//this.left2.set(left);
-		this.right1.set(-right);
+		this.right1.set(right);
 		//this.right2.set(right);
 		Robot.addToAuto("drive|" + -left + "|" + -right);
 	}
 	
 	//Arcade drive. Uses a single joystick to move the robot.
 	public void arcadeDrive(Joystick joy) {
-		tankDrive(joy.getX() + joy.getY(), joy.getX() - joy.getY());
+		tankDrive(joy.getY() + joy.getX(), joy.getY() - joy.getX());
 	}
 	
 	public void initDefaultCommand() {

@@ -9,7 +9,8 @@ public class AutonomousCommand extends Command {
 
 	public List<String[]> commands = new ArrayList<>();
 	
-    public AutonomousCommand(String auto) {
+    public AutonomousCommand() {
+    	String auto = Robot.recordedAutonomous.table.getString("autonomous", "fail");
     	requires(Robot.recordedAutonomous);
     	for (String s : auto.split("]")) {
     		commands.add(s.split("|"));
