@@ -1,14 +1,13 @@
 package org.usfirst.frc.team1902.robot.commands;
 
 import org.usfirst.frc.team1902.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 public class LiftCommand extends Command {
 
-	public int motorValue;
+	public double motorValue;
 	
-    public LiftCommand(int motorValue) {
+    public LiftCommand(double motorValue) {
         requires(Robot.lift);
         this.motorValue = motorValue;
     }

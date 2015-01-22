@@ -17,34 +17,46 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import org.usfirst.frc.team1902.robot.subsystems.CanGrabberSubsystem;
+import org.usfirst.frc.team1902.robot.commands.AutonomousCommand;
+import org.usfirst.frc.team1902.robot.subsystems.BinGrabberSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.DriveSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.IntakeSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.LiftSubsystem;
-import org.usfirst.frc.team1902.robot.subsystems.RecordedAutonomousSubsystem;
+import org.usfirst.frc.team1902.robot.subsystems.AutonomousSubsystem;
                                                                              
 public class Robot extends IterativeRobot {
 
 	public static DriveSubsystem drive;
 	public static IntakeSubsystem intake;
-	public static CanGrabberSubsystem canGrabber;
+	public static BinGrabberSubsystem binGrabber;
 	public static LiftSubsystem lift;
-	public static RecordedAutonomousSubsystem recordedAutonomous;
+	public static AutonomousSubsystem autonomous;
 	public static OI oi;
+	public static Robot self;
 
     Command autonomousCommand = null;
 
     //Initialize our subsystems, autonomous, and Operator Interface (OI)
     public void robotInit() {
+		System.out.println("Initializing DriveSubsystem...");
 		drive = new DriveSubsystem();
+		System.out.println("Initializing IntakeSubsystem...");
 		intake = new IntakeSubsystem();
-		//canGrabber = new CanGrabberSubsystem();
+		//System.out.println("Initializing BinGrabberSubsystem");
+		//binGrabber = new BinGrabberSubsystem();
+		System.out.println("Initializing LiftSubsystem...");
 		lift = new LiftSubsystem();
-		recordedAutonomous = new RecordedAutonomousSubsystem();
-        //autonomousCommand = new AutonomousCommand("this should be replaced with real autonomous data before you try running this");
+		System.out.println("Initializing AutonomousSubsystem...");
+		autonomous = new AutonomousSubsystem();
+		System.out.println("Initializing OI...");
 		oi = new OI();
+		System.out.println("Initializing AutonomousCommand...");
+        autonomousCommand = new AutonomousCommand();
+        System.out.println("Enabling intake arms and roller...");
 		intake.setArms(true);
-		//intak.roller.set(true);
+		//intake.roller.set(true);
+		System.out.println("Robot initialization complete!");
+		self = this;
     }
 	
 	public void disabledPeriodic() {
@@ -86,11 +98,5 @@ public class Robot extends IterativeRobot {
      */
     public void testPeriodic() {
         LiveWindow.run();
-    }
-    
-    public static void addToAuto(String add) {
-    	if (recordedAutonomous.recording) {
-			recordedAutonomous.data = recordedAutonomous.data + add + "]";
-		}
-    }
+    }   
 }

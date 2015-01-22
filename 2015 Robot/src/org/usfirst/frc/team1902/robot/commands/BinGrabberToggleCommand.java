@@ -3,21 +3,21 @@ package org.usfirst.frc.team1902.robot.commands;
 import org.usfirst.frc.team1902.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class CanGrabberToggleCommand extends Command {
+public class BinGrabberToggleCommand extends Command {
 
 	public Boolean state = null;
 	
-    public CanGrabberToggleCommand() {
-    	requires(Robot.canGrabber);
+    public BinGrabberToggleCommand() {
+    	requires(Robot.binGrabber);
     }
     
-    public CanGrabberToggleCommand(boolean state) {
-    	requires(Robot.canGrabber);
+    public BinGrabberToggleCommand(boolean state) {
+    	requires(Robot.binGrabber);
     	this.state = state;
     }
 
     protected void initialize() {
-    	Robot.canGrabber.setGrabber(state == null ? !Robot.canGrabber.canGrabber.get() : state);
+    	Robot.binGrabber.setGrabber(state == null ? !Robot.binGrabber.canGrabber.get() : state);
     }
 
     protected void execute() {  	

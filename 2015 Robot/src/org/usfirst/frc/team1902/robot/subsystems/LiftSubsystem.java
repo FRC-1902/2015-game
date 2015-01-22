@@ -6,21 +6,22 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+                                                                                                           
 public class LiftSubsystem extends Subsystem {
     
     //public Talon lift = new Talon(RobotMap.liftTalon);
 	public Talon lift = new Talon(4);
     public Solenoid totePusher = new Solenoid(RobotMap.totePusherSolenoid);
     
-    public void lift(int motorValue) {
+    public void lift(double motorValue) {
 		lift.set(motorValue);
-    	Robot.addToAuto("lift|" + motorValue);
+		Robot.autonomous.add(new String[]{"lift", motorValue + ""});
     }
     
     public void pushTote() {
     	totePusher.set(true);
     	totePusher.set(false);
-    	Robot.addToAuto("pushTote");
+    	Robot.autonomous.add(new String[]{"pushTote"});
     }
     
     public void initDefaultCommand() {

@@ -5,31 +5,16 @@ import org.usfirst.frc.team1902.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class RecordAutonomousToggleCommand extends Command {
-
-	public Boolean state = null;
 	
     public RecordAutonomousToggleCommand() {
-    	requires(Robot.recordedAutonomous);
-    }
-    
-    public RecordAutonomousToggleCommand(boolean state) {
-    	requires(Robot.recordedAutonomous);
-    	this.state = state;
-    }
+    	requires(Robot.autonomous);
+    }   
 
     protected void initialize() { 
-    	if (state != null) {
-    		if (state == true) {
-    			Robot.recordedAutonomous.enable();
-    		} else {
-    			Robot.recordedAutonomous.disable();
-    		}
+    	if (Robot.autonomous.recording) {
+    		Robot.autonomous.disable();
     	} else {
-    		if (Robot.recordedAutonomous.recording) {
-    			Robot.recordedAutonomous.disable();
-    		} else {
-    			Robot.recordedAutonomous.enable();
-    		}
+    		Robot.autonomous.enable();
     	}
     }
 

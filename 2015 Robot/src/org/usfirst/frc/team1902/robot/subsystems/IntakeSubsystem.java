@@ -39,7 +39,7 @@ public class IntakeSubsystem extends Subsystem {
 			}
 		}
     	motorStatus = status;
-    	Robot.addToAuto("intakeMotor|" + status);
+    	Robot.autonomous.add(new String[]{"intakeMotor", status + ""});
     }
     
     public void setReversed(boolean status) {
@@ -47,7 +47,7 @@ public class IntakeSubsystem extends Subsystem {
     	if (left.get() != 0) {
     		setMotors(true);
     	}
-    	Robot.addToAuto("reverseIntake|" + status);    	
+    	Robot.autonomous.add(new String[]{"reverseIntake", status + ""});    	
     }
     
     public void setRotated(boolean status) {
@@ -55,12 +55,12 @@ public class IntakeSubsystem extends Subsystem {
     	if (left.get() != 0) {
     		setMotors(true);
     	}
-    	Robot.addToAuto("rotateIntake|" + status);    	
+    	Robot.autonomous.add(new String[]{"rotateIntake", status + ""});   	
     }
     
     public void setArms(boolean status) {
     	arms.set(status);
-    	Robot.addToAuto("intakeArms|" + status);
+    	Robot.autonomous.add(new String[]{"intakeArms", status + ""});
     }
     
     public void initDefaultCommand() {

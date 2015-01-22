@@ -1,8 +1,6 @@
 package org.usfirst.frc.team1902.robot.commands;
 
 import org.usfirst.frc.team1902.robot.Robot;
-import org.usfirst.frc.team1902.robot.RobotMap;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveTypeToggleCommand extends Command {
@@ -19,7 +17,7 @@ public class DriveTypeToggleCommand extends Command {
     }
 
     protected void initialize() {
-    	RobotMap.arcadeDrive = status == null? !RobotMap.arcadeDrive : status;
+    	Robot.drive.arcadeDrive = status == null? !Robot.drive.arcadeDrive : status;
     }
 
     protected void execute() {

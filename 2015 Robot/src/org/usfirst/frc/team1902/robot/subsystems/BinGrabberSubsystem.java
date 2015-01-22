@@ -5,13 +5,13 @@ import org.usfirst.frc.team1902.robot.RobotMap;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-public class CanGrabberSubsystem extends Subsystem {
+public class BinGrabberSubsystem extends Subsystem {
     
     public Solenoid canGrabber = new Solenoid(RobotMap.canGrabberSolenoid);
     
     public void setGrabber(boolean state) {
     	canGrabber.set(state);
-    	Robot.addToAuto("canGrabber|" + state);
+    	Robot.autonomous.add(new String[]{"canGrabber", state + ""});
     }
     
     public void initDefaultCommand() {

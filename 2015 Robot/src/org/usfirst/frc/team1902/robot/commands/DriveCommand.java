@@ -2,7 +2,6 @@ package org.usfirst.frc.team1902.robot.commands;
 
 import org.usfirst.frc.team1902.robot.OI;
 import org.usfirst.frc.team1902.robot.Robot;
-import org.usfirst.frc.team1902.robot.RobotMap;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveCommand extends Command {
@@ -15,7 +14,7 @@ public class DriveCommand extends Command {
     }
 
     protected void execute() {
-    	if (RobotMap.arcadeDrive) {
+    	if (Robot.drive.arcadeDrive) {
     		Robot.drive.arcadeDrive(OI.left);
     	} else {
     		Robot.drive.tankDrive(OI.left.getY(), OI.right.getY());

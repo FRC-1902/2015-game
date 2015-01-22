@@ -22,23 +22,22 @@ public class OI {
 	Button reverseIntake;
 	Button rotateIntake;
 	Button intakeArms;
-	Button canGrabber;
+	Button binGrabber;
 	Button liftUp;
 	Button liftDown;
 	Button pushTote;
 	Button recordAutonomous;		
 	
 	//Anything with the value of 9001 is a placeholder.
-	public void init() {
-		//Use "action = three;" if you actually have three joysticks available
-		action = right;
+	public void init() {		
+		action = right; //Use "action = three;" if you have three or more joysticks available
 		//Define buttons
-		driveToggle = new JoystickButton(action, 8);
+		driveToggle = new JoystickButton(left, 8);
 		intake = new JoystickButton(action, 4);
 		reverseIntake = new JoystickButton(action, 5);
 		rotateIntake = new JoystickButton(action, 9001);
 		intakeArms = new JoystickButton(action, 1);
-		canGrabber = new JoystickButton(action, 9001);
+		binGrabber = new JoystickButton(action, 9001);
 		liftUp = new JoystickButton(action, 3);
 		liftDown = new JoystickButton(action, 2);
 		pushTote = new JoystickButton(action, 9001);
@@ -58,12 +57,12 @@ public class OI {
 		intakeArms.whenPressed(new IntakeToggleArmsCommand(false));
 		intakeArms.whenReleased(new IntakeToggleArmsCommand(true));
 		
-		//canGrabber.whenPressed(new CanGrabberToggleCommand());
+		//binGrabber.whenPressed(new BinGrabberToggleCommand());
 		
 		liftUp.whenPressed(new LiftCommand(1));
 		liftUp.whenReleased(new LiftCommand(0));
 		
-		liftDown.whenPressed(new LiftCommand(-1));
+		liftDown.whenPressed(new LiftCommand(-0.5));
 		liftDown.whenReleased(new LiftCommand(0));
 		
 		//pushTote.whenPressed(new PushToteCommand());
