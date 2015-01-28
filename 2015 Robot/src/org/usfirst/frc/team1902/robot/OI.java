@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1902.robot;
 
+import org.usfirst.frc.team1902.robot.commands.AdjustToToteCommand;
 import org.usfirst.frc.team1902.robot.commands.DriveTypeToggleCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleArmsCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleReverseCommand;
@@ -7,6 +8,7 @@ import org.usfirst.frc.team1902.robot.commands.IntakeToggleRotateCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleCommand;
 import org.usfirst.frc.team1902.robot.commands.LiftCommand;
 import org.usfirst.frc.team1902.robot.commands.RecordAutonomousToggleCommand;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -26,7 +28,9 @@ public class OI {
 	Button liftUp;
 	Button liftDown;
 	Button pushTote;
-	Button recordAutonomous;		
+	Button adjustToTote;
+	Button recordAutoOn;	
+	Button recordAutoOff;
 	
 	//Anything with the value of 9001 is a placeholder.
 	public void init() {		
@@ -35,24 +39,26 @@ public class OI {
 		driveToggle = new JoystickButton(left, 8);
 		intake = new JoystickButton(action, 4);
 		reverseIntake = new JoystickButton(action, 5);
-		rotateIntake = new JoystickButton(action, 9001);
+		//rotateIntake = new JoystickButton(action, 9001);
 		intakeArms = new JoystickButton(action, 1);
-		binGrabber = new JoystickButton(action, 9001);
+		//binGrabber = new JoystickButton(action, 9001);
 		liftUp = new JoystickButton(action, 3);
 		liftDown = new JoystickButton(action, 2);
-		pushTote = new JoystickButton(action, 9001);
-		recordAutonomous = new JoystickButton(action, 9);
+		//pushTote = new JoystickButton(action, 9001);
+		//adjustToTote = new JoystickButton(action, 9001);
+		recordAutoOn = new JoystickButton(action, 8);
+		recordAutoOff = new JoystickButton(action, 9);
 		
 		//Define what happens when the buttons are pressed
-		driveToggle.whenPressed(new DriveTypeToggleCommand());
+		//driveToggle.whenPressed(new DriveTypeToggleCommand());
 		
 		intake.whenPressed(new IntakeToggleCommand());
 		
 		reverseIntake.whenPressed(new IntakeToggleReverseCommand(true));
 		reverseIntake.whenReleased(new IntakeToggleReverseCommand(false));
 		
-		rotateIntake.whenPressed(new IntakeToggleRotateCommand(true));
-		rotateIntake.whenReleased(new IntakeToggleRotateCommand(false));
+		//rotateIntake.whenPressed(new IntakeToggleRotateCommand(true));
+		//rotateIntake.whenReleased(new IntakeToggleRotateCommand(false));
 		
 		intakeArms.whenPressed(new IntakeToggleArmsCommand(false));
 		intakeArms.whenReleased(new IntakeToggleArmsCommand(true));
@@ -67,7 +73,10 @@ public class OI {
 		
 		//pushTote.whenPressed(new PushToteCommand());
 		
-		recordAutonomous.whenPressed(new RecordAutonomousToggleCommand());
+		//adjustToTote.whileHeld(new AdjustToToteCommand());
+		
+		recordAutoOn.whenPressed(new RecordAutonomousToggleCommand(true));
+		recordAutoOff.whenPressed(new RecordAutonomousToggleCommand(false));
 	}
 	
 	public OI() {

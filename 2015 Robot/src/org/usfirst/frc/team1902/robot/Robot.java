@@ -13,7 +13,9 @@
 */
 package org.usfirst.frc.team1902.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -32,6 +34,8 @@ public class Robot extends IterativeRobot {
 	public static LiftSubsystem lift;
 	public static AutonomousSubsystem autonomous;
 	public static OI oi;
+	public static PowerDistributionPanel pdp;
+	public static DriverStation ds;
 	public static Robot self;
 
     Command autonomousCommand = null;
@@ -50,6 +54,10 @@ public class Robot extends IterativeRobot {
 		autonomous = new AutonomousSubsystem();
 		System.out.println("Initializing OI...");
 		oi = new OI();
+		System.out.println("Initializing Power Distribution Panel...");
+		pdp = new PowerDistributionPanel();
+		System.out.println("Intializing Driver Station...");
+		ds = DriverStation.getInstance();
 		System.out.println("Initializing AutonomousCommand...");
         autonomousCommand = new AutonomousCommand();
         System.out.println("Enabling intake arms and roller...");
@@ -84,6 +92,7 @@ public class Robot extends IterativeRobot {
      * You can use it to reset subsystems before shutting down.
      */
     public void disabledInit(){
+    	autonomous.disable();
     }
 
     /**
@@ -91,6 +100,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        //System.out.println("Lift motor current: " + pdp.getCurrent(1) + "(Time logged: " + ds.getMatchTime() + ")");       
     }
     
     /**
