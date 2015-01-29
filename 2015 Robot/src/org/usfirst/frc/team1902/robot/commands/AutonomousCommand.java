@@ -87,7 +87,7 @@ public class AutonomousCommand extends Command {
 			Timer.delay(2);
 			Robot.autonomous.light.set(false);
 			commands = new ArrayList<>();
-			commands.add(new String[]{"drive", "0", "0"});
+			//commands.add(new String[]{"drive", "0", "0"});
 			for (String[] s : Robot.autonomous.data) {
 				commands.add(s);
 			}

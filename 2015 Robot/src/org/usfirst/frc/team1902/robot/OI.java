@@ -1,11 +1,9 @@
 package org.usfirst.frc.team1902.robot;
 
-import org.usfirst.frc.team1902.robot.commands.AdjustToToteCommand;
-import org.usfirst.frc.team1902.robot.commands.DriveTypeToggleCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleArmsCommand;
+import org.usfirst.frc.team1902.robot.commands.IntakeToggleCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleReverseCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleRotateCommand;
-import org.usfirst.frc.team1902.robot.commands.IntakeToggleCommand;
 import org.usfirst.frc.team1902.robot.commands.LiftCommand;
 import org.usfirst.frc.team1902.robot.commands.RecordAutonomousToggleCommand;
 
