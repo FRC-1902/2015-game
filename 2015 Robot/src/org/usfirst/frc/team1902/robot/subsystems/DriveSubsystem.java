@@ -2,12 +2,9 @@ package org.usfirst.frc.team1902.robot.subsystems;
 
 import org.usfirst.frc.team1902.robot.Robot;
 import org.usfirst.frc.team1902.robot.commands.DriveCommand;
-
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class DriveSubsystem extends Subsystem {
@@ -58,23 +55,17 @@ public class DriveSubsystem extends Subsystem {
 	public void encoderDrive(double left, double right) {
 		double rightError, leftError;
 		boolean exit = false;
-		
-		//right = Math.random() * 10 + 1;
-		//left = Math.random() * 10 + 1;
-		//if(left/abs(left) != right/abs(right)
-		//right = 100;
-		//left = 100;
 
-		double kP = 75;
-		double min = 0.3;
-		double max = 0.75;
+		double kP = 70; //How much we will divide rightError by.
+		double min = 0.3; //The minimum speed we want to move before saying we're arrived.
+		double max = 0.75; //The maximum speed we want to move before capping the speed.
 		boolean turning = false;
 		
 		rightError = right - rightEncoder.getDistance();
 		leftError  = left - leftEncoder.getDistance();
 		
 		if (leftError != 0 && rightError != 0) {
-			if(leftError/Math.abs(leftError) != rightError/Math.abs(rightError)) turning = true;
+			if(leftError/Math.abs(leftError) != rightError/Math.abs(rightError)) turning = true;  //If left and right error's signs are not the same, set turning to true
 		}
 		
 		if(Math.abs(leftError-rightError) > 90) turning = true;
@@ -132,9 +123,6 @@ public class DriveSubsystem extends Subsystem {
 			if(rightError == 0 && leftError == 0) exit = true;
 		}
 		System.out.println("Encoder drive finished!");	
-		//rightEncoder.reset();
-		//leftEncoder.reset();
-		//Timer.delay(1);
 	}
 
 	public boolean adjustToTote() {
