@@ -30,7 +30,7 @@ public class DriveSubsystem extends Subsystem {
 
 	//Tank drive. Uses left and right inputs ranging from -1 to 1 to move the robot.
 	public void tankDrive(double left, double right) {
-		this.left1.set(left);
+		this.left1.set(-left);
 		//this.left2.set(left);
 		this.right1.set(right);
 		//this.right2.set(right);
@@ -57,9 +57,9 @@ public class DriveSubsystem extends Subsystem {
 		double rightError, leftError;
 		boolean exit = false;
 
-		double kP = 70; //How much we will divide rightError by.
+		double kP = 125; //How much we will divide rightError by.
 		double min = 0.3; //The minimum speed we want to move before saying we're arrived.
-		double max = 0.75; //The maximum speed we want to move before capping the speed.
+		double max = 0.5; //The maximum speed we want to move before capping the speed.
 		boolean turning = false;
 		
 		rightError = right - rightEncoder.getDistance();
@@ -76,7 +76,7 @@ public class DriveSubsystem extends Subsystem {
 		if (turning) {
 			kP = 40;
 			min = 0.4;
-			max = 0.85;
+			max = 0;
 		}
 		
 		System.out.println("Got a command to drive to '" + left + "' and '" + right + "'.");
@@ -119,7 +119,7 @@ public class DriveSubsystem extends Subsystem {
 			System.out.println("Left is driving at " + leftError + " to " + left);
 			
 			right1.set(rightError);
-			left1.set(leftError);
+			left1.set(-leftError);
 
 			if(rightError == 0 && leftError == 0) exit = true;
 		}

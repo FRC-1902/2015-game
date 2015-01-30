@@ -83,6 +83,7 @@ public class AutonomousCommand extends Command {
 		} else {
 			Robot.drive.leftEncoder.reset();
 			Robot.drive.rightEncoder.reset();
+			System.out.println("" + Robot.drive.leftEncoder.get + " " + Robot.drive.rightEncoder.getDistance());
 			Robot.autonomous.light.set(true);
 			Timer.delay(2);
 			Robot.autonomous.light.set(false);
