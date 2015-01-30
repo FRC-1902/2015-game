@@ -2,17 +2,18 @@ package org.usfirst.frc.team1902.robot.subsystems;
 
 import org.usfirst.frc.team1902.robot.Robot;
 import org.usfirst.frc.team1902.robot.commands.DriveCommand;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class DriveSubsystem extends Subsystem {
 
 	//public Talon left1 = new Talon(RobotMap.leftDriveTalon1);
-	public Talon left1 = new Talon(1);
+	public VictorSP left1 = new VictorSP(1);
 	//public Talon left2 = new Talon(RobotMap.leftDriveTalon2);
-	public Talon right1 = new Talon(0);
+	public VictorSP right1 = new VictorSP(0);
 	//public Talon right1 = new Talon(RobotMap.rightDriveTalon1);
 	//public Talon right2 = new Talon(RobotMap.rightDriveTalon2);
 	public Encoder leftEncoder = new Encoder(0, 1);
