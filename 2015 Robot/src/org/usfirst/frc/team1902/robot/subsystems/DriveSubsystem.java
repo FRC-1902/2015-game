@@ -52,17 +52,28 @@ public class DriveSubsystem extends Subsystem {
 	}
 
 	//Encoder drive. Takes a left and right encoder value and plugs them into a P loop.
-	public void encoderDrive(double left, double right) {
+	public void encoderDrive(double left, double right, double nextLeft, double nextRight) {
 		double rightError, leftError;
 		boolean exit = false;
 
 		double kP = 70; //How much we will divide rightError by.
 		double min = 0.3; //The minimum speed we want to move before saying we're arrived.
 		double max = 0.75; //The maximum speed we want to move before capping the speed.
-		boolean turning = false;
+		boolean turning = false;		
+		double leftSign = -1;
+		double rightSign = -1;
+		double lastCorrectLeft = 0;
+		double lastCorrectRight = 0;
 		
 		rightError = right - rightEncoder.getDistance();
 		leftError  = left - leftEncoder.getDistance();
+		
+		if (rightError >= 0) {
+			rightSign = 1;
+		}
+		if (leftError >= 0) {
+			leftSign = 1;
+		}
 		
 		if (leftError != 0 && rightError != 0) {
 			if(leftError/Math.abs(leftError) != rightError/Math.abs(rightError)) turning = true;  //If left and right error's signs are not the same, set turning to true
@@ -113,6 +124,19 @@ public class DriveSubsystem extends Subsystem {
 			
 			rightError = Math.abs(rightError) > max ? Math.abs(max/rightError)*rightError: rightError;
 			leftError = Math.abs(leftError) > max ? Math.abs(max/leftError)*leftError : leftError;                                                                                                                                                                                                                                                                                                     
+
+			if (nextLeft != 0 && nextRight != 0) {
+				if (Math.abs(rightError)/rightError != rightSign && Math.abs(leftError)/leftError != leftSign) {
+					if (nextRight - Robot.drive.rightEncoder.getDistance() < nextRight - lastCorrectRight && nextLeft - Robot.drive.leftEncoder.getDistance() > nextLeft - lastCorrectLeft) {
+						rightError = 0;
+						leftError = 0;
+					}
+				} else if (Math.abs(rightError)/rightError != rightSign) {
+					lastCorrectRight = Robot.drive.rightEncoder.getDistance();
+				} else {
+					lastCorrectLeft = Robot.drive.leftEncoder.getDistance();
+				}
+			}
 
 			System.out.println("Right is driving at " + rightError + " to " + right);
 			System.out.println("Left is driving at " + leftError + " to " + left);

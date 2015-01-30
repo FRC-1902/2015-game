@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.command.Command;
 public class AutonomousCommand extends Command {
 
 	public List<String[]> commands = new ArrayList<>();
-	public List<String[]> preProcessedCommands = new ArrayList<>();
 	boolean initialized = false;
 
 	public AutonomousCommand() {
@@ -25,38 +24,16 @@ public class AutonomousCommand extends Command {
 		if (initialized) {
 			if (!commands.isEmpty()) {				
 				String[] s = commands.get(0);
-				if (!preProcessedCommands.contains(s)) {
 					if (s[0].equals("drive")) {
 						double left = Double.parseDouble(s[1]);
 						double right = Double.parseDouble(s[2]);
 						if (Math.abs(left) != 0 && Math.abs(right) != 0) {
-							int merges = 0;
-							double min = 250;				
-							if (Math.abs(left) < min && Math.abs(right) < min) {
-								boolean stopMerge = false;
-								for (String[] s2 : commands) {
-									if ((Math.abs(left) < min && Math.abs(right) < min) || stopMerge) {
-										if (s2[0].equals("drive")) {
-											double mergeLeft = Double.parseDouble(s2[1]);
-											double mergeRight = Double.parseDouble(s2[2]);
-											if (mergeLeft != 0 && mergeRight != 0) {
-												left += Double.parseDouble(s2[1]);
-												right += Double.parseDouble(s2[2]);
-												preProcessedCommands.add(s2);
-												merges++;
-											} else {
-												stopMerge = true;
-											}
-										}
-									} else {
-										break;
-									}
-								}
+							String[] next = commands.get(1);
+							if (next[0].equals("drive")) {
+								Robot.drive.encoderDrive(left, right, Double.parseDouble(next[1]), Double.parseDouble(next[2]));
+							} else {
+								Robot.drive.encoderDrive(left, right, 0, 0);
 							}
-							if (merges > 0) {
-								System.out.println("Merged " + merges + " command(s) into " + left + " left and " + right + " right.");
-							}
-							Robot.drive.encoderDrive(left, right);
 						}
 					} else if (s[0].equals("intakeMotor")) {
 						Robot.intake.setMotors(Boolean.parseBoolean(s[1]));
@@ -75,7 +52,6 @@ public class AutonomousCommand extends Command {
 					} else if (s[0].equals("adjustToTote")) {
 						while (!Robot.drive.adjustToTote());
 					}
-				}
 				commands.remove(commands.get(0));				
 			} else {
 				Robot.autonomous.light.set(true);
@@ -87,9 +63,43 @@ public class AutonomousCommand extends Command {
 			Timer.delay(2);
 			Robot.autonomous.light.set(false);
 			commands = new ArrayList<>();
-			//commands.add(new String[]{"drive", "0", "0"});
+			List<String[]> mergedCommands = new ArrayList<>();
 			for (String[] s : Robot.autonomous.data) {
-				commands.add(s);
+				if (!mergedCommands.contains(s)) {
+					if (s[0].equals("drive")) {
+						double left = Double.parseDouble(s[1]);
+						double right = Double.parseDouble(s[2]);
+						int merges = 0;
+						double min = 250;				
+						if (Math.abs(left) < min && Math.abs(right) < min) {
+							boolean stopMerge = false;
+							for (String[] s2 : commands) {
+								if ((Math.abs(left) < min && Math.abs(right) < min) || stopMerge) {
+									if (s2[0].equals("drive")) {
+										double mergeLeft = Double.parseDouble(s2[1]);
+										double mergeRight = Double.parseDouble(s2[2]);
+										if (mergeLeft != 0 && mergeRight != 0) {
+											left += Double.parseDouble(s2[1]);
+											right += Double.parseDouble(s2[2]);
+											mergedCommands.add(s2);
+											merges++;
+										} else {
+											stopMerge = true;
+										}
+									}
+								} else {
+									break;
+								}
+							}
+						}
+						if (merges > 0) {
+							s[1] = left + "";
+							s[2] = right + "";
+							System.out.println("Merged " + merges + " command(s) into " + left + " left and " + right + " right.");
+						}						
+					}
+					commands.add(s);
+				}
 			}
 			initialized = true;			
 			System.out.println("AutonomousCommand has read the most up-to-date recorded autonomous.");
@@ -103,11 +113,14 @@ public class AutonomousCommand extends Command {
 	}
 
 	protected void end() {
-		initialized = false;
-		Robot.autonomous.light.set(false);
+		wrapUp();
 	}
 
 	protected void interrupted() {
+		wrapUp();
+	}
+	
+	public void wrapUp() {
 		initialized = false;
 		Robot.autonomous.light.set(false);
 	}
