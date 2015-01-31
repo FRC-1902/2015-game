@@ -2,17 +2,19 @@ package org.usfirst.frc.team1902.robot.subsystems;
 
 import org.usfirst.frc.team1902.robot.Robot;
 import org.usfirst.frc.team1902.robot.commands.DriveCommand;
+
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class DriveSubsystem extends Subsystem {
 
 	//public Talon left1 = new Talon(RobotMap.leftDriveTalon1);
-	public Talon left1 = new Talon(1);
+	public VictorSP left1 = new VictorSP(1);
 	//public Talon left2 = new Talon(RobotMap.leftDriveTalon2);
-	public Talon right1 = new Talon(0);
+	public VictorSP right1 = new VictorSP(0);
 	//public Talon right1 = new Talon(RobotMap.rightDriveTalon1);
 	//public Talon right2 = new Talon(RobotMap.rightDriveTalon2);
 	public Encoder leftEncoder = new Encoder(0, 1);
@@ -29,7 +31,7 @@ public class DriveSubsystem extends Subsystem {
 
 	//Tank drive. Uses left and right inputs ranging from -1 to 1 to move the robot.
 	public void tankDrive(double left, double right) {
-		this.left1.set(left);
+		this.left1.set(-left);
 		//this.left2.set(left);
 		this.right1.set(right);
 		//this.right2.set(right);
@@ -56,9 +58,9 @@ public class DriveSubsystem extends Subsystem {
 		double rightError, leftError;
 		boolean exit = false;
 
-		double kP = 70; //How much we will divide rightError by.
+		double kP = 125; //How much we will divide rightError by.
 		double min = 0.3; //The minimum speed we want to move before saying we're arrived.
-		double max = 0.75; //The maximum speed we want to move before capping the speed.
+		double max = 0.5; //The maximum speed we want to move before capping the speed.
 		boolean turning = false;		
 		double leftSign = -1;
 		double rightSign = -1;
@@ -142,7 +144,7 @@ public class DriveSubsystem extends Subsystem {
 			System.out.println("Left is driving at " + leftError + " to " + left);
 			
 			right1.set(rightError);
-			left1.set(leftError);
+			left1.set(-leftError);
 
 			if(rightError == 0 && leftError == 0) exit = true;
 		}
