@@ -19,6 +19,7 @@ public class DriveCommand extends Command {
     	} else {
     		Robot.drive.tankDrive(OI.left.getY(), OI.right.getY());
     	}
+    	System.out.println("Gyro: " + Robot.drive.gyro.getAngle());
     }
 
     protected boolean isFinished() {

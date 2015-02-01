@@ -4,6 +4,7 @@ import org.usfirst.frc.team1902.robot.Robot;
 import org.usfirst.frc.team1902.robot.commands.DriveCommand;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -17,16 +18,20 @@ public class DriveSubsystem extends Subsystem {
 	public VictorSP right1 = new VictorSP(0);
 	//public Talon right1 = new Talon(RobotMap.rightDriveTalon1);
 	//public Talon right2 = new Talon(RobotMap.rightDriveTalon2);
-	public Encoder leftEncoder = new Encoder(0, 1);
-	public Encoder rightEncoder = new Encoder(2, 3, true);
+	public Encoder leftEncoder = new Encoder(1, 2, true);
+	public Encoder rightEncoder = new Encoder(3, 4);
+	public Gyro gyro = new Gyro(0);
 	//public DigitalInput leftSensor = new DigitalInput(0);
 	//public DigitalInput rightSensor = new DigitalInput(1);
 	public int encoderSkip = 0;
 	public boolean arcadeDrive = true;
 	
 	public DriveSubsystem() {
+		leftEncoder.setDistancePerPulse(1);
+		rightEncoder.setDistancePerPulse(1);
 		leftEncoder.reset();
-		rightEncoder.reset();
+		rightEncoder.reset();		
+		gyro.reset();
 	}
 
 	//Tank drive. Uses left and right inputs ranging from -1 to 1 to move the robot.
@@ -35,14 +40,14 @@ public class DriveSubsystem extends Subsystem {
 		//this.left2.set(left);
 		this.right1.set(right);
 		//this.right2.set(right);
-		//System.out.println("Left encoder: " + leftEncoder.getDistance());
-		//System.out.println("Right encoder: " + rightEncoder.getDistance());
+		//System.out.println("Left encoder: " + leftEncoder.getRaw());
+		//System.out.println("Right encoder: " + rightEncoder.getRaw());
 		//encoderSkip++;
 		//if (encoderSkip == 10) {
-			Robot.autonomous.add(new String[]{"drive", leftEncoder.getDistance() + "", rightEncoder.getDistance()  + ""});
+			Robot.autonomous.add(new String[]{"drive", leftEncoder.getRaw() + "", rightEncoder.getRaw()  + "", gyro.getAngle() + ""});
 			if (Robot.autonomous.recording) {
-				//leftEncoder.reset();
-				//rightEncoder.reset();
+				leftEncoder.reset();
+				rightEncoder.reset();
 			}
 			encoderSkip = 0;
 		//}
@@ -54,10 +59,11 @@ public class DriveSubsystem extends Subsystem {
 	}
 
 	//Encoder drive. Takes a left and right encoder value and plugs them into a P loop.
-	public void encoderDrive(double left, double right, double nextLeft, double nextRight) {
-		double rightError, leftError;
+	public void encoderDrive(double left, double right, double nextLeft, double nextRight, double angle) {
+		double rightError, leftError, angleError;
 		boolean exit = false;
 
+		angle *= -1;
 		double kP = 125; //How much we will divide rightError by.
 		double min = 0.3; //The minimum speed we want to move before saying we're arrived.
 		double max = 0.5; //The maximum speed we want to move before capping the speed.
@@ -66,9 +72,10 @@ public class DriveSubsystem extends Subsystem {
 		double rightSign = -1;
 		double lastCorrectLeft = 0;
 		double lastCorrectRight = 0;
+		double angleDivide = 3;
 		
-		rightError = right - rightEncoder.getDistance();
-		leftError  = left - leftEncoder.getDistance();
+		rightError = right - rightEncoder.getRaw();
+		leftError  = left - leftEncoder.getRaw();
 		
 		if (rightError >= 0) {
 			rightSign = 1;
@@ -93,62 +100,103 @@ public class DriveSubsystem extends Subsystem {
 		
 		System.out.println("Got a command to drive to '" + left + "' and '" + right + "'.");
 		while(!exit && Robot.self.isAutonomous() && Robot.self.isEnabled()) {
-			rightError = right - rightEncoder.getDistance();
-			leftError  = left - leftEncoder.getDistance();
+			rightError = right - rightEncoder.getRaw();
+			leftError  = left - leftEncoder.getRaw();
+			angleError = angle - gyro.getAngle();
 
 			rightError /= kP;
 			leftError /= kP;
+			angleError /= kP;
+			angleError /= angleDivide;
 			
 			//rightError = rightError < 0 ? -Math.sqrt(-rightError) : Math.sqrt(rightError);
 			//leftError = leftError < 0 ? -Math.sqrt(-leftError) : Math.sqrt(leftError);
 			
 			if (Math.abs(rightError) < min) {
-				/*
-				if (Math.abs(rightError) >= 0.15) {
-					rightError = rightError < 0 ? (0.2 / Math.abs(rightError)) * rightError : rightError;
-				} else {
-					rightError = 0;
-				}
-				*/
 				rightError = 0;
 			}
 			
 			if (Math.abs(leftError) < min) {
-				/*
-				if (Math.abs(leftError) >= 0.15) {
-					leftError = leftError < 0 ? (0.2 / Math.abs(leftError)) * leftError : leftError;
-				} else {
-					leftError = 0;
-				}
-				*/
 				leftError = 0;
 			}
 			
+			if (Math.abs(angleError) < min) {
+				angleError = 0;
+			}
+			
+			
+			
 			rightError = Math.abs(rightError) > max ? Math.abs(max/rightError)*rightError: rightError;
 			leftError = Math.abs(leftError) > max ? Math.abs(max/leftError)*leftError : leftError;                                                                                                                                                                                                                                                                                                     
+			angleError = Math.abs(angleError) > max ? Math.abs(max/angleError)*angleError : angleError;                                                                                                                                                                                                                                                                                                     
 
+			
 			if (nextLeft != 0 && nextRight != 0) {
 				if (Math.abs(rightError)/rightError != rightSign && Math.abs(leftError)/leftError != leftSign) {
-					if (nextRight - Robot.drive.rightEncoder.getDistance() < nextRight - lastCorrectRight && nextLeft - Robot.drive.leftEncoder.getDistance() > nextLeft - lastCorrectLeft) {
+					if (nextRight - Robot.drive.rightEncoder.getRaw() < nextRight - lastCorrectRight && nextLeft - Robot.drive.leftEncoder.getRaw() > nextLeft - lastCorrectLeft) {
 						rightError = 0;
 						leftError = 0;
 					}
 				} else if (Math.abs(rightError)/rightError != rightSign) {
-					lastCorrectRight = Robot.drive.rightEncoder.getDistance();
+					lastCorrectRight = Robot.drive.rightEncoder.getRaw();
 				} else {
-					lastCorrectLeft = Robot.drive.leftEncoder.getDistance();
+					lastCorrectLeft = Robot.drive.leftEncoder.getRaw();
 				}
 			}
-
-			System.out.println("Right is driving at " + rightError + " to " + right);
-			System.out.println("Left is driving at " + leftError + " to " + left);
 			
-			right1.set(rightError);
-			left1.set(-leftError);
+			if (leftError == 0 && rightError == 0 && angleError != 0) angleError *= angleDivide;
+			if (angleError > 0) { //turn left
+				leftError -= angleError;
+				rightError += angleError;
+			} else if (angleError < 0) { //turn right
+				leftError += angleError;
+				rightError -= angleError;
+			}
+			if (angleError != 0) {
+				System.out.println("Adjusted driving by " + angleError + " to try and re-adjust to angle " + angle + ".");
+			}
+			System.out.println("Right is driving at " + rightError + " to " + right + ", and is at " + rightEncoder.getRaw() + ".");
+			System.out.println("Left is driving at " + leftError + " to " + left + ", and is at " + leftEncoder.getRaw() + ".");
+			
+			right1.set(-rightError);
+			left1.set(leftError);
 
-			if(rightError == 0 && leftError == 0) exit = true;
+			if(rightError == 0 && leftError == 0 && angleError == 0) exit = true;
 		}
+		leftEncoder.reset();
+		rightEncoder.reset();
 		System.out.println("Encoder drive finished!");	
+	}
+	
+	public void gyroTurn(double angle) {
+		angle *= -1;
+		double error;
+		boolean exit = false;
+
+		double kP = 40; //How much we will divide rightError by.
+		double min = 0.4; //The minimum speed we want to move before saying we're arrived.
+		double max = 0.85; //The maximum speed we want to move before capping the speed.						
+		
+		System.out.println("Got a command to turn to '" + angle + "' degrees.");
+		while(!exit && Robot.self.isAutonomous() && Robot.self.isEnabled()) {
+			error = angle - gyro.getAngle();
+
+			error /= kP;
+			
+			if (Math.abs(error) < min) {
+				error = 0;
+			}
+			
+			error = Math.abs(error) > max ? Math.abs(max/error)*error: error;
+
+			System.out.println("Turning at " + error + " to " + angle + " degrees, and is at " + gyro.getAngle() + ".");
+			
+			right1.set(-error);
+			left1.set(error * -1);
+
+			if(error == 0) exit = true;
+		}
+		System.out.println("Gyro turn finished!");	
 	}
 
 	public boolean adjustToTote() {

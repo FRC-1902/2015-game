@@ -36,11 +36,13 @@ public class AutonomousCommand extends Command {
 								next = commands.get(1);
 							}
 							if (next != null && next[0].equals("drive")) {
-								Robot.drive.encoderDrive(left, right, Double.parseDouble(next[1]), Double.parseDouble(next[2]));
+								Robot.drive.encoderDrive(left, right, Double.parseDouble(next[1]), Double.parseDouble(next[2]), Double.parseDouble(next[3]));
 							} else {
-								Robot.drive.encoderDrive(left, right, 0, 0);
+								Robot.drive.encoderDrive(left, right, 0, 0, Double.parseDouble(s[3]));
 							}
 						}
+					} else if (s[0].equals("turn")) {
+						Robot.drive.gyroTurn(Double.parseDouble(s[1]));
 					} else if (s[0].equals("intakeMotor")) {
 						Robot.intake.setMotors(Boolean.parseBoolean(s[1]));
 					} else if (s[0].equals("reverseIntake")) {
@@ -65,8 +67,8 @@ public class AutonomousCommand extends Command {
 		} else {
 			Robot.drive.leftEncoder.reset();
 			Robot.drive.rightEncoder.reset();
+			Robot.drive.gyro.reset();
 			Robot.autonomous.light.set(true);
-			
 			Timer.delay(2);
 			Robot.autonomous.light.set(false);
 			commands = new ArrayList<>();
@@ -78,7 +80,7 @@ public class AutonomousCommand extends Command {
 				//if (file.exists()) {
 					//try {
 						//BufferedReader br = new BufferedReader(new FileReader(file));
-						String stuff = "drive:21570.469445687228:21570.469445687228]";
+						String stuff = "turn:142.5729486079898]drive:5028.0060350412505:5028.0060350412505:142.5729486079898]turn:192.97115312241573]drive:6442.139149374341:6442.139149374341:192.97115312241573]turn:417.7942888129486]drive:4958.355100243394:4958.355100243394:417.7942888129486]";
 				  		//for (String s : br.readLine().split("]")) {
 						for (String s : stuff.split("]")) {
 							dataSource.add(s.split(":"));
@@ -142,6 +144,7 @@ public class AutonomousCommand extends Command {
 		return false;
 	}
 
+	
 	protected void end() {
 		wrapUp();
 	}
@@ -152,6 +155,8 @@ public class AutonomousCommand extends Command {
 	
 	public void wrapUp() {
 		initialized = false;
+		Robot.drive.left1.set(Robot.drive.left1.get() * -1);
+		Robot.drive.right1.set(Robot.drive.right1.get() * -1);
 		Robot.autonomous.light.set(false);
 	}
 }
