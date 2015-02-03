@@ -36,9 +36,9 @@ public class AutonomousCommand extends Command {
 								next = commands.get(1);
 							}
 							if (next != null && next[0].equals("drive")) {
-								Robot.drive.encoderDrive(left, right, Double.parseDouble(next[1]), Double.parseDouble(next[2]), Double.parseDouble(next[3]));
+								Robot.drive.encoderDrive(left, right, Double.parseDouble(next[1]), Double.parseDouble(next[2]));
 							} else {
-								Robot.drive.encoderDrive(left, right, 0, 0, Double.parseDouble(s[3]));
+								Robot.drive.encoderDrive(left, right, 0, 0);
 							}
 						}
 					} else if (s[0].equals("turn")) {
@@ -80,7 +80,7 @@ public class AutonomousCommand extends Command {
 				//if (file.exists()) {
 					//try {
 						//BufferedReader br = new BufferedReader(new FileReader(file));
-						String stuff = "turn:142.5729486079898]drive:5028.0060350412505:5028.0060350412505:142.5729486079898]turn:192.97115312241573]drive:6442.139149374341:6442.139149374341:192.97115312241573]turn:417.7942888129486]drive:4958.355100243394:4958.355100243394:417.7942888129486]";
+						String stuff = "turn:45.763898450480745]drive:2200.157933302361:2200.157933302361]turn:-134.9512468358629]drive:2852.0565802067645:2852.0565802067645]turn:130.4287926904935]drive:1955.69594071321:1955.69594071321]";
 				  		//for (String s : br.readLine().split("]")) {
 						for (String s : stuff.split("]")) {
 							dataSource.add(s.split(":"));

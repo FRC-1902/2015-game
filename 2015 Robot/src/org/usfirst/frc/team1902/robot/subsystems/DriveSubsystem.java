@@ -59,11 +59,11 @@ public class DriveSubsystem extends Subsystem {
 	}
 
 	//Encoder drive. Takes a left and right encoder value and plugs them into a P loop.
-	public void encoderDrive(double left, double right, double nextLeft, double nextRight, double angle) {
+	public void encoderDrive(double left, double right, double nextLeft, double nextRight) {
 		double rightError, leftError, angleError;
 		boolean exit = false;
 
-		angle *= -1;
+		double angle = gyro.getAngle();
 		double kP = 125; //How much we will divide rightError by.
 		double min = 0.3; //The minimum speed we want to move before saying we're arrived.
 		double max = 0.5; //The maximum speed we want to move before capping the speed.
@@ -122,14 +122,11 @@ public class DriveSubsystem extends Subsystem {
 			
 			if (Math.abs(angleError) < min) {
 				angleError = 0;
-			}
-			
-			
+			}						
 			
 			rightError = Math.abs(rightError) > max ? Math.abs(max/rightError)*rightError: rightError;
 			leftError = Math.abs(leftError) > max ? Math.abs(max/leftError)*leftError : leftError;                                                                                                                                                                                                                                                                                                     
 			angleError = Math.abs(angleError) > max ? Math.abs(max/angleError)*angleError : angleError;                                                                                                                                                                                                                                                                                                     
-
 			
 			if (nextLeft != 0 && nextRight != 0) {
 				if (Math.abs(rightError)/rightError != rightSign && Math.abs(leftError)/leftError != leftSign) {
@@ -143,12 +140,12 @@ public class DriveSubsystem extends Subsystem {
 					lastCorrectLeft = Robot.drive.leftEncoder.getRaw();
 				}
 			}
-			
+
 			if (leftError == 0 && rightError == 0 && angleError != 0) angleError *= angleDivide;
-			if (angleError > 0) { //turn left
+			if (angleError > 0) { // turn left
 				leftError -= angleError;
 				rightError += angleError;
-			} else if (angleError < 0) { //turn right
+			} else if (angleError < 0) { // turn right
 				leftError += angleError;
 				rightError -= angleError;
 			}
@@ -169,17 +166,18 @@ public class DriveSubsystem extends Subsystem {
 	}
 	
 	public void gyroTurn(double angle) {
-		angle *= -1;
 		double error;
 		boolean exit = false;
 
-		double kP = 40; //How much we will divide rightError by.
+		double goalAngle = gyro.getAngle() + angle;
+		
+		double kP = 40; //How much we will divide the angle by.
 		double min = 0.4; //The minimum speed we want to move before saying we're arrived.
 		double max = 0.85; //The maximum speed we want to move before capping the speed.						
 		
 		System.out.println("Got a command to turn to '" + angle + "' degrees.");
 		while(!exit && Robot.self.isAutonomous() && Robot.self.isEnabled()) {
-			error = angle - gyro.getAngle();
+			error = goalAngle - gyro.getAngle();
 
 			error /= kP;
 			
