@@ -80,7 +80,7 @@ public class AutonomousCommand extends Command {
 				//if (file.exists()) {
 					//try {
 						//BufferedReader br = new BufferedReader(new FileReader(file));
-						String stuff = "turn:45.763898450480745]drive:2200.157933302361:2200.157933302361]turn:-134.9512468358629]drive:2852.0565802067645:2852.0565802067645]turn:130.4287926904935]drive:1955.69594071321:1955.69594071321]";
+						String stuff = "turn:-0.3370301097808537]drive:3503.955227111168:3503.955227111168]turn:-81.19182523858888]drive:1955.69594071321:1955.69594071321]turn:-12.49940829664599]drive:1466.7719555349074:1466.7719555349074]";
 				  		//for (String s : br.readLine().split("]")) {
 						for (String s : stuff.split("]")) {
 							dataSource.add(s.split(":"));
@@ -135,6 +135,7 @@ public class AutonomousCommand extends Command {
 					commands.add(s);
 				}
 			}
+			Robot.angle = 0;
 			initialized = true;			
 			System.out.println("AutonomousCommand has finished initializing.");
 		}		

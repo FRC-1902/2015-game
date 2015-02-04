@@ -60,10 +60,11 @@ public class DriveSubsystem extends Subsystem {
 
 	//Encoder drive. Takes a left and right encoder value and plugs them into a P loop.
 	public void encoderDrive(double left, double right, double nextLeft, double nextRight) {
+		leftEncoder.reset();
+		rightEncoder.reset();
 		double rightError, leftError, angleError;
 		boolean exit = false;
 
-		double angle = gyro.getAngle();
 		double kP = 125; //How much we will divide rightError by.
 		double min = 0.3; //The minimum speed we want to move before saying we're arrived.
 		double max = 0.5; //The maximum speed we want to move before capping the speed.
@@ -72,10 +73,10 @@ public class DriveSubsystem extends Subsystem {
 		double rightSign = -1;
 		double lastCorrectLeft = 0;
 		double lastCorrectRight = 0;
-		double angleDivide = 3;
+		double angleDivide = 2;
 		
 		rightError = right - rightEncoder.getRaw();
-		leftError  = left - leftEncoder.getRaw();
+		leftError  = left - leftEncoder.getRaw();		
 		
 		if (rightError >= 0) {
 			rightSign = 1;
@@ -88,9 +89,9 @@ public class DriveSubsystem extends Subsystem {
 			if(leftError/Math.abs(leftError) != rightError/Math.abs(rightError)) turning = true;  //If left and right error's signs are not the same, set turning to true
 		}
 		
-		if(Math.abs(leftError-rightError) > 90) turning = true;
+		//if(Math.abs(leftError-rightError) > 90) turning = true;
 		
-		if(Math.max(leftError, rightError) / Math.min(leftError, rightError) > 1.33) turning = true;
+		//if(Math.max(leftError, rightError) / Math.min(leftError, rightError) > 1.33) turning = true;
 
 		if (turning) {
 			kP = 40;
@@ -102,7 +103,7 @@ public class DriveSubsystem extends Subsystem {
 		while(!exit && Robot.self.isAutonomous() && Robot.self.isEnabled()) {
 			rightError = right - rightEncoder.getRaw();
 			leftError  = left - leftEncoder.getRaw();
-			angleError = angle - gyro.getAngle();
+			angleError = Robot.angle - gyro.getAngle();
 
 			rightError /= kP;
 			leftError /= kP;
@@ -129,28 +130,35 @@ public class DriveSubsystem extends Subsystem {
 			angleError = Math.abs(angleError) > max ? Math.abs(max/angleError)*angleError : angleError;                                                                                                                                                                                                                                                                                                     
 			
 			if (nextLeft != 0 && nextRight != 0) {
-				if (Math.abs(rightError)/rightError != rightSign && Math.abs(leftError)/leftError != leftSign) {
+				if (Robot.sign(rightError) != rightSign && Robot.sign(leftError) != leftSign) {
 					if (nextRight - Robot.drive.rightEncoder.getRaw() < nextRight - lastCorrectRight && nextLeft - Robot.drive.leftEncoder.getRaw() > nextLeft - lastCorrectLeft) {
 						rightError = 0;
 						leftError = 0;
 					}
-				} else if (Math.abs(rightError)/rightError != rightSign) {
+				} else if (Robot.sign(rightError) != rightSign) {
 					lastCorrectRight = Robot.drive.rightEncoder.getRaw();
 				} else {
 					lastCorrectLeft = Robot.drive.leftEncoder.getRaw();
 				}
 			}
-
+			
 			if (leftError == 0 && rightError == 0 && angleError != 0) angleError *= angleDivide;
 			if (angleError > 0) { // turn left
-				leftError -= angleError;
-				rightError += angleError;
+				if (Robot.sign(rightError) == Robot.sign(angleError) || rightError == 0) {
+					if (leftError == 0 && rightError == 0) leftError -= angleError;
+					rightError += angleError;				
+				}
 			} else if (angleError < 0) { // turn right
-				leftError += angleError;
-				rightError -= angleError;
+				if (Robot.sign(leftError) == Robot.sign(angleError) || leftError == 0) {
+					if (leftError == 0 && rightError == 0) rightError += angleError;
+					leftError -= angleError;
+				}
 			}
+			
 			if (angleError != 0) {
-				System.out.println("Adjusted driving by " + angleError + " to try and re-adjust to angle " + angle + ".");
+				if (leftError != 0 || rightError != 0) {
+					System.out.println("Adjusted driving by " + angleError + " to try and re-adjust to angle " + Robot.angle + ".");
+				}
 			}
 			System.out.println("Right is driving at " + rightError + " to " + right + ", and is at " + rightEncoder.getRaw() + ".");
 			System.out.println("Left is driving at " + leftError + " to " + left + ", and is at " + leftEncoder.getRaw() + ".");
@@ -160,40 +168,43 @@ public class DriveSubsystem extends Subsystem {
 
 			if(rightError == 0 && leftError == 0 && angleError == 0) exit = true;
 		}
-		leftEncoder.reset();
-		rightEncoder.reset();
 		System.out.println("Encoder drive finished!");	
 	}
 	
 	public void gyroTurn(double angle) {
+		gyro.reset();
 		double error;
 		boolean exit = false;
-
-		double goalAngle = gyro.getAngle() + angle;
 		
 		double kP = 40; //How much we will divide the angle by.
-		double min = 0.4; //The minimum speed we want to move before saying we're arrived.
-		double max = 0.85; //The maximum speed we want to move before capping the speed.						
+		double min = 0.3; //The minimum speed we want to move before saying we're arrived.
+		double max = 0.7; //The maximum speed we want to move before capping the speed.						
 		
 		System.out.println("Got a command to turn to '" + angle + "' degrees.");
 		while(!exit && Robot.self.isAutonomous() && Robot.self.isEnabled()) {
-			error = goalAngle - gyro.getAngle();
+			error = angle - gyro.getAngle();
 
 			error /= kP;
 			
-			if (Math.abs(error) < min) {
-				error = 0;
-			}
-			
 			error = Math.abs(error) > max ? Math.abs(max/error)*error: error;
+			
+			if (Math.abs(error) < min) {
+				double angleDiff = angle - gyro.getAngle();
+				if (Math.abs(angleDiff) > 2) {
+					error = 0.3 * (Math.abs(angleDiff)/angleDiff);
+				} else {
+					error = 0;
+				}
+			}						
 
 			System.out.println("Turning at " + error + " to " + angle + " degrees, and is at " + gyro.getAngle() + ".");
 			
 			right1.set(-error);
-			left1.set(error * -1);
+			left1.set(-error);
 
 			if(error == 0) exit = true;
 		}
+		Robot.angle += angle;
 		System.out.println("Gyro turn finished!");	
 	}
 

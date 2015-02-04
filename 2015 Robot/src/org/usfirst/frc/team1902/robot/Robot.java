@@ -37,6 +37,7 @@ public class Robot extends IterativeRobot {
 	public static PowerDistributionPanel pdp;
 	public static DriverStation ds;
 	public static Robot self;
+	public static double angle = 0;
 
     Command autonomousCommand = null;
 
@@ -109,4 +110,12 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
     }   
+    
+    public static double sign(double d) {
+    	double sign = 1;
+    	if (d != 0) {
+    		sign = (Math.abs(d) / d);
+    	}
+    	return sign;
+    }
 }
