@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class DriveSubsystem extends Subsystem {
 
 	//public Talon left1 = new Talon(RobotMap.leftDriveTalon1);
-	public VictorSP left1 = new VictorSP(1);
+	public Talon left1 = new Talon(1);
 	//public Talon left2 = new Talon(RobotMap.leftDriveTalon2);
-	public VictorSP right1 = new VictorSP(0);
+	public Talon right1 = new Talon(0);
 	//public Talon right1 = new Talon(RobotMap.rightDriveTalon1);
 	//public Talon right2 = new Talon(RobotMap.rightDriveTalon2);
 	public Encoder leftEncoder = new Encoder(1, 2, true);
@@ -99,6 +99,7 @@ public class DriveSubsystem extends Subsystem {
 			max = 0.85;
 		}
 		
+		gyroTurn(Robot.angle, true);
 		System.out.println("Got a command to drive to '" + left + "' and '" + right + "'.");
 		while(!exit && Robot.self.isAutonomous() && Robot.self.isEnabled()) {
 			rightError = right - rightEncoder.getRaw();
@@ -107,27 +108,12 @@ public class DriveSubsystem extends Subsystem {
 
 			rightError /= kP;
 			leftError /= kP;
-			angleError /= kP;
-			angleError /= angleDivide;
+			angleError /= 20; //This is a KP specifically for the small angle differences we get
 			
-			//rightError = rightError < 0 ? -Math.sqrt(-rightError) : Math.sqrt(rightError);
-			//leftError = leftError < 0 ? -Math.sqrt(-leftError) : Math.sqrt(leftError);
-			
-			if (Math.abs(rightError) < min) {
-				rightError = 0;
-			}
-			
-			if (Math.abs(leftError) < min) {
-				leftError = 0;
-			}
-			
-			if (Math.abs(angleError) < min) {
-				angleError = 0;
-			}						
-			
-			rightError = Math.abs(rightError) > max ? Math.abs(max/rightError)*rightError: rightError;
-			leftError = Math.abs(leftError) > max ? Math.abs(max/leftError)*leftError : leftError;                                                                                                                                                                                                                                                                                                     
-			angleError = Math.abs(angleError) > max ? Math.abs(max/angleError)*angleError : angleError;                                                                                                                                                                                                                                                                                                     
+			rightError = minMax(rightError, min, max);
+			leftError = minMax(leftError, min, max);
+			System.out.println("Gyro: " + gyro.getAngle() + ", AngleError: " + angleError);
+			angleError = minMax(angleError, min, max);
 			
 			if (nextLeft != 0 && nextRight != 0) {
 				if (Robot.sign(rightError) != rightSign && Robot.sign(leftError) != leftSign) {
@@ -142,16 +128,26 @@ public class DriveSubsystem extends Subsystem {
 				}
 			}
 			
-			if (leftError == 0 && rightError == 0 && angleError != 0) angleError *= angleDivide;
+			if (minMax(angleError / angleDivide, min, max) > 0) {
+				angleError /= angleDivide;
+			}
 			if (angleError > 0) { // turn left
-				if (Robot.sign(rightError) == Robot.sign(angleError) || rightError == 0) {
-					if (leftError == 0 && rightError == 0) leftError -= angleError;
-					rightError += angleError;				
+				if (Robot.sign(rightError) == Robot.sign(angleError)) {
+					if (Robot.sign(rightError + angleError - max) == -1) {
+						rightError += angleError;					
+					} else {
+						rightError = max * Robot.sign(rightError);
+						leftError = minMax(leftError - angleError, min, max);
+					}
 				}
 			} else if (angleError < 0) { // turn right
-				if (Robot.sign(leftError) == Robot.sign(angleError) || leftError == 0) {
-					if (leftError == 0 && rightError == 0) rightError += angleError;
-					leftError -= angleError;
+				if (Robot.sign(leftError) == Robot.sign(angleError)) {
+					if (Robot.sign(leftError - angleError + max) == 1) {
+						leftError -= angleError;					
+					} else {
+						leftError = max * Robot.sign(leftError);
+						rightError = minMax(right + angleError, min, max);
+					}
 				}
 			}
 			
@@ -166,19 +162,24 @@ public class DriveSubsystem extends Subsystem {
 			right1.set(-rightError);
 			left1.set(leftError);
 
-			if(rightError == 0 && leftError == 0 && angleError == 0) exit = true;
+			if (rightError == 0 && rightError == 0) {
+				if (angleError != 0) {
+					gyroTurn(Robot.angle, true);
+				}
+				exit = true;
+			}
 		}
 		System.out.println("Encoder drive finished!");	
 	}
 	
-	public void gyroTurn(double angle) {
-		gyro.reset();
+	public void gyroTurn(double angle, boolean adjustment) {
 		double error;
 		boolean exit = false;
 		
-		double kP = 40; //How much we will divide the angle by.
-		double min = 0.3; //The minimum speed we want to move before saying we're arrived.
-		double max = 0.7; //The maximum speed we want to move before capping the speed.						
+		double kP = 50; //How much we will divide the angle by.
+		if (adjustment) kP = 20;
+		double min = 0.4; //The minimum speed we want to move before saying we're arrived.
+		double max = 0.5; //The maximum speed we want to move before capping the speed.						
 		
 		System.out.println("Got a command to turn to '" + angle + "' degrees.");
 		while(!exit && Robot.self.isAutonomous() && Robot.self.isEnabled()) {
@@ -191,7 +192,7 @@ public class DriveSubsystem extends Subsystem {
 			if (Math.abs(error) < min) {
 				double angleDiff = angle - gyro.getAngle();
 				if (Math.abs(angleDiff) > 2) {
-					error = 0.3 * (Math.abs(angleDiff)/angleDiff);
+					error = min * Robot.sign(angleDiff);
 				} else {
 					error = 0;
 				}
@@ -204,8 +205,20 @@ public class DriveSubsystem extends Subsystem {
 
 			if(error == 0) exit = true;
 		}
-		Robot.angle += angle;
+		if (!adjustment) {
+			Robot.angle += angle;
+		}
 		System.out.println("Gyro turn finished!");	
+	}
+	
+	public double minMax(double d, double min, double max) {
+		double minMaxed = 0;
+		if (Math.abs(d) > Math.abs(max)) {
+			minMaxed = max * Robot.sign(d);
+		} else if (Math.abs(d) < Math.abs(min)) {
+			minMaxed = 0;
+		}
+		return minMaxed;
 	}
 
 	public boolean adjustToTote() {

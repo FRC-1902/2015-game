@@ -42,7 +42,7 @@ public class AutonomousCommand extends Command {
 							}
 						}
 					} else if (s[0].equals("turn")) {
-						Robot.drive.gyroTurn(Double.parseDouble(s[1]));
+						Robot.drive.gyroTurn(Double.parseDouble(s[1]), false);
 					} else if (s[0].equals("intakeMotor")) {
 						Robot.intake.setMotors(Boolean.parseBoolean(s[1]));
 					} else if (s[0].equals("reverseIntake")) {
@@ -80,7 +80,7 @@ public class AutonomousCommand extends Command {
 				//if (file.exists()) {
 					//try {
 						//BufferedReader br = new BufferedReader(new FileReader(file));
-						String stuff = "turn:-0.3370301097808537]drive:3503.955227111168:3503.955227111168]turn:-81.19182523858888]drive:1955.69594071321:1955.69594071321]turn:-12.49940829664599]drive:1466.7719555349074:1466.7719555349074]";
+						String stuff = "turn:8.50870331432752]drive:10430.378350470453:10430.378350470453]turn:-24.856874857945996]drive:6356.011807317932:6356.011807317932]turn:-164.80916148314745]drive:16134.491510883981:16134.491510883981]";
 				  		//for (String s : br.readLine().split("]")) {
 						for (String s : stuff.split("]")) {
 							dataSource.add(s.split(":"));
