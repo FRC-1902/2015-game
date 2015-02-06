@@ -66,6 +66,7 @@ public class Robot extends IterativeRobot {
 		//intake.roller.set(true);
 		System.out.println("Robot initialization complete!");
 		self = this;
+		intake.compressor.setClosedLoopControl(false);
     }
 	
 	public void disabledPeriodic() {

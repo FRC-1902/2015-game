@@ -60,12 +60,13 @@ public class DriveSubsystem extends Subsystem {
 
 	//Encoder drive. Takes a left and right encoder value and plugs them into a P loop.
 	public void encoderDrive(double left, double right, double nextLeft, double nextRight) {
+		gyroTurn(Robot.angle - gyro.getAngle(), true);
 		leftEncoder.reset();
 		rightEncoder.reset();
 		double rightError, leftError, angleError;
 		boolean exit = false;
 
-		double kP = 125; //How much we will divide rightError by.
+		double kP = .01; //How much we will divide rightError by.
 		double min = 0.3; //The minimum speed we want to move before saying we're arrived.
 		double max = 0.5; //The maximum speed we want to move before capping the speed.
 		boolean turning = false;		
@@ -97,18 +98,15 @@ public class DriveSubsystem extends Subsystem {
 			kP = 40;
 			min = 0.4;
 			max = 0.85;
-		}
-		
-		gyroTurn(Robot.angle, true);
+		}		
 		System.out.println("Got a command to drive to '" + left + "' and '" + right + "'.");
 		while(!exit && Robot.self.isAutonomous() && Robot.self.isEnabled()) {
 			rightError = right - rightEncoder.getRaw();
 			leftError  = left - leftEncoder.getRaw();
 			angleError = Robot.angle - gyro.getAngle();
 
-			rightError /= kP;
-			leftError /= kP;
-			angleError /= 20; //This is a KP specifically for the small angle differences we get
+			rightError *= kP;
+			leftError *= kP;
 			
 			rightError = minMax(rightError, min, max);
 			leftError = minMax(leftError, min, max);
@@ -131,6 +129,7 @@ public class DriveSubsystem extends Subsystem {
 			if (minMax(angleError / angleDivide, min, max) > 0) {
 				angleError /= angleDivide;
 			}
+			/*
 			if (angleError > 0) { // turn left
 				if (Robot.sign(rightError) == Robot.sign(angleError)) {
 					if (Robot.sign(rightError + angleError - max) == -1) {
@@ -156,6 +155,7 @@ public class DriveSubsystem extends Subsystem {
 					System.out.println("Adjusted driving by " + angleError + " to try and re-adjust to angle " + Robot.angle + ".");
 				}
 			}
+			*/
 			System.out.println("Right is driving at " + rightError + " to " + right + ", and is at " + rightEncoder.getRaw() + ".");
 			System.out.println("Left is driving at " + leftError + " to " + left + ", and is at " + leftEncoder.getRaw() + ".");
 			
@@ -172,48 +172,66 @@ public class DriveSubsystem extends Subsystem {
 		System.out.println("Encoder drive finished!");	
 	}
 	
+	//Turns X degrees relative to the starting angle of the Gyro.
 	public void gyroTurn(double angle, boolean adjustment) {
-		double error;
+		double p;
 		boolean exit = false;
 		
-		double kP = 50; //How much we will divide the angle by.
-		if (adjustment) kP = 20;
-		double min = 0.4; //The minimum speed we want to move before saying we're arrived.
-		double max = 0.5; //The maximum speed we want to move before capping the speed.						
+		double absoluteAngle = angle + gyro.getAngle();
+		double kP = 0.025; //Tuning variable for proportional term.
+		double kI = 0.0005; //0.0005
+		double min = 0.2; //The minimum speed we want to move before saying we're arrived.
+		double max = 0.5; //The maximum speed we want to move before capping the speed.
+		double i = 0;
+		boolean errorIsPositive;
+		boolean errorWasPositive = true;
+		String iString = ", accelerating";
 		
-		System.out.println("Got a command to turn to '" + angle + "' degrees.");
+		System.out.println("Got a command to turn to '" + absoluteAngle + "' degrees.");
 		while(!exit && Robot.self.isAutonomous() && Robot.self.isEnabled()) {
-			error = angle - gyro.getAngle();
-
-			error /= kP;
+			double error = absoluteAngle - gyro.getAngle();
 			
-			error = Math.abs(error) > max ? Math.abs(max/error)*error: error;
+			p = error;
 			
-			if (Math.abs(error) < min) {
+			if(error >= 0) errorIsPositive = true; else errorIsPositive = false;
+			
+			if(errorIsPositive != errorWasPositive) i = 0;
+			
+			errorWasPositive = errorIsPositive;
+			
+			i += error;
+			/*
+			if (Math.abs(p) < min) {
 				double angleDiff = angle - gyro.getAngle();
 				if (Math.abs(angleDiff) > 2) {
-					error = min * Robot.sign(angleDiff);
+					p = min * Robot.sign(angleDiff);
 				} else {
-					error = 0;
+					p = 0;
 				}
-			}						
-
-			System.out.println("Turning at " + error + " to " + angle + " degrees, and is at " + gyro.getAngle() + ".");
+			}
 			
-			right1.set(-error);
-			left1.set(-error);
+			if (Math.abs(gyro.getRate()) > Math.abs(5)) {
+				kI = 0;
+				iString = ".";
+			}
+			*/
+			double motorValue = minMax((p * kP + (i * kI)), min, max);
+			System.out.println("Going " + motorValue + " to " + absoluteAngle + " degrees, and is at " + gyro.getAngle() + iString + ", I is " + (kI*i));
+			
+			right1.set(-motorValue);
+			left1.set(-motorValue);
 
-			if(error == 0) exit = true;
+			if(Math.abs(error) <= 2) exit = true;
 		}
 		if (!adjustment) {
-			Robot.angle += angle;
+			Robot.angle = angle;
 		}
 		System.out.println("Gyro turn finished!");	
 	}
 	
 	public double minMax(double d, double min, double max) {
-		double minMaxed = 0;
-		if (Math.abs(d) > Math.abs(max)) {
+		double minMaxed = d;
+		if (Math.abs(d) >= Math.abs(max)) {
 			minMaxed = max * Robot.sign(d);
 		} else if (Math.abs(d) < Math.abs(min)) {
 			minMaxed = 0;
