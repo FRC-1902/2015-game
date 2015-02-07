@@ -80,7 +80,7 @@ public class AutonomousCommand extends Command {
 				//if (file.exists()) {
 					//try {
 						//BufferedReader br = new BufferedReader(new FileReader(file));
-						String stuff = "turn:8.50870331432752]drive:10430.378350470453:10430.378350470453]turn:-24.856874857945996]drive:6356.011807317932:6356.011807317932]turn:-164.80916148314745]drive:16134.491510883981:16134.491510883981]";
+						String stuff = "turn:0.0]drive:2363.132595028462:2363.132595028462]turn:90]drive:3748.417219700319:3748.417219700319]turn:-0.0]drive:1711.2339481240588:1711.2339481240588]turn:-90]drive:7496.834439400638:7496.834439400638]turn:-180]drive:1548.2592863979578:1548.2592863979578]turn:-270]drive:3666.9298888372687:3666.9298888372687]turn:0]drive:5296.676506098277:5296.676506098277]turn:-180]drive:7659.809101126739:7659.809101126739]";
 				  		//for (String s : br.readLine().split("]")) {
 						for (String s : stuff.split("]")) {
 							dataSource.add(s.split(":"));
