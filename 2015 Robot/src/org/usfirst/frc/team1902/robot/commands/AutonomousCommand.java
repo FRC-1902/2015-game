@@ -65,8 +65,7 @@ public class AutonomousCommand extends Command {
 				} else if (s[0].equals("pushTote")) {
 					Robot.lift.pushTote();
 				} else if (s[0].equals("adjustToTote")) {
-					while (!Robot.drive.adjustToTote())
-						;
+					while (!Robot.drive.adjustToTote());
 				}
 				commands.remove(commands.get(0));
 			} else {
