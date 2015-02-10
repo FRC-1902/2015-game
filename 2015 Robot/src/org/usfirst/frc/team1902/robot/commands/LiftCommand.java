@@ -12,7 +12,7 @@ public class LiftCommand extends Command {
         this.motorValue = motorValue;
     }
     protected void initialize() {
-    	Robot.lift.lift(motorValue);
+    	Robot.lift.setRaw(motorValue);
     }
 
     protected void execute() {

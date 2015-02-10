@@ -61,7 +61,7 @@ public class AutonomousCommand extends Command {
 				} else if (s[0].equals("canGrabber")) {
 					Robot.binGrabber.setGrabber(Boolean.parseBoolean(s[1]));
 				} else if (s[0].equals("lift")) {
-					Robot.lift.lift(Double.parseDouble(s[1]));
+					Robot.lift.setRaw(Double.parseDouble(s[1]));
 				} else if (s[0].equals("pushTote")) {
 					Robot.lift.pushTote();
 				} else if (s[0].equals("adjustToTote")) {
