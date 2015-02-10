@@ -13,12 +13,15 @@
 */
 package org.usfirst.frc.team1902.robot;
 
+import java.io.File;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1902.robot.commands.AutonomousCommand;
 import org.usfirst.frc.team1902.robot.subsystems.BinGrabberSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.DriveSubsystem;
@@ -38,11 +41,13 @@ public class Robot extends IterativeRobot {
 	public static DriverStation ds;
 	public static Robot self;
 	public static double angle = 0;
+	public static SendableChooser chooser = new SendableChooser();
 
-    Command autonomousCommand = null;
+    AutonomousCommand autonomousCommand = null;
 
     //Initialize our subsystems, autonomous, and Operator Interface (OI)
     public void robotInit() {
+		self = this;
 		System.out.println("Initializing DriveSubsystem...");
 		drive = new DriveSubsystem();
 		System.out.println("Initializing IntakeSubsystem...");
@@ -59,22 +64,38 @@ public class Robot extends IterativeRobot {
 		pdp = new PowerDistributionPanel();
 		System.out.println("Intializing Driver Station...");
 		ds = DriverStation.getInstance();
-		System.out.println("Initializing AutonomousCommand...");
-        autonomousCommand = new AutonomousCommand();
         System.out.println("Enabling intake arms and roller...");
 		intake.setArms(true);
-		//intake.roller.set(true);
-		System.out.println("Robot initialization complete!");
-		self = this;
+		//intake.roller.set(true);		
 		intake.compressor.setClosedLoopControl(false);
+		System.out.println("Initializing AutonomousCommand...");
+		autonomousCommand = new AutonomousCommand();
+		chooser.initTable(NetworkTable.getTable("TableThing"));
+		File usbDir = new File("/u/.auto/");
+		if (usbDir != null && usbDir.exists()) {
+			for (File f : usbDir.listFiles()) {
+				//if (f != null) {
+					chooser.addDefault("default.auto", new File("/u/.auto/default.auto"));
+					if (f.getName().contains(".auto")) {
+						System.out.println("Found a valid autonomous file named '" + f.getName() + "'.");
+						chooser.addObject(f.getName(), f);
+					}
+				//}
+			}
+		}
+		SmartDashboard.putData("Chooser", chooser);
+		autonomousCommand.actuallyInit();
+		System.out.println("Robot initialization complete!");
     }
 	
 	public void disabledPeriodic() {
+		SmartDashboard.putData("PDP", pdp);
 		Scheduler.getInstance().run();
 	}
 
     public void autonomousInit() {
         //Schedule autonomous
+
         if (autonomousCommand != null) autonomousCommand.start();
     }
 
@@ -82,6 +103,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+		SmartDashboard.putData("PDP", pdp);
         Scheduler.getInstance().run();
     }
 
@@ -101,8 +123,8 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
+		SmartDashboard.putData("PDP", pdp);
         Scheduler.getInstance().run();
-        //System.out.println("Lift motor current: " + pdp.getCurrent(1) + "(Time logged: " + ds.getMatchTime() + ")");       
     }
     
     /**
