@@ -25,9 +25,13 @@ public class RobotMap {
 	public static int canGrabberSolenoid = 0;
 	
 	//Lift Values
-	public static int liftTalon = 9;
-	public static int totePusherSolenoid = 1;
+	public static int liftTalon = 4;
+	public static int totePusherSolenoid = 2;
 	
 	//Autonomous Values
 	public static int autonomousLight = 6;
+	public static int liftEncoderA = 9001;
+	public static int liftEncoderB = 9001;
+	public static int liftTopLimit = 9001;
+	public static int liftBottomLimit = 9001;
 }
