@@ -134,16 +134,16 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("PDP", pdp);
 		if (intake.leftTouchSensor.get() && intake.rightTouchSensor.get()) {
 			if (rumble) {
-				OI.manipulator.setRumble(RumbleType.kLeftRumble, 1);
-				OI.manipulator.setRumble(RumbleType.kRightRumble, 1);
+				OI.xbox.setRumble(RumbleType.kLeftRumble, 1);
+				OI.xbox.setRumble(RumbleType.kRightRumble, 1);
 				rumble = false;
 			} else {
-				OI.manipulator.setRumble(RumbleType.kLeftRumble, 0);
-				OI.manipulator.setRumble(RumbleType.kRightRumble, 0);
+				OI.xbox.setRumble(RumbleType.kLeftRumble, 0);
+				OI.xbox.setRumble(RumbleType.kRightRumble, 0);
 			}
     	} else {
-    		OI.manipulator.setRumble(RumbleType.kLeftRumble, 0);
-    		OI.manipulator.setRumble(RumbleType.kRightRumble, 0);
+    		OI.xbox.setRumble(RumbleType.kLeftRumble, 0);
+    		OI.xbox.setRumble(RumbleType.kRightRumble, 0);
     		rumble = true;
     	}
         Scheduler.getInstance().run();
