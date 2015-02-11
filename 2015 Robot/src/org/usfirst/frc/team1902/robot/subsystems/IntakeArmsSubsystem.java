@@ -24,8 +24,22 @@ public class IntakeArmsSubsystem extends Subsystem {
     double kI = 0.05;
     double kI2 = 0.0005;
     
-    double leftTarget = 0;
-    double rightTarget = 0;
+    public double leftTarget = 0;
+    public double rightTarget = 0;
+    
+    public void setArm(Arm arm, State state) {
+    	if (arm == Arm.LEFT) {
+    		leftTarget = state == State.OPEN ? 1 : 0;
+    	} else if (arm == Arm.RIGHT) {
+    		rightTarget = state == State.OPEN ? 1 : 0;
+    	}
+    	Robot.autonomous.add(new String[]{"intakeArm", arm.toString(), state.toString()});
+    }
+    
+    public void setArms(State state) {
+    	setArm(Arm.LEFT, state);
+    	setArm(Arm.RIGHT, state);
+    }
     
     public IntakeArmsSubsystem()
     {
@@ -74,6 +88,16 @@ public class IntakeArmsSubsystem extends Subsystem {
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
+    }
+    
+    public enum Arm {
+    	LEFT,
+    	RIGHT
+    }
+    
+    public enum State {
+    	OPEN,
+    	CLOSED
     }
 }
 

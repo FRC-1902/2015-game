@@ -30,6 +30,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1902.robot.commands.AutonomousCommand;
 import org.usfirst.frc.team1902.robot.subsystems.BinGrabberSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.DriveSubsystem;
+import org.usfirst.frc.team1902.robot.subsystems.IntakeArmsSubsystem;
+import org.usfirst.frc.team1902.robot.subsystems.IntakeArmsSubsystem.Arm;
+import org.usfirst.frc.team1902.robot.subsystems.IntakeArmsSubsystem.State;
 import org.usfirst.frc.team1902.robot.subsystems.IntakeSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.LiftSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.AutonomousSubsystem;
@@ -38,6 +41,7 @@ public class Robot extends IterativeRobot {
 
 	public static DriveSubsystem drive;
 	public static IntakeSubsystem intake;
+	public static IntakeArmsSubsystem intakeArms;
 	public static BinGrabberSubsystem binGrabber;
 	public static LiftSubsystem lift;
 	public static AutonomousSubsystem autonomous;
@@ -58,6 +62,8 @@ public class Robot extends IterativeRobot {
 		drive = new DriveSubsystem();
 		System.out.println("Initializing IntakeSubsystem...");
 		intake = new IntakeSubsystem();
+		System.out.println("Initializing IntakeArmsSubsystem...");
+		intakeArms = new IntakeArmsSubsystem();
 		System.out.println("Initializing BinGrabberSubsystem");
 		binGrabber = new BinGrabberSubsystem();
 		System.out.println("Initializing LiftSubsystem...");
@@ -71,7 +77,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("Intializing Driver Station...");
 		ds = DriverStation.getInstance();
         System.out.println("Enabling intake arms and roller...");
-		intake.setArms(true);
+		intakeArms.setArms(State.OPEN);
 		intake.roller.set(1);		
 		//intake.compressor.setClosedLoopControl(false);
 		System.out.println("Initializing AutonomousCommand...");
