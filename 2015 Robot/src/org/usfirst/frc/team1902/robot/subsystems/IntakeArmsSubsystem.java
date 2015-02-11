@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeArmsSubsystem extends Subsystem {
 	
-	AnalogPotentiometer leftPot = new AnalogPotentiometer(RobotMap.leftArmPivotPot);
-	AnalogPotentiometer rightPot = new AnalogPotentiometer(RobotMap.rightArmPivotPot);
+	AnalogPotentiometer leftPot = new AnalogPotentiometer(RobotMap.leftArmPivotPot, 1, 0);
+	AnalogPotentiometer rightPot = new AnalogPotentiometer(RobotMap.rightArmPivotPot, 1, 0);
 	
 	Talon leftArm = new Talon(RobotMap.leftArmPivotTalon);
 	Talon rightArm = new Talon(RobotMap.rightArmPivotTalon);
