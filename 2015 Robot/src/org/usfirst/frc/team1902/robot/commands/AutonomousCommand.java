@@ -108,7 +108,7 @@ public class AutonomousCommand extends Command {
 					double left = Double.parseDouble(s[1]);
 					double right = Double.parseDouble(s[2]);
 					int merges = 0;
-					double min = 80;
+					double min = 200;
 					if (Math.abs(left) < min && Math.abs(right) < min) {
 						boolean stopMerge = false;
 						for (String[] s2 : commands) {
@@ -158,10 +158,7 @@ public class AutonomousCommand extends Command {
 
 	public void wrapUp() {
 		initialized = false;
-		Robot.drive.left1.set(0);
-		Robot.drive.left2.set(0);
-		Robot.drive.right1.set(0);
-		Robot.drive.right2.set(0);
+		Robot.drive.tankDrive(0, 0);
 		Robot.autonomous.light.set(false);
 	}
 }

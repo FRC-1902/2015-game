@@ -4,15 +4,11 @@ import org.usfirst.frc.team1902.robot.OI;
 import org.usfirst.frc.team1902.robot.Robot;
 import org.usfirst.frc.team1902.robot.RobotMap;
 import org.usfirst.frc.team1902.robot.Util;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
-
 import org.usfirst.frc.team1902.robot.commands.LiftPCommand;
-
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
                                                                                                            
@@ -44,10 +40,6 @@ public class LiftSubsystem extends Subsystem {
 		}
     }
     
-    public void initDefaultCommand() {
-    	setDefaultCommand(new LiftPCommand());
-    }
-    
     public void setRaw(double motorValue) {
 		lift1.set(motorValue);
 		lift2.set(motorValue);
@@ -60,8 +52,7 @@ public class LiftSubsystem extends Subsystem {
     	Robot.autonomous.add(new String[]{"pushTote"});
     }
     
-    public void absoluteLift()
-    {
+    public void absoluteLift() {
     	double error, p, i, setpoint;
     	i = 0;
     	
@@ -81,7 +72,7 @@ public class LiftSubsystem extends Subsystem {
     		
     		i += error;
     		
-    		setpoint = minMax(p*kP + i*kI, min, max);
+    		setpoint = Util.minMax(p*kP + i*kI, min, max);
     		setpoint += i*kI2;
     		
     		lift1.set(setpoint);
@@ -89,15 +80,13 @@ public class LiftSubsystem extends Subsystem {
     	} while(!"pigs".equals("fly"));
     }
     
-    public void home()
-    {
+    public void home() {
     	setRaw(0);
     	
     	liftEncoder.reset();
     }
     
-    public void getTarget()
-    {
+    public void getTarget() {
     	double angle = OI.manipulator.getPOV(0); //You might need to get X and Y by reading axises 5 and 6
     	if (angle != -1) {
     		if (angle == 0 || angle == 45 || angle == 315) {
@@ -108,14 +97,9 @@ public class LiftSubsystem extends Subsystem {
     	}
     }
     
-    public double minMax(double d, double min, double max) {
-		double minMaxed = d;
-		if (Math.abs(d) >= Math.abs(max)) {
-			minMaxed = max * Util.sign(d);
-		} else if (Math.abs(d) < Math.abs(min)) {
-			minMaxed = 0;
-		}
-		return minMaxed;
-	}
+    
+    public void initDefaultCommand() {
+    	setDefaultCommand(new LiftPCommand());
+    }
 }
 

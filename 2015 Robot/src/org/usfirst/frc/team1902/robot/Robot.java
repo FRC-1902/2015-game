@@ -8,6 +8,8 @@
   
   Written for FIRST's 2015 FRC game "Recycle Rush"!
   
+  Written by Ryan Shavell and Dominic Canora.
+  
   All code is either sample code provided by FIRST or is hand-written by team 1902.
 
 */
@@ -45,7 +47,6 @@ public class Robot extends IterativeRobot {
 	public static Robot self;
 	public static double angle = 0;
 	public static SendableChooser chooser = new SendableChooser();
-	
 	public boolean rumble = true;
 
     AutonomousCommand autonomousCommand = null;
@@ -97,8 +98,6 @@ public class Robot extends IterativeRobot {
 	}
 
     public void autonomousInit() {
-        //Schedule autonomous
-
         if (autonomousCommand != null) autonomousCommand.start();
     }
 
@@ -126,13 +125,16 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	SmartDashboard.putData("PDP", pdp);
-    	if (intake.leftTouchSensor.get() && intake.rightTouchSensor.get()) {
-    		if (rumble) {
-    			OI.manipulator.setRumble(RumbleType.kLeftRumble, 1);
-    			OI.manipulator.setRumble(RumbleType.kRightRumble, 1);
-    			rumble = false;
-    		}
+		SmartDashboard.putData("PDP", pdp);
+		if (intake.leftTouchSensor.get() && intake.rightTouchSensor.get()) {
+			if (rumble) {
+				OI.manipulator.setRumble(RumbleType.kLeftRumble, 1);
+				OI.manipulator.setRumble(RumbleType.kRightRumble, 1);
+				rumble = false;
+			} else {
+				OI.manipulator.setRumble(RumbleType.kLeftRumble, 0);
+				OI.manipulator.setRumble(RumbleType.kRightRumble, 0);
+			}
     	} else {
     		OI.manipulator.setRumble(RumbleType.kLeftRumble, 0);
     		OI.manipulator.setRumble(RumbleType.kRightRumble, 0);
