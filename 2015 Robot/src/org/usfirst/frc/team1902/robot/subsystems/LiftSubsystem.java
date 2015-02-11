@@ -1,14 +1,14 @@
 package org.usfirst.frc.team1902.robot.subsystems;
 
+import org.usfirst.frc.team1902.robot.OI;
 import org.usfirst.frc.team1902.robot.Robot;
 import org.usfirst.frc.team1902.robot.RobotMap;
 import org.usfirst.frc.team1902.robot.Util;
-import org.usfirst.frc.team1902.robot.commands.LiftStopCommand;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 
-import org.usfirst.frc.team1902.robot.commands.LiftDPADCommand;
+import org.usfirst.frc.team1902.robot.commands.LiftPCommand;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
@@ -29,6 +29,8 @@ public class LiftSubsystem extends Subsystem {
     double kI = 0.05;
     double kI2 = 0.0005;
     
+    double target = 0;
+    
     public LiftSubsystem()
     {
     	if (Robot.self.isTest()) {
@@ -41,7 +43,7 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public void initDefaultCommand() {
-    	setDefaultCommand(new LiftStopCommand());
+    	setDefaultCommand(new LiftPCommand());
     }
     
     public void setRaw(double motorValue) {
@@ -55,10 +57,12 @@ public class LiftSubsystem extends Subsystem {
     	Robot.autonomous.add(new String[]{"pushTote"});
     }
     
-    public void absoluteLift(double pos)
+    public void absoluteLift()
     {
     	double error, p, i, setpoint;
     	i = 0;
+    	
+    	getTarget();
     	
     	kP = SmartDashboard.getNumber("liftKP", kP);
 		kI = SmartDashboard.getNumber("liftKI", kI);
@@ -68,7 +72,7 @@ public class LiftSubsystem extends Subsystem {
     	
     	do
     	{
-    		error = pos - liftEncoder.getRaw();
+    		error = target - liftEncoder.getRaw();
     		
     		p = error;
     		
@@ -86,6 +90,18 @@ public class LiftSubsystem extends Subsystem {
     	setRaw(0);
     	
     	liftEncoder.reset();
+    }
+    
+    public void getTarget()
+    {
+    	double angle = OI.manipulator.getPOV(0); //You might need to get X and Y by reading axises 5 and 6
+    	if (angle != -1) {
+    		if (angle == 0 || angle == 45 || angle == 315) {
+    			target += 1;
+    		} else {
+    			target -= 1;
+    		}
+    	}
     }
     
     public double minMax(double d, double min, double max) {
