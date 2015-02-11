@@ -11,10 +11,8 @@ public class LiftPCommand extends Command {
 
 	double setpoint = 0;
 
-    public LiftPCommand(double sp) {
+    public LiftPCommand() {
         requires(Robot.lift);
-        
-        if(sp > 0) setpoint = sp;
     }
 
     // Called just before this Command runs the first time
@@ -23,9 +21,11 @@ public class LiftPCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	
     	if(Robot.lift.topLimit.get()) Robot.lift.setRaw(0);
     	else if(Robot.lift.bottomLimit.get()) Robot.lift.home();
-    		else Robot.lift.absoluteLift(setpoint);
+    		else Robot.lift.absoluteLift();
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
