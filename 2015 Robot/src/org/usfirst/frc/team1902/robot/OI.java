@@ -2,28 +2,20 @@ package org.usfirst.frc.team1902.robot;
 
 import org.usfirst.frc.team1902.robot.commands.BinGrabberToggleCommand;
 import org.usfirst.frc.team1902.robot.commands.HumanPlayerStackCommand;
-import org.usfirst.frc.team1902.robot.commands.IntakeArmPivotCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleCommand;
 import org.usfirst.frc.team1902.robot.commands.IntakeToggleReverseCommand;
 import org.usfirst.frc.team1902.robot.commands.RecordAutonomousToggleCommand;
-import org.usfirst.frc.team1902.robot.subsystems.IntakeArmsSubsystem.Arm;
-import org.usfirst.frc.team1902.robot.subsystems.IntakeArmsSubsystem.State;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class OI {
 	public static Joystick left = new Joystick(0);
-	public static Joystick manipulator = new Joystick(1);
-	public static Joystick action = null;
+	public static XboxController xbox = new XboxController(0);
 	
 	Button driveToggle;
 	Button intake;
 	Button reverseIntake;
 	Button rotateIntake;
-	Button intakeArmLeft;
-	Button intakeArmRight;
 	Button binGrabber;
 	Button pushTote;
 	Button adjustToTote;
@@ -33,20 +25,17 @@ public class OI {
 	
 	//Anything with the value of 9001 is a placeholder.
 	public void init() {		
-		action = manipulator;
 		//Define buttons
 		//driveToggle = new JoystickButton(left, 8);
-		intake = new JoystickButton(action, 3);
-		reverseIntake = new JoystickButton(action, 1);
+		intake = xbox.x;
+		reverseIntake = xbox.a;
 		//rotateIntake = new JoystickButton(action, 9001);
-		intakeArmLeft = new JoystickButton(action, 5);
-		intakeArmRight = new JoystickButton(action, 6);
-		binGrabber = new JoystickButton(action, 4);
+		binGrabber = xbox.y;
 		//pushTote = new JoystickButton(action, 9001);
 		//adjustToTote = new JoystickButton(action, 9001);
-		humanPlayerStack = new JoystickButton(action, 10);
-		recordAutoOn = new JoystickButton(action, 7);
-		recordAutoOff = new JoystickButton(action, 8);
+		humanPlayerStack = xbox.rightJoyButton;
+		recordAutoOn = xbox.start;
+		recordAutoOff = xbox.select;
 		
 		//Define what happens when the buttons are pressed
 		//driveToggle.whenPressed(new DriveTypeToggleCommand());
@@ -58,12 +47,6 @@ public class OI {
 		
 		//rotateIntake.whenPressed(new IntakeToggleRotateCommand(true));
 		//rotateIntake.whenReleased(new IntakeToggleRotateCommand(false));
-		
-		intakeArmLeft.whenPressed(new IntakeArmPivotCommand(Arm.LEFT, State.CLOSED));
-		intakeArmLeft.whenReleased(new IntakeArmPivotCommand(Arm.LEFT, State.OPEN));
-		
-		intakeArmRight.whenPressed(new IntakeArmPivotCommand(Arm.RIGHT, State.CLOSED));
-		intakeArmRight.whenReleased(new IntakeArmPivotCommand(Arm.RIGHT, State.OPEN));
 		
 		binGrabber.whenPressed(new BinGrabberToggleCommand());
 		

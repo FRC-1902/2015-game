@@ -20,27 +20,27 @@ public class IntakeSubsystem extends Subsystem {
     public TalonSRX roller = new TalonSRX(RobotMap.rollerTalon);
 	public DigitalInput leftTouchSensor = new DigitalInput(RobotMap.leftTouchSensor);
 	public DigitalInput rightTouchSensor = new DigitalInput(RobotMap.rightTouchSensor);
+	public DigitalInput chuteTouchSensor = new DigitalInput(RobotMap.chuteTouchSensor);
 	public Compressor compressor = new Compressor();
     public boolean motorStatus = false;
     public boolean reverse = false;
     public boolean rotate = false;
 
 	public void setMotors(boolean status) {
-		double power = OI.action.getZ();
 		if (status == false) {
 			leftIntake.set(0);
 			rightIntake.set(0);
 		} else {
 			if (rotate) {
-				leftIntake.set(power);
-				rightIntake.set(power);
+				leftIntake.set(1);
+				rightIntake.set(1);
 			} else {
 				if (reverse) {
-					leftIntake.set(power);
-					rightIntake.set(-power);
+					leftIntake.set(1);
+					rightIntake.set(-1);
 				} else {
-					leftIntake.set(-power);
-					rightIntake.set(power);
+					leftIntake.set(-1);
+					rightIntake.set(1);
 				}
 			}
 		}

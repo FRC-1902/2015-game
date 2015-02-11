@@ -3,6 +3,7 @@ package org.usfirst.frc.team1902.robot.subsystems;
 import org.usfirst.frc.team1902.robot.Robot;
 import org.usfirst.frc.team1902.robot.RobotMap;
 import org.usfirst.frc.team1902.robot.Util;
+import org.usfirst.frc.team1902.robot.commands.IntakeArmsControlCommand;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Talon;
@@ -86,6 +87,7 @@ public class IntakeArmsSubsystem extends Subsystem {
 	}
 
     public void initDefaultCommand() {
+    	setDefaultCommand(new IntakeArmsControlCommand());
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
     }

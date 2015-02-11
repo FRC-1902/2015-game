@@ -20,6 +20,7 @@ public class RobotMap {
 	public static int rollerTalon = 0x00; //ID 8
 	public static int leftTouchSensor = 0; //ID 15
 	public static int rightTouchSensor = 1; //ID 16
+	public static int chuteTouchSensor = 14; //ID 31
 	public static int leftArmPivotPot = 1; //ID 22
 	public static int rightArmPivotPot = 2; //ID 23
 	

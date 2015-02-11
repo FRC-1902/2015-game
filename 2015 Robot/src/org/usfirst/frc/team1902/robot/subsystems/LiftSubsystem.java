@@ -87,7 +87,7 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public void getTarget() {
-    	double angle = OI.manipulator.getPOV(0); //You might need to get X and Y by reading axises 5 and 6
+    	double angle = OI.xbox.getDPad(); //You might need to get X and Y by reading axises 5 and 6
     	if (angle != -1) {
     		if (angle == 0 || angle == 45 || angle == 315) {
     			target += 1;
