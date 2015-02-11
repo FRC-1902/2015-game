@@ -6,10 +6,10 @@ public class RobotMap {
 	public static int leftDriveVictor2 = 1;
 	public static int rightDriveVictor1 = 2;
 	public static int rightDriveVictor2 = 3;
-	public static int leftEncoderID1 = 0;
-	public static int leftEncoderID2 = 1;
-	public static int rightEncoderID1 = 2;
-	public static int rightEncoderID2 = 3;
+	public static int leftEncoderA = 0;
+	public static int leftEncoderB = 1;
+	public static int rightEncoderA = 2;
+	public static int rightEncoderB = 3;
 	public static int gyro = 0;
 	
 	//Intake Values
@@ -27,11 +27,11 @@ public class RobotMap {
 	//Lift Values
 	public static int liftTalon = 4;
 	public static int totePusherSolenoid = 2;
-	
-	//Autonomous Values
-	public static int autonomousLight = 6;
 	public static int liftEncoderA = 9001;
 	public static int liftEncoderB = 9001;
 	public static int liftTopLimit = 9001;
 	public static int liftBottomLimit = 9001;
+	
+	//Autonomous Values
+	public static int autonomousLight = 6;
 }

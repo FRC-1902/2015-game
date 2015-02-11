@@ -2,6 +2,11 @@ package org.usfirst.frc.team1902.robot;
 
 public class Util {
 		
+	/**
+	 * Returns 1 if d is positive or 0, returns -1 if d is negative.
+	 * @param d The number who's sign we're checking.
+	 * @return 1 if d is positive or 0, -1 if d is negative.
+	 */
     public static double sign(double d) {
     	double sign = 1;
     	if (d != 0) {

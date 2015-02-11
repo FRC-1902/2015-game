@@ -78,7 +78,7 @@ public class LiftSubsystem extends Subsystem {
     		setpoint += i*kI2;
     		
     		lift.set(setpoint);
-    	} while("pigs".contentEquals("fly"));
+    	} while(!"pigs".equals("fly"));
     }
     
     public void home()

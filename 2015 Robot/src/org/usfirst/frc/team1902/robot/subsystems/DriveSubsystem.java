@@ -17,8 +17,8 @@ public class DriveSubsystem extends Subsystem {
 	public VictorSP left2 = new VictorSP(RobotMap.leftDriveVictor2);
 	public VictorSP right1 = new VictorSP(RobotMap.rightDriveVictor1);
 	public VictorSP right2 = new VictorSP(RobotMap.rightDriveVictor2);
-	public Encoder leftEncoder = new Encoder(RobotMap.leftEncoderID1, RobotMap.leftEncoderID2, true);
-	public Encoder rightEncoder = new Encoder(RobotMap.rightEncoderID1, RobotMap.rightEncoderID2);
+	public Encoder leftEncoder = new Encoder(RobotMap.leftEncoderA, RobotMap.leftEncoderB, true);
+	public Encoder rightEncoder = new Encoder(RobotMap.rightEncoderA, RobotMap.rightEncoderB);
 	public Gyro gyro = new Gyro(RobotMap.gyro);
 	public boolean arcadeDrive = true;
 	
@@ -53,7 +53,7 @@ public class DriveSubsystem extends Subsystem {
 	}
 
 	/**
-	 * Tank drive. Uses left and right inputs ranging from -1 to 1 to drive the robot.
+	 * Uses left and right inputs ranging from -1 to 1 to drive the robot.
 	 **/
 	public void tankDrive(double left, double right) {
 		this.left1.set(-left);
@@ -68,14 +68,14 @@ public class DriveSubsystem extends Subsystem {
 	}
 
 	/**
-	 * Arcade drive. Uses a single joystick to drive the robot.
+	 * Uses a single joystick to drive the robot.
 	 **/
 	public void arcadeDrive(Joystick joy) {
 		tankDrive(joy.getY() - joy.getX(), joy.getY() + joy.getX());
 	}
 
 	/**
-	 * Encoder drive. P loop that drives to the left and right encoder values.
+	 * P loop that drives to the left and right encoder values.
 	 **/
 	public void encoderDrive(double left, double right, double nextLeft, double nextRight) {
 		gyroTurn(Robot.angle, true);
@@ -109,7 +109,7 @@ public class DriveSubsystem extends Subsystem {
 			
 			rightError = Util.minMax(rightError, min, max);
 			leftError = Util.minMax(leftError, min, max);
-			System.out.println("Gyro: " + gyro.getAngle() + ", AngleError: " + angleError);
+			//System.out.println("Gyro: " + gyro.getAngle() + ", AngleError: " + angleError);
 			
 			if (nextLeft != 0 && nextRight != 0) {
 				if (Util.sign(rightError) != rightSign && Util.sign(leftError) != leftSign) {
@@ -150,7 +150,7 @@ public class DriveSubsystem extends Subsystem {
 	}
 	
 	/**
-	 * Gyro turn. PI loop that turns the robot to angle.
+	 * PI loop that turns the robot to angle.
 	 **/
 	public void gyroTurn(double angle, boolean adjustment) {
 		double p;

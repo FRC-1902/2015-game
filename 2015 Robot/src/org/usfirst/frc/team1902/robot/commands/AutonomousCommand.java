@@ -4,15 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import org.usfirst.frc.team1902.robot.Robot;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -41,9 +36,7 @@ public class AutonomousCommand extends Command {
 							next = commands.get(1);
 						}
 						if (next != null && next[0].equals("drive")) {
-							Robot.drive.encoderDrive(left, right,
-									Double.parseDouble(next[1]),
-									Double.parseDouble(next[2]));
+							Robot.drive.encoderDrive(left, right, Double.parseDouble(next[1]), Double.parseDouble(next[2]));
 						} else {
 							Robot.drive.encoderDrive(left, right, 0, 0);
 						}
@@ -105,7 +98,6 @@ public class AutonomousCommand extends Command {
 			} else {
 				System.out.println("No default autonomous found! Doing nothing...");
 			}
-			// System.out.println("Read pre-loaded autonomous data.");
 		} else {
 			dataSource = new ArrayList<>(Robot.autonomous.data);
 			System.out.println("Got Autonomous data from recorded teleop actions.");
@@ -167,9 +159,9 @@ public class AutonomousCommand extends Command {
 	public void wrapUp() {
 		initialized = false;
 		Robot.drive.left1.set(0);
-		//Robot.drive.left2.set(0);
+		Robot.drive.left2.set(0);
 		Robot.drive.right1.set(0);
-		//Robot.drive.right2.set(0);
+		Robot.drive.right2.set(0);
 		Robot.autonomous.light.set(false);
 	}
 }
