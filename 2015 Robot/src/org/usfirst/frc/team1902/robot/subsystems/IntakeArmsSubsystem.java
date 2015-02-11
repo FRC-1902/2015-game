@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeArmsSubsystem extends Subsystem {
 	
-	AnalogPotentiometer leftPot = new AnalogPotentiometer(RobotMap.leftArmPivotPot);
-	AnalogPotentiometer rightPot = new AnalogPotentiometer(RobotMap.rightArmPivotPot);
+	AnalogPotentiometer leftPot = new AnalogPotentiometer(RobotMap.leftArmPivotPot, 1, 0);
+	AnalogPotentiometer rightPot = new AnalogPotentiometer(RobotMap.rightArmPivotPot, 1, 0);
 	
 	Talon leftArm = new Talon(RobotMap.leftArmPivotTalon);
 	Talon rightArm = new Talon(RobotMap.rightArmPivotTalon);
@@ -41,10 +41,15 @@ public class IntakeArmsSubsystem extends Subsystem {
     	setArm(Arm.RIGHT, state);
     }
     
-    public void getTargets()
+    public IntakeArmsSubsystem()
     {
-    	//leftTarget = something
-    	//rightTarget = something
+    	if (Robot.self.isTest()) {
+			SmartDashboard.putNumber("liftKP", kP);
+			SmartDashboard.putNumber("liftKI", kI);
+			SmartDashboard.putNumber("liftKI2", kI2);
+			SmartDashboard.putNumber("liftMin", min);
+			SmartDashboard.putNumber("liftMax", max);
+		}
     }
 	
 	public void absolutePivot() 
