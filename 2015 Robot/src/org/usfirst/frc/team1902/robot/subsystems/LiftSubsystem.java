@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.VictorSP;
 import org.usfirst.frc.team1902.robot.commands.LiftPCommand;
 
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
                                                                                                            
@@ -81,7 +80,7 @@ public class LiftSubsystem extends Subsystem {
     		
     		i += error;
     		
-    		setpoint = minMax(p*kP + i*kI, min, max);
+    		setpoint = Util.minMax(p*kP + i*kI, min, max);
     		setpoint += i*kI2;
     		
     		lift1.set(setpoint);
@@ -107,15 +106,5 @@ public class LiftSubsystem extends Subsystem {
     		}
     	}
     }
-    
-    public double minMax(double d, double min, double max) {
-		double minMaxed = d;
-		if (Math.abs(d) >= Math.abs(max)) {
-			minMaxed = max * Util.sign(d);
-		} else if (Math.abs(d) < Math.abs(min)) {
-			minMaxed = 0;
-		}
-		return minMaxed;
-	}
 }
 
