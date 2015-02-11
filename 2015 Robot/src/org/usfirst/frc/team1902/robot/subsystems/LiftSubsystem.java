@@ -27,7 +27,7 @@ public class LiftSubsystem extends Subsystem {
     double kI = 0.05;
     double kI2 = 0.0005;
     
-    double target = 0;
+    public double target = 0;
     
     public LiftSubsystem()
     {
@@ -95,6 +95,10 @@ public class LiftSubsystem extends Subsystem {
     			target -= 1;
     		}
     	}
+    }
+    
+    public boolean atTarget() {
+    	return true; //TODO Actually make this work.
     }
     
     

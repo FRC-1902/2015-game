@@ -20,8 +20,8 @@ public class IntakeSubsystem extends Subsystem {
     public TalonSRX roller = new TalonSRX(RobotMap.rollerTalon);
 	public DigitalInput leftTouchSensor = new DigitalInput(RobotMap.leftTouchSensor);
 	public DigitalInput rightTouchSensor = new DigitalInput(RobotMap.rightTouchSensor);
+	public DigitalInput chuteTouchSensor = new DigitalInput(RobotMap.chuteTouchSensor);
 	public Compressor compressor = new Compressor();
-    public Solenoid arms = new Solenoid(0); //TODO remove this for talon arms
     public boolean motorStatus = false;
     public boolean reverse = false;
     public boolean rotate = false;
@@ -65,9 +65,12 @@ public class IntakeSubsystem extends Subsystem {
     	Robot.autonomous.add(new String[]{"rotateIntake", status + ""});   	
     }
     
-    public void setArms(boolean status) {
-    	arms.set(status);
-    	Robot.autonomous.add(new String[]{"intakeArms", status + ""});
+    public boolean hasTote() {
+    	if (leftTouchSensor.get() && rightTouchSensor.get()) {
+    		return true;
+    	} else {
+    		return false;
+    	}
     }
     
     public void initDefaultCommand() {

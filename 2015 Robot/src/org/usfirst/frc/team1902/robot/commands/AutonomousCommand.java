@@ -7,7 +7,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.usfirst.frc.team1902.robot.Robot;
+import org.usfirst.frc.team1902.robot.subsystems.IntakeArmsSubsystem.Arm;
+import org.usfirst.frc.team1902.robot.subsystems.IntakeArmsSubsystem.State;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -49,8 +53,8 @@ public class AutonomousCommand extends Command {
 					Robot.intake.setReversed(Boolean.parseBoolean(s[1]));
 				} else if (s[0].equals("rotateIntake")) {
 					Robot.intake.setRotated(Boolean.parseBoolean(s[1]));
-				} else if (s[0].equals("intakeArms")) {
-					Robot.intake.setArms(Boolean.parseBoolean(s[1]));
+				} else if (s[0].equals("intakeArm")) {
+					Robot.intakeArms.setArm(Arm.valueOf(s[1]), State.valueOf(s[2]));
 				} else if (s[0].equals("canGrabber")) {
 					Robot.binGrabber.setGrabber(Boolean.parseBoolean(s[1]));
 				} else if (s[0].equals("lift")) {
