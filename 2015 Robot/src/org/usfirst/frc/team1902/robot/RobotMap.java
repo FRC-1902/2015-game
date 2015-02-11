@@ -20,6 +20,8 @@ public class RobotMap {
 	public static int rollerTalon = 8;
 	public static int leftTouchSensor = 0;
 	public static int rightTouchSensor = 1;
+	public static int rightArmPivotTalon = 9001;
+	public static int leftArmPivotTalon = 9001;
 	
 	//Can Grabber Values
 	public static int canGrabberSolenoid = 0;
