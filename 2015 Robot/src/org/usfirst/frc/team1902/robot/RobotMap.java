@@ -27,7 +27,8 @@ public class RobotMap {
 	public static int canGrabberSolenoid = 0;
 	
 	//Lift Values
-	public static int liftTalon = 4;
+	public static int liftVictor1 = 9;
+	public static int liftVictor2 = 10;
 	public static int totePusherSolenoid = 2;
 	public static int liftEncoderA = 9001;
 	public static int liftEncoderB = 9001;

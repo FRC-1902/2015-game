@@ -18,7 +18,7 @@ public class DriveCommand extends Command {
     		Robot.drive.arcadeDrive(OI.left);
     	} else {
     		Robot.drive.tankDrive(OI.left.getY(), OI.manipulator.getY());
-    	}
+    	}    	
     }
 
     protected boolean isFinished() {

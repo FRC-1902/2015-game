@@ -14,14 +14,17 @@
 package org.usfirst.frc.team1902.robot;
 
 import java.io.File;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.usfirst.frc.team1902.robot.commands.AutonomousCommand;
 import org.usfirst.frc.team1902.robot.subsystems.BinGrabberSubsystem;
 import org.usfirst.frc.team1902.robot.subsystems.DriveSubsystem;
@@ -42,6 +45,8 @@ public class Robot extends IterativeRobot {
 	public static Robot self;
 	public static double angle = 0;
 	public static SendableChooser chooser = new SendableChooser();
+	
+	public boolean rumble = true;
 
     AutonomousCommand autonomousCommand = null;
 
@@ -121,7 +126,18 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-		SmartDashboard.putData("PDP", pdp);
+    	SmartDashboard.putData("PDP", pdp);
+    	if (intake.leftTouchSensor.get() && intake.rightTouchSensor.get()) {
+    		if (rumble) {
+    			OI.manipulator.setRumble(RumbleType.kLeftRumble, 1);
+    			OI.manipulator.setRumble(RumbleType.kRightRumble, 1);
+    			rumble = false;
+    		}
+    	} else {
+    		OI.manipulator.setRumble(RumbleType.kLeftRumble, 0);
+    		OI.manipulator.setRumble(RumbleType.kRightRumble, 0);
+    		rumble = true;
+    	}
         Scheduler.getInstance().run();
     }
     

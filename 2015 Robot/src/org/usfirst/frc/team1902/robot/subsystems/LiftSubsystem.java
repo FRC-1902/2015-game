@@ -7,6 +7,7 @@ import org.usfirst.frc.team1902.robot.Util;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.VictorSP;
 
 import org.usfirst.frc.team1902.robot.commands.LiftPCommand;
 
@@ -17,7 +18,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
                                                                                                            
 public class LiftSubsystem extends Subsystem {
     
-    public Talon lift = new Talon(RobotMap.liftTalon);
+    public VictorSP lift1 = new VictorSP(RobotMap.liftVictor1);
+    public VictorSP lift2 = new VictorSP(RobotMap.liftVictor2);
     public Solenoid totePusher = new Solenoid(RobotMap.totePusherSolenoid);
     public Encoder liftEncoder = new Encoder(RobotMap.liftEncoderA, RobotMap.liftEncoderB);
     public DigitalInput topLimit = new DigitalInput(RobotMap.liftTopLimit);
@@ -47,7 +49,8 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public void setRaw(double motorValue) {
-		lift.set(motorValue);
+		lift1.set(motorValue);
+		lift2.set(motorValue);
 		Robot.autonomous.add(new String[]{"lift", motorValue + ""});
     }
     
@@ -81,7 +84,8 @@ public class LiftSubsystem extends Subsystem {
     		setpoint = minMax(p*kP + i*kI, min, max);
     		setpoint += i*kI2;
     		
-    		lift.set(setpoint);
+    		lift1.set(setpoint);
+    		lift2.set(setpoint);
     	} while(!"pigs".equals("fly"));
     }
     
