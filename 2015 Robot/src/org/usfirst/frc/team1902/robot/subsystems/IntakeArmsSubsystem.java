@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1902.robot.subsystems;
 
+import org.usfirst.frc.team1902.robot.Robot;
 import org.usfirst.frc.team1902.robot.RobotMap;
 import org.usfirst.frc.team1902.robot.Util;
 
@@ -26,10 +27,15 @@ public class IntakeArmsSubsystem extends Subsystem {
     double leftTarget = 0;
     double rightTarget = 0;
     
-    public void getTargets()
+    public IntakeArmsSubsystem()
     {
-    	//leftTarget = something
-    	//rightTarget = something
+    	if (Robot.self.isTest()) {
+			SmartDashboard.putNumber("liftKP", kP);
+			SmartDashboard.putNumber("liftKI", kI);
+			SmartDashboard.putNumber("liftKI2", kI2);
+			SmartDashboard.putNumber("liftMin", min);
+			SmartDashboard.putNumber("liftMax", max);
+		}
     }
 	
 	public void absolutePivot() 
