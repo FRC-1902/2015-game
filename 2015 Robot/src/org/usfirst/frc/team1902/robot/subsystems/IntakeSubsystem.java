@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class IntakeSubsystem extends Subsystem {
     
-	public Talon leftArm = new Talon(RobotMap.leftArmTalon);
-	public Talon rightArm = new Talon(RobotMap.rightArmTalon);
+	public Talon leftArm = new Talon(RobotMap.leftArmPivotTalon);
+	public Talon rightArm = new Talon(RobotMap.rightArmPivotTalon);
     public Talon leftIntake = new Talon(RobotMap.leftIntakeTalon);
     public Talon rightIntake = new Talon(RobotMap.rightIntakeTalon);
     public TalonSRX roller = new TalonSRX(RobotMap.rollerTalon);
