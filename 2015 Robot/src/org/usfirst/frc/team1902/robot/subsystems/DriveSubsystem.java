@@ -4,11 +4,9 @@ import org.usfirst.frc.team1902.robot.Robot;
 import org.usfirst.frc.team1902.robot.RobotMap;
 import org.usfirst.frc.team1902.robot.Util;
 import org.usfirst.frc.team1902.robot.commands.DriveCommand;
-
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

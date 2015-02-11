@@ -89,7 +89,7 @@ public class AutonomousCommand extends Command {
 		if (Robot.autonomous.data.isEmpty()) {
 			File file = (File) Robot.chooser.getSelected();
 			if (file != null && file.exists()) {
-				System.out.println("Attempting to read Autonomous data from " + file.getName() + "...");
+				System.out.println("Attempting to read Autonomous data from '" + file.getName() + "'...");
 				try {
 					BufferedReader br = new BufferedReader(new FileReader(file));
 					for (String s : br.readLine().split("]")) {
@@ -101,8 +101,7 @@ public class AutonomousCommand extends Command {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				System.out.println("Copied Autonomous data from "
-						+ file.getName() + ".");
+				System.out.println("Read Autonomous data from '" + file.getName() + "'!");
 			} else {
 				System.out.println("No default autonomous found! Doing nothing...");
 			}
@@ -150,7 +149,7 @@ public class AutonomousCommand extends Command {
 		}
 		Robot.angle = 0;
 		initialized = true;
-		System.out.println("AutonomousCommand has finished initializing.");
+		System.out.println("Autonomous has finished initializing.");
 	}
 
 	protected boolean isFinished() {

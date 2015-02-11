@@ -15,7 +15,7 @@ public class LiftDPADCommand extends Command {
     }
 
     protected void execute() {
-    	double angle = OI.manipulator.getPOV(0);
+    	double angle = OI.manipulator.getPOV(0); //You might need to get X and Y by reading axises 5 and 6
     	if (angle != -1) {
     		if (angle == 0 || angle == 45 || angle == 315) {
     			//do a liftPCommand to whatever encoder value we want
