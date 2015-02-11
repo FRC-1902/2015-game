@@ -52,8 +52,8 @@ public class Robot extends IterativeRobot {
 		drive = new DriveSubsystem();
 		System.out.println("Initializing IntakeSubsystem...");
 		intake = new IntakeSubsystem();
-		//System.out.println("Initializing BinGrabberSubsystem");
-		//binGrabber = new BinGrabberSubsystem();
+		System.out.println("Initializing BinGrabberSubsystem");
+		binGrabber = new BinGrabberSubsystem();
 		System.out.println("Initializing LiftSubsystem...");
 		lift = new LiftSubsystem();
 		System.out.println("Initializing AutonomousSubsystem...");
@@ -66,21 +66,19 @@ public class Robot extends IterativeRobot {
 		ds = DriverStation.getInstance();
         System.out.println("Enabling intake arms and roller...");
 		intake.setArms(true);
-		//intake.roller.set(true);		
-		intake.compressor.setClosedLoopControl(false);
+		intake.roller.set(1);		
+		//intake.compressor.setClosedLoopControl(false);
 		System.out.println("Initializing AutonomousCommand...");
 		autonomousCommand = new AutonomousCommand();
 		chooser.initTable(NetworkTable.getTable("TableThing"));
 		File usbDir = new File("/u/.auto/");
 		if (usbDir != null && usbDir.exists()) {
 			for (File f : usbDir.listFiles()) {
-				//if (f != null) {
-					chooser.addDefault("default.auto", new File("/u/.auto/default.auto"));
-					if (f.getName().contains(".auto")) {
-						System.out.println("Found a valid autonomous file named '" + f.getName() + "'.");
-						chooser.addObject(f.getName(), f);
-					}
-				//}
+				chooser.addDefault("default.auto", new File("/u/.auto/default.auto"));
+				if (f.getName().contains(".auto")) {
+					System.out.println("Found a valid autonomous file named '" + f.getName() + "'.");
+					chooser.addObject(f.getName(), f);
+				}
 			}
 		}
 		SmartDashboard.putData("Chooser", chooser);
@@ -133,12 +131,4 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
     }   
-    
-    public static double sign(double d) {
-    	double sign = 1;
-    	if (d != 0) {
-    		sign = (Math.abs(d) / d);
-    	}
-    	return sign;
-    }
 }

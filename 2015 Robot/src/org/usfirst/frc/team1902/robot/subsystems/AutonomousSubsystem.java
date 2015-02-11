@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.usfirst.frc.team1902.robot.Robot;
+import org.usfirst.frc.team1902.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -14,7 +15,7 @@ public class AutonomousSubsystem extends Subsystem {
 
 	public List<String[]> data = new ArrayList<>();
 	public boolean recording = false;
-	public Solenoid light = new Solenoid(6);
+	public Solenoid light = new Solenoid(RobotMap.autonomousLight);
 	// public Timer timer = null;
 	// public NetworkTable table = null;
 

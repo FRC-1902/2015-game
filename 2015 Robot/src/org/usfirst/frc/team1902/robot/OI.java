@@ -11,8 +11,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class OI {
 	public static Joystick left = new Joystick(0);
-	public static Joystick right = new Joystick(1);
-	public static Joystick three = new Joystick(2);
+	public static Joystick manipulator = new Joystick(1);
 	public static Joystick action = null;
 	
 	Button driveToggle;
@@ -21,8 +20,6 @@ public class OI {
 	Button rotateIntake;
 	Button intakeArms;
 	Button binGrabber;
-	Button liftUp;
-	Button liftDown;
 	Button pushTote;
 	Button adjustToTote;
 	Button recordAutoOn;	
@@ -30,20 +27,18 @@ public class OI {
 	
 	//Anything with the value of 9001 is a placeholder.
 	public void init() {		
-		action = right; //Use "action = three;" if you have three or more joysticks available
+		action = manipulator;
 		//Define buttons
 		driveToggle = new JoystickButton(left, 8);
-		intake = new JoystickButton(action, 4);
-		reverseIntake = new JoystickButton(action, 5);
+		intake = new JoystickButton(action, 3);
+		reverseIntake = new JoystickButton(action, 1);
 		//rotateIntake = new JoystickButton(action, 9001);
-		intakeArms = new JoystickButton(action, 1);
+		intakeArms = new JoystickButton(action, 5); //TODO make 5 the left arm and 6 the right arm
 		//binGrabber = new JoystickButton(action, 9001);
-		liftUp = new JoystickButton(action, 3);
-		liftDown = new JoystickButton(action, 2);
 		//pushTote = new JoystickButton(action, 9001);
 		//adjustToTote = new JoystickButton(action, 9001);
-		recordAutoOn = new JoystickButton(action, 8);
-		recordAutoOff = new JoystickButton(action, 9);
+		recordAutoOn = new JoystickButton(action, 7);
+		recordAutoOff = new JoystickButton(action, 8);
 		
 		//Define what happens when the buttons are pressed
 		//driveToggle.whenPressed(new DriveTypeToggleCommand());
@@ -60,12 +55,6 @@ public class OI {
 		intakeArms.whenReleased(new IntakeToggleArmsCommand(true));
 		
 		//binGrabber.whenPressed(new BinGrabberToggleCommand());
-		
-		liftUp.whenPressed(new LiftCommand(1));
-		liftUp.whenReleased(new LiftCommand(0));
-		
-		liftDown.whenPressed(new LiftCommand(-0.5));
-		liftDown.whenReleased(new LiftCommand(0));
 		
 		//pushTote.whenPressed(new PushToteCommand());
 		

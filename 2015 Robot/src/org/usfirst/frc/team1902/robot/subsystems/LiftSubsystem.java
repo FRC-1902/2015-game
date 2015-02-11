@@ -2,10 +2,14 @@ package org.usfirst.frc.team1902.robot.subsystems;
 
 import org.usfirst.frc.team1902.robot.Robot;
 import org.usfirst.frc.team1902.robot.RobotMap;
+import org.usfirst.frc.team1902.robot.Util;
 import org.usfirst.frc.team1902.robot.commands.LiftStopCommand;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+
+import org.usfirst.frc.team1902.robot.commands.LiftDPADCommand;
+
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -87,7 +91,7 @@ public class LiftSubsystem extends Subsystem {
     public double minMax(double d, double min, double max) {
 		double minMaxed = d;
 		if (Math.abs(d) >= Math.abs(max)) {
-			minMaxed = max * Robot.sign(d);
+			minMaxed = max * Util.sign(d);
 		} else if (Math.abs(d) < Math.abs(min)) {
 			minMaxed = 0;
 		}
