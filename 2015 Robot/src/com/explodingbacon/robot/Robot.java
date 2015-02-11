@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.explodingbacon.robot.commands.AutonomousCommand;
 import com.explodingbacon.robot.subsystems.AutonomousSubsystem;
 import com.explodingbacon.robot.subsystems.BinGrabberSubsystem;
+import com.explodingbacon.robot.subsystems.DrawerSlideSubsystem;
 import com.explodingbacon.robot.subsystems.DriveSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeSubsystem;
@@ -44,6 +45,7 @@ public class Robot extends IterativeRobot {
 	public static IntakeArmsSubsystem intakeArms;
 	public static BinGrabberSubsystem binGrabber;
 	public static LiftSubsystem lift;
+	public static DrawerSlideSubsystem drawerSlides;
 	public static AutonomousSubsystem autonomous;
 	public static OI oi;
 	public static PowerDistributionPanel pdp;
@@ -68,6 +70,8 @@ public class Robot extends IterativeRobot {
 		binGrabber = new BinGrabberSubsystem();
 		System.out.println("Initializing LiftSubsystem...");
 		lift = new LiftSubsystem();
+		System.out.println("Initializing DrawerSlideSubsystem...");
+		drawerSlides = new DrawerSlideSubsystem();
 		System.out.println("Initializing AutonomousSubsystem...");
 		autonomous = new AutonomousSubsystem();
 		System.out.println("Initializing OI...");
@@ -134,16 +138,13 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("PDP", pdp);
 		if (intake.leftTouchSensor.get() && intake.rightTouchSensor.get()) {
 			if (rumble) {
-				OI.xbox.setRumble(RumbleType.kLeftRumble, 1);
-				OI.xbox.setRumble(RumbleType.kRightRumble, 1);
+				OI.xbox.rumble(1, 1);
 				rumble = false;
 			} else {
-				OI.xbox.setRumble(RumbleType.kLeftRumble, 0);
-				OI.xbox.setRumble(RumbleType.kRightRumble, 0);
+				OI.xbox.rumble(0, 0);
 			}
     	} else {
-    		OI.xbox.setRumble(RumbleType.kLeftRumble, 0);
-    		OI.xbox.setRumble(RumbleType.kRightRumble, 0);
+    		OI.xbox.rumble(0, 0); 
     		rumble = true;
     	}
         Scheduler.getInstance().run();

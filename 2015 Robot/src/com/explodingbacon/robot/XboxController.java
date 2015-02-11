@@ -50,5 +50,9 @@ public class XboxController extends Joystick {
 	public double getRightTrigger() {
 		return getRawAxis(3);
 	}
-
+	
+	public void rumble(float l, float r) {
+		setRumble(RumbleType.kLeftRumble, l);
+		setRumble(RumbleType.kRightRumble, r);
+	}
 }
