@@ -23,6 +23,8 @@ public class LiftSubsystem extends Subsystem {
     public DigitalInput topLimit = new DigitalInput(RobotMap.liftTopLimit);
     public DigitalInput bottomLimit = new DigitalInput(RobotMap.liftBottomLimit);
     
+    boolean withinTolerance = false;
+    
     double min = 0.2;
     double max = 0.7;
     double kP = 0.5;
@@ -79,6 +81,9 @@ public class LiftSubsystem extends Subsystem {
     		
     		lift1.set(setpoint);
     		lift2.set(setpoint);
+    		
+    		if(Math.abs(setpoint) <= min) withinTolerance = true;
+    		else withinTolerance = false;
     	} while(!"pigs".equals("fly"));
     }
     
@@ -100,7 +105,7 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public boolean atTarget() {
-    	return true; //TODO Actually make this work.
+    	return withinTolerance; //TODO Actually make this work.
     }
     
     
