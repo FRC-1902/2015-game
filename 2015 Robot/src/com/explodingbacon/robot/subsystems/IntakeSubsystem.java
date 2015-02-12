@@ -2,7 +2,6 @@ package com.explodingbacon.robot.subsystems;
 
 import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.RobotMap;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.TalonSRX;
@@ -15,46 +14,23 @@ public class IntakeSubsystem extends Subsystem {
     public Talon leftIntake = new Talon(RobotMap.leftIntakeTalon);
     public Talon rightIntake = new Talon(RobotMap.rightIntakeTalon);
     public TalonSRX roller = new TalonSRX(RobotMap.rollerTalon);
-	public DigitalInput leftTouchSensor = new DigitalInput(RobotMap.leftTouchSensor);
-	public DigitalInput rightTouchSensor = new DigitalInput(RobotMap.rightTouchSensor);
 	public DigitalInput chuteTouchSensor = new DigitalInput(RobotMap.chuteTouchSensor);
-	public Compressor compressor = new Compressor();
-    public boolean motorStatus = false;
-    public boolean reverse = false;
+	public double motorSpeed = 0;
 
-    public void setMotors(boolean status) {
-    	if (status == false) {
-    		leftIntake.set(0);
-    		rightIntake.set(0);
-    	} else {
-    		leftIntake.set(1);
-    		rightIntake.set(1);
-    		if (reverse) {
-    			leftIntake.set(1);
-    			rightIntake.set(-1);
-    		} else {
-    			leftIntake.set(-1);
-    			rightIntake.set(1);
-    		}
-    	}
-    	motorStatus = status;
-    	Robot.autonomous.add(new String[]{"intakeMotor", status + ""});
+    public void setMotors(double d) {
+    	leftIntake.set(d);
+    	rightIntake.set(d);
+    	motorSpeed = d;
+    	Robot.autonomous.add(new String[]{"intakeMotor", d + ""});
     }
     
-    public void setReversed(boolean status) {
-    	reverse = status;
-    	if (leftIntake.get() != 0) {
-    		setMotors(true);
-    	}
-    	Robot.autonomous.add(new String[]{"reverseIntake", status + ""});    	
-    }
-    
-    public boolean hasTote() {
-    	if (leftTouchSensor.get() && rightTouchSensor.get()) {
-    		return true;
+    public void setRoller(boolean status) {
+    	if (status) {
+    		roller.set(1);
     	} else {
-    		return false;
+    		roller.set(0);
     	}
+    	Robot.autonomous.add(new String[]{"roller", status + ""});    	
     }
     
     public void initDefaultCommand() {

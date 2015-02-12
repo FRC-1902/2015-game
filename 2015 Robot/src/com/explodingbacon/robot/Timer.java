@@ -27,9 +27,12 @@ public class Timer extends Thread {
 		return this;
 	}
 	
+	/**
+	 * The loop that makes this timer work. Don't call this.
+	 */
 	@Override
 	public void run() {
-		user.timerStart();
+		user.timerBegin();
 		while (true) {
 			try {
 				if (stop) break;
@@ -40,11 +43,11 @@ public class Timer extends Thread {
 				e.printStackTrace();
 			}
 		}
-		user.timerStop();
+		user.timerHalt();
 	}
 
 	/**
-	 * Stops the this thread. Use this instead of stop() or any other related functions.
+	 * Stops this thread. Use this instead of stop() or any other related functions.
 	 */
 	public void halt() {
 		stop = true;

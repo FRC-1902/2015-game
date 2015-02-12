@@ -1,12 +1,11 @@
 package com.explodingbacon.robot;
 
-import com.explodingbacon.robot.commands.AdjustToToteCommand;
+import com.explodingbacon.robot.Robot.State;
 import com.explodingbacon.robot.commands.BinGrabberToggleCommand;
 import com.explodingbacon.robot.commands.HumanPlayerStackCommand;
 import com.explodingbacon.robot.commands.IntakeToggleCommand;
-import com.explodingbacon.robot.commands.IntakeToggleReverseCommand;
-import com.explodingbacon.robot.commands.PushToteCommand;
 import com.explodingbacon.robot.commands.RecordAutonomousToggleCommand;
+import com.explodingbacon.robot.commands.RollerToggleCommand;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -16,37 +15,31 @@ public class OI {
 	public static XboxController xbox = new XboxController(1);
 	
 	Button intake;
-	Button reverseIntake;
+	Button reversedIntake;
 	Button binGrabber;
-	Button pushTote;
-	Button adjustToTote;
+	Button toggleRoller;
 	Button humanPlayerStack;
 	Button recordAutoOn;	
 	Button recordAutoOff;
 	
-	//Anything with the value of 9001 is a placeholder.
-	public void init() {		
-		//Define buttons
+	public void init() {
 		intake = xbox.x;
-		reverseIntake = xbox.a;
+		reversedIntake = xbox.a;
 		binGrabber = xbox.y;
-		pushTote = xbox.b;
-		adjustToTote = xbox.leftJoyButton;
-		humanPlayerStack = xbox.rightJoyButton;
+		toggleRoller = xbox.b;
+		humanPlayerStack = xbox.rightBumper;
 		recordAutoOn = xbox.start;
 		recordAutoOff = xbox.select;
 		
-		//Define what happens when the buttons are pressed		
+		//======================================================
+		
 		intake.whenPressed(new IntakeToggleCommand());
 		
-		reverseIntake.whenPressed(new IntakeToggleReverseCommand(true));
-		reverseIntake.whenReleased(new IntakeToggleReverseCommand(false));
+		reversedIntake.whenPressed(new IntakeToggleCommand(State.BACKWARDS));
 		
-		binGrabber.whenPressed(new BinGrabberToggleCommand());
-		
-		pushTote.whenPressed(new PushToteCommand());
-		
-		adjustToTote.whileHeld(new AdjustToToteCommand());
+		binGrabber.whenPressed(new BinGrabberToggleCommand());		
+
+		toggleRoller.whenPressed(new RollerToggleCommand());
 		
 		humanPlayerStack.whileHeld(new HumanPlayerStackCommand());
 		

@@ -2,10 +2,10 @@ package com.explodingbacon.robot;
 
 public interface TimerUser {
 
-	public void timerStart();
+	public void timerBegin();
 	
 	public void timer();
 	
-	public void timerStop();
+	public void timerHalt();
 	
 }

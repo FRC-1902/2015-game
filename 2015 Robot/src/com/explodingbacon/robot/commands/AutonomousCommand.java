@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.explodingbacon.robot.Robot;
+import com.explodingbacon.robot.Robot.State;
 import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem.Arm;
-import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem.State;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -54,9 +54,9 @@ public class AutonomousCommand extends Command {
 				} else if (s[0].equals("turn")) {
 					Robot.drive.gyroTurn(Double.parseDouble(s[1]), false);
 				} else if (s[0].equals("intakeMotor")) {
-					Robot.intake.setMotors(Boolean.parseBoolean(s[1]));
-				} else if (s[0].equals("reverseIntake")) {
-					Robot.intake.setReversed(Boolean.parseBoolean(s[1]));			
+					Robot.intake.setMotors(Double.parseDouble(s[1]));
+				} else if (s[0].equals("roller")) {
+					Robot.intake.setRoller(Boolean.parseBoolean(s[1]));	
 				} else if (s[0].equals("intakeArm")) {
 					Robot.intakeArms.setArm(Arm.valueOf(s[1]), State.valueOf(s[2]));
 				} else if (s[0].equals("binGrabber")) {
@@ -65,10 +65,6 @@ public class AutonomousCommand extends Command {
 					Robot.lift.setRaw(Double.parseDouble(s[1]));
 				} else if (s[0].equals("drawerSlides")) {
 					Robot.drawerSlides.setDrawerSlides(Double.parseDouble(s[1]));
-				} else if (s[0].equals("pushTote")) {
-					Robot.lift.pushTote();
-				} else if (s[0].equals("adjustToTote")) {
-					while (!Robot.drive.adjustToTote());
 				}
 				commands.remove(commands.get(0));
 			} else {

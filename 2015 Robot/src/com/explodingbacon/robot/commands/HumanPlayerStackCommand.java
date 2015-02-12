@@ -1,7 +1,7 @@
 package com.explodingbacon.robot.commands;
 
 import com.explodingbacon.robot.Robot;
-import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem.State;
+import com.explodingbacon.robot.Robot.State;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -34,12 +34,13 @@ public class HumanPlayerStackCommand extends Command {
     			if (toteThroughChute) {
     				//TODO disable feed-a-tote indicator light
     				if (!grabbedTote) {
-    					Robot.intake.setMotors(true);
+    					Robot.intake.setMotors(1);
     					Robot.intakeArms.setArms(State.CLOSED);
     				}
-    				if (Robot.intake.hasTote() || grabbedTote) {
+    				boolean weHaveTheTote = true; //TODO implement
+    				if (weHaveTheTote || grabbedTote) {
     					grabbedTote = true;
-    					Robot.intake.setMotors(false);
+    					Robot.intake.setMotors(0);
     					if (!liftHasTote) Robot.lift.target = 0;    					
     					if (Robot.lift.atTarget() || liftHasTote) {
     						liftHasTote = true;

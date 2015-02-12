@@ -58,9 +58,9 @@ public class DriveSubsystem extends Subsystem {
 	 **/
 	public void tankDrive(double left, double right) {
 		this.left1.set(-left);
-		//this.left2.set(left);
+		this.left2.set(left);
 		this.right1.set(right);
-		//this.right2.set(right);
+		this.right2.set(right);
 		Robot.autonomous.add(new String[]{"drive", leftEncoder.getRaw() + "", rightEncoder.getRaw()  + "", gyro.getAngle() + ""});
 		if (Robot.autonomous.recording) {
 			leftEncoder.reset();
@@ -198,19 +198,6 @@ public class DriveSubsystem extends Subsystem {
 		}
 		System.out.println("Gyro turn finished!");	
 	}	
-
-	public boolean adjustToTote() {
-		double adjustSpeed = 0.4;
-		Robot.autonomous.add(new String[]{"adjustToTote"});		
-		if (Robot.intake.leftTouchSensor.get() && !Robot.intake.rightTouchSensor.get()) {
-			tankDrive(-adjustSpeed, adjustSpeed);
-		} else if (Robot.intake.rightTouchSensor.get() && !Robot.intake.leftTouchSensor.get()) {
-			tankDrive(adjustSpeed, -adjustSpeed);
-		} else {
-			return true;
-		}
-		return false;
-	}
 
 	public void initDefaultCommand() {
 		setDefaultCommand(new DriveCommand());

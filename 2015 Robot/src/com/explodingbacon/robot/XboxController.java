@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-public class XboxController extends Joystick {
+public class XboxController extends Joystick implements TimerUser {
 
 	public Button a;
 	public Button b;
@@ -18,6 +18,7 @@ public class XboxController extends Joystick {
 	public Button rightJoyButton;
 	public float rumbleL = 0;
 	public float rumbleR = 0;
+	public Timer rumbleTimer;
 	
 	public XboxController(int port) {
 		super(port);
@@ -52,7 +53,7 @@ public class XboxController extends Joystick {
 	/**
 	 * See the documentation for Joystick.getPOV(int).
 	 */
-	public double getDPad() {
+	public double getDPad() { //Possibly read axises 5 and 6 for X and Y
 		return getPOV(0);
 	}
 	
@@ -82,5 +83,29 @@ public class XboxController extends Joystick {
 		rumbleR = r;
 		setRumble(RumbleType.kLeftRumble, l);
 		setRumble(RumbleType.kRightRumble, r);
+	}
+	
+	/**
+	 * Makes the controller rumble for X seconds.
+	 * @param l The left rumble value.
+	 * @param r The right rumble value.
+	 * @param time How long the controller should rumble.
+	 */
+	public void rumble(float l, float r, double time) {
+		rumble(l, r);
+		rumbleTimer = new Timer(0.5, false, this).begin();
+	}
+
+	@Override
+	public void timerBegin() {}
+
+	@Override
+	public void timer() {
+		rumble(0, 0);
+	}
+
+	@Override
+	public void timerHalt() {
+		rumbleTimer = null;
 	}
 }
