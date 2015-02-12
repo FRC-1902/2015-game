@@ -105,7 +105,7 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public boolean atTarget() {
-    	return withinTolerance; //TODO Actually make this work.
+    	return withinTolerance; 
     }
     
     
