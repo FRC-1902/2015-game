@@ -1,12 +1,9 @@
 package com.explodingbacon.robot.subsystems;
 
-import com.explodingbacon.robot.OI;
 import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.RobotMap;
-
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -24,26 +21,22 @@ public class IntakeSubsystem extends Subsystem {
 	public Compressor compressor = new Compressor();
     public boolean motorStatus = false;
     public boolean reverse = false;
-    public boolean rotate = false;
 
-	public void setMotors(boolean status) {
-		if (status == false) {
-			leftIntake.set(0);
-			rightIntake.set(0);
-		} else {
-			if (rotate) {
-				leftIntake.set(1);
-				rightIntake.set(1);
-			} else {
-				if (reverse) {
-					leftIntake.set(1);
-					rightIntake.set(-1);
-				} else {
-					leftIntake.set(-1);
-					rightIntake.set(1);
-				}
-			}
-		}
+    public void setMotors(boolean status) {
+    	if (status == false) {
+    		leftIntake.set(0);
+    		rightIntake.set(0);
+    	} else {
+    		leftIntake.set(1);
+    		rightIntake.set(1);
+    		if (reverse) {
+    			leftIntake.set(1);
+    			rightIntake.set(-1);
+    		} else {
+    			leftIntake.set(-1);
+    			rightIntake.set(1);
+    		}
+    	}
     	motorStatus = status;
     	Robot.autonomous.add(new String[]{"intakeMotor", status + ""});
     }
@@ -54,14 +47,6 @@ public class IntakeSubsystem extends Subsystem {
     		setMotors(true);
     	}
     	Robot.autonomous.add(new String[]{"reverseIntake", status + ""});    	
-    }
-    
-    public void setRotated(boolean status) {
-    	rotate = status;
-    	if (leftIntake.get() != 0) {
-    		setMotors(true);
-    	}
-    	Robot.autonomous.add(new String[]{"rotateIntake", status + ""});   	
     }
     
     public boolean hasTote() {

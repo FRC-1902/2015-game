@@ -1,5 +1,7 @@
 package com.explodingbacon.robot.commands;
 
+import javax.swing.Timer;
+
 import com.explodingbacon.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -7,6 +9,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class AdjustToToteCommand extends Command {
 
 	boolean success = false;
+	public Timer timer;
 	
     public AdjustToToteCommand() {
         requires(Robot.drive);

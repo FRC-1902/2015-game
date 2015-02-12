@@ -30,7 +30,7 @@ public class RobotMap {
 	public static int drawerSlidesEncoderB = 9; //ID 28
 	public static int drawerSlidesOutLimit = 12; //ID 29
 	public static int drawerSlidesInLimit = 13; //ID 30
-	public static int canGrabberSolenoid = 0; //ID 24
+	public static int binGrabberSolenoid = 0; //ID 24
 	
 	//Lift Values
 	public static int liftVictor1 = 6; //ID 6

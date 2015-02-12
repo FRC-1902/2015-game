@@ -24,6 +24,7 @@ public class IntakeArmsControlCommand extends Command {
     	} else {
     		Robot.intakeArms.setArm(Arm.LEFT, State.OPEN);
     	}
+    	
     	if (Math.abs(OI.xbox.getRightTrigger()) > deadZone) {
     		Robot.intakeArms.setArm(Arm.RIGHT, State.CLOSED);
     	} else {

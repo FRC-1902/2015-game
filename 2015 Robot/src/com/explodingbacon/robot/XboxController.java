@@ -10,12 +10,14 @@ public class XboxController extends Joystick {
 	public Button b;
 	public Button x;
 	public Button y;
-	public Button start; //the left one
+	public Button start;
 	public Button select;
 	public Button leftBumper;
 	public Button rightBumper;
 	public Button leftJoyButton;
 	public Button rightJoyButton;
+	public float rumbleL = 0;
+	public float rumbleR = 0;
 	
 	public XboxController(int port) {
 		super(port);
@@ -31,27 +33,53 @@ public class XboxController extends Joystick {
 		rightJoyButton = new JoystickButton(this, 10);
 	}
 	
+	/**
+	 * Gets the X axis of the right Xbox joystick.
+	 * @return The X axis of the right Xbox joystick.
+	 */
 	public double getX2() {
 		return getRawAxis(4);
 	}
 	
+	/**
+	 * Gets the Y axis of the right Xbox joystick.
+	 * @return The Y axis of the right Xbox joystick.
+	 */
 	public double getY2() {
 		return getRawAxis(5);
 	}
 	
+	/**
+	 * See the documentation for Joystick.getPOV(int).
+	 */
 	public double getDPad() {
 		return getPOV(0);
 	}
 	
+	/**
+	 * Gets the value of the left trigger.
+	 * @return The value of the left trigger.
+	 */
 	public double getLeftTrigger() {
 		return getRawAxis(2);
 	}
 	
+	/**
+	 * Gets the value of the right trigger.
+	 * @return The value of the right trigger.
+	 */
 	public double getRightTrigger() {
 		return getRawAxis(3);
 	}
 	
+	/**
+	 * Sets the rumble value of the left and right rumble motors.
+	 * @param l The left rumble value.
+	 * @param r The right rumble value.
+	 */
 	public void rumble(float l, float r) {
+		rumbleL = l;
+		rumbleR = r;
 		setRumble(RumbleType.kLeftRumble, l);
 		setRumble(RumbleType.kRightRumble, r);
 	}

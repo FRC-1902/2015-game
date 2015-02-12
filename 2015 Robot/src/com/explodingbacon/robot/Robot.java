@@ -38,7 +38,7 @@ import com.explodingbacon.robot.subsystems.LiftSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem.Arm;
 import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem.State;
                                                                              
-public class Robot extends IterativeRobot {
+public class Robot extends IterativeRobot implements TimerUser {
 
 	public static DriveSubsystem drive;
 	public static IntakeSubsystem intake;
@@ -53,7 +53,9 @@ public class Robot extends IterativeRobot {
 	public static Robot self;
 	public static double angle = 0;
 	public static SendableChooser chooser = new SendableChooser();
+	
 	public boolean rumble = true;
+	public Timer timer;
 
     AutonomousCommand autonomousCommand = null;
 
@@ -98,6 +100,7 @@ public class Robot extends IterativeRobot {
 			}
 		}
 		SmartDashboard.putData("Chooser", chooser);
+		SmartDashboard.putNumber("Delay", 0);
 		autonomousCommand.actuallyInit();
 		System.out.println("Robot initialization complete!");
     }
@@ -137,15 +140,8 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
 		SmartDashboard.putData("PDP", pdp);
 		if (intake.leftTouchSensor.get() && intake.rightTouchSensor.get()) {
-			if (rumble) {
-				OI.xbox.rumble(1, 1);
-				rumble = false;
-			} else {
-				OI.xbox.rumble(0, 0);
-			}
-    	} else {
-    		OI.xbox.rumble(0, 0); 
-    		rumble = true;
+			OI.xbox.rumble(1, 1);
+			timer = new Timer(0.5, false, this).begin();
     	}
         Scheduler.getInstance().run();
     }
@@ -155,5 +151,21 @@ public class Robot extends IterativeRobot {
      */
     public void testPeriodic() {
         LiveWindow.run();
-    }   
+    }	
+
+	@Override
+	public void timerStart() {		
+	}
+
+	@Override
+	public void timer() {
+		if (OI.xbox.rumbleL != 0 || OI.xbox.rumbleR != 0) {
+			OI.xbox.rumble(0, 0);
+		}
+	}
+	
+	@Override
+	public void timerStop() {
+		timer = null;
+	}   
 }

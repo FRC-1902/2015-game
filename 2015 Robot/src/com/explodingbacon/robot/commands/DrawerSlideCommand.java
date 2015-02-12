@@ -15,7 +15,7 @@ public class DrawerSlideCommand extends Command {
     }
 
     protected void execute() {
-    	Robot.drawerSlides.setDrawerSlides(OI.xbox.getY2());
+    	Robot.drawerSlides.setDrawerSlides(OI.xbox.getY());
     }
 
     protected boolean isFinished() {

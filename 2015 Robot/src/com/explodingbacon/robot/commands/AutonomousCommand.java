@@ -14,11 +14,13 @@ import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem.State;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutonomousCommand extends Command {
 
 	public List<String[]> commands = new ArrayList<>();
 	boolean initialized = false;
+	boolean didDelay = false;
 
 	public AutonomousCommand() {
 		requires(Robot.autonomous);
@@ -29,6 +31,10 @@ public class AutonomousCommand extends Command {
 
 	protected void execute() {
 		if (initialized) {
+			if (!didDelay) {
+				Timer.delay(SmartDashboard.getNumber("Delay", 0));
+				didDelay = true;
+			}
 			if (!commands.isEmpty()) {
 				String[] s = commands.get(0);
 				if (s[0].equals("drive")) {
@@ -50,12 +56,10 @@ public class AutonomousCommand extends Command {
 				} else if (s[0].equals("intakeMotor")) {
 					Robot.intake.setMotors(Boolean.parseBoolean(s[1]));
 				} else if (s[0].equals("reverseIntake")) {
-					Robot.intake.setReversed(Boolean.parseBoolean(s[1]));
-				} else if (s[0].equals("rotateIntake")) {
-					Robot.intake.setRotated(Boolean.parseBoolean(s[1]));
+					Robot.intake.setReversed(Boolean.parseBoolean(s[1]));			
 				} else if (s[0].equals("intakeArm")) {
 					Robot.intakeArms.setArm(Arm.valueOf(s[1]), State.valueOf(s[2]));
-				} else if (s[0].equals("canGrabber")) {
+				} else if (s[0].equals("binGrabber")) {
 					Robot.binGrabber.setGrabber(Boolean.parseBoolean(s[1]));
 				} else if (s[0].equals("lift")) {
 					Robot.lift.setRaw(Double.parseDouble(s[1]));
@@ -147,6 +151,7 @@ public class AutonomousCommand extends Command {
 		}
 		Robot.angle = 0;
 		initialized = true;
+		didDelay = false;
 		System.out.println("Autonomous has finished initializing.");
 	}
 
