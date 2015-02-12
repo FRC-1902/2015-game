@@ -15,6 +15,8 @@ void setup()
   strip.begin();
   strip.show();
   
+  Serial.begin(9600);
+  
   baconOrange = Color(255, 10, 0); //Final, Sarah approved
   baconGreen = Color(0, 255, 0); //Final, Sarah approved
 }
@@ -31,9 +33,15 @@ void loop()
   everyX(1, 0, Color(0, 0, 0), strip);
   delay(2000);
   */
-  
-  chase(true, false, 4, strip);
-  delay(100);
+  if(Serial.available())
+  {
+    switch(Serial.read())
+    {
+      case('o'): colorWipe(baconOrange, 50, strip); return;
+      case('g'): colorWipe(baconGreen, 50, strip); return;
+      default: colorWipe(Color(0, 0, 0), 50, strip);
+    }
+  }
 }
 
 void colorWipe(uint32_t c, uint8_t wait, Adafruit_WS2801 strip) {
