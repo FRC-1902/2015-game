@@ -1,12 +1,13 @@
 #include "Adafruit_WS2801.h"
 #include "SPI.h"
+#include "ctype.h"
 
 Adafruit_WS2801 arcReactor = Adafruit_WS2801(1, 5, 3);
 Adafruit_WS2801 brakeLights = Adafruit_WS2801(1, 8, 9);
 Adafruit_WS2801 elevatorLights = Adafruit_WS2801(1, 6, 7);
 Adafruit_WS2801 test = Adafruit_WS2801(61, 2, 4);
 
-uint32_t baconGreen, baconOrange, disabled, off, colors[5];
+uint32_t baconGreen, baconOrange, disabled, off, custom, colors[5];
 byte state[4], strip, count, i, period, wait, complementArray[3];
 boolean isReversed[4], isInversed[4], isStopped[4];
 
@@ -66,6 +67,9 @@ void loop()
       case('0'): allOff(); break;
       case('1'): everyX(1, 0, colors[strip], strips[strip]); state[strip] = 0; break;
       case('4'): colors[4] = colors[strip]; break;
+      
+      //Custom color
+      case('9'): recieveCustomColor(strip); break;
     }
   }
   advance();
@@ -89,8 +93,6 @@ void advance()
   
   count = millis() / wait;
   count %= period;
-  
-  Serial.println(count);
 }
 
 void everyX(byte skip, byte offset, uint32_t color, Adafruit_WS2801 strip)
@@ -181,6 +183,36 @@ void allOff()
     state[i] = 0;
     everyX(1, 0, off, strips[i]);
   }
+}
+
+void recieveCustomColor(byte stripIndex)
+{
+  byte s, c[3];
+  for(i=0; i<3; i++)
+  {
+    Serial.println(i);
+    s = 0;
+    while(Serial.peek() != '.')
+    {
+      if(Serial.available())
+      {
+        if(isdigit(Serial.peek()))
+        {
+          s *= 10;
+          s += Serial.read();
+        }
+        else
+        {
+          Serial.read();
+        }
+      }
+    }
+    Serial.read();
+    
+    c[i] = s;
+  }
+  
+  colors[stripIndex] = Color(c[0], c[1], c[2]);
 }
 
 uint32_t Color(byte r, byte g, byte b)
