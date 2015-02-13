@@ -16,17 +16,14 @@
 package com.explodingbacon.robot;
 
 import java.io.File;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import com.explodingbacon.robot.commands.AutonomousCommand;
 import com.explodingbacon.robot.subsystems.AutonomousSubsystem;
 import com.explodingbacon.robot.subsystems.BinGrabberSubsystem;
@@ -35,8 +32,6 @@ import com.explodingbacon.robot.subsystems.DriveSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeSubsystem;
 import com.explodingbacon.robot.subsystems.LiftSubsystem;
-import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem.Arm;
-import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem.State;
                                                                              
 public class Robot extends IterativeRobot {
 
@@ -52,8 +47,7 @@ public class Robot extends IterativeRobot {
 	public static DriverStation ds;
 	public static Robot self;
 	public static double angle = 0;
-	public static SendableChooser chooser = new SendableChooser();
-	public boolean rumble = true;
+	public static SendableChooser chooser = new SendableChooser();	
 
     AutonomousCommand autonomousCommand = null;
 
@@ -98,6 +92,7 @@ public class Robot extends IterativeRobot {
 			}
 		}
 		SmartDashboard.putData("Chooser", chooser);
+		SmartDashboard.putNumber("Delay", 0);
 		autonomousCommand.actuallyInit();
 		System.out.println("Robot initialization complete!");
     }
@@ -135,18 +130,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-		SmartDashboard.putData("PDP", pdp);
-		if (intake.leftTouchSensor.get() && intake.rightTouchSensor.get()) {
-			if (rumble) {
-				OI.xbox.rumble(1, 1);
-				rumble = false;
-			} else {
-				OI.xbox.rumble(0, 0);
-			}
-    	} else {
-    		OI.xbox.rumble(0, 0); 
-    		rumble = true;
-    	}
+		SmartDashboard.putData("PDP", pdp);		
         Scheduler.getInstance().run();
     }
     
@@ -155,5 +139,12 @@ public class Robot extends IterativeRobot {
      */
     public void testPeriodic() {
         LiveWindow.run();
-    }   
+    }	
+    
+    public enum State {
+    	OPEN,
+    	CLOSED,
+    	FORWARDS,
+    	BACKWARDS
+    }
 }

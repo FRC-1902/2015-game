@@ -15,12 +15,10 @@ public class LiftPCommand extends Command {
     protected void initialize() {
     }
 
-    protected void execute() {
-    	
+    protected void execute() {  	
     	if(Robot.lift.topLimit.get()) Robot.lift.setRaw(0);
     	else if(Robot.lift.bottomLimit.get()) Robot.lift.home();
-    		else Robot.lift.absoluteLift();
-    	
+    		else Robot.lift.absoluteLift();    	
     }
 
     protected boolean isFinished() {

@@ -1,6 +1,7 @@
 package com.explodingbacon.robot.subsystems;
 
 import com.explodingbacon.robot.Robot;
+import com.explodingbacon.robot.Robot.State;
 import com.explodingbacon.robot.RobotMap;
 import com.explodingbacon.robot.Util;
 import com.explodingbacon.robot.commands.IntakeArmsControlCommand;
@@ -42,8 +43,7 @@ public class IntakeArmsSubsystem extends Subsystem {
     	setArm(Arm.RIGHT, state);
     }
     
-    public IntakeArmsSubsystem()
-    {
+    public IntakeArmsSubsystem() {
     	if (Robot.self.isTest()) {
 			SmartDashboard.putNumber("liftKP", kP);
 			SmartDashboard.putNumber("liftKI", kI);
@@ -53,8 +53,7 @@ public class IntakeArmsSubsystem extends Subsystem {
 		}
     }
 	
-	public void absolutePivot() 
-	{
+	public void absolutePivot() {
 		double leftError, rightError, leftP, rightP, leftI, rightI, leftSetpoint, rightSetpoint;
 		leftI = 0;
 		rightI = 0;
@@ -95,11 +94,6 @@ public class IntakeArmsSubsystem extends Subsystem {
     public enum Arm {
     	LEFT,
     	RIGHT
-    }
-    
-    public enum State {
-    	OPEN,
-    	CLOSED
     }
 }
 

@@ -20,13 +20,13 @@ public class RecordAutonomousToggleCommand extends Command {
     protected void initialize() {
     	if (state == null) {
     		if (Robot.autonomous.recording) {
-    			Robot.autonomous.disable();
+    			//Robot.autonomous.disable();
     		} else {
-    			Robot.autonomous.enable();
+    			//Robot.autonomous.enable();
     		}
     	} else {
-    		if (Robot.autonomous.recording) Robot.autonomous.disable();
-    		if (state) Robot.autonomous.enable();
+    		//if (Robot.autonomous.recording) Robot.autonomous.disable();
+    		//if (state) Robot.autonomous.enable();
     	}
     }
 

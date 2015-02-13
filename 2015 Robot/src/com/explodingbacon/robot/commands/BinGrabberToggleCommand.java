@@ -18,7 +18,7 @@ public class BinGrabberToggleCommand extends Command {
     }
 
     protected void initialize() {
-    	Robot.binGrabber.setGrabber(state == null ? !Robot.binGrabber.canGrabber.get() : state);
+    	Robot.binGrabber.setGrabber(state == null ? !Robot.binGrabber.binGrabber.get() : state);
     }
 
     protected void execute() {  	

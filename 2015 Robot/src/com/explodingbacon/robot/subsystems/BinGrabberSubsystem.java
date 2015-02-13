@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class BinGrabberSubsystem extends Subsystem {
     
-    public Solenoid canGrabber = new Solenoid(RobotMap.canGrabberSolenoid);
+    public Solenoid binGrabber = new Solenoid(RobotMap.binGrabberSolenoid);
     
     public void setGrabber(boolean state) {
-    	canGrabber.set(state);
-    	Robot.autonomous.add(new String[]{"canGrabber", state + ""});
+    	binGrabber.set(state);
+    	Robot.autonomous.add(new String[]{"binGrabber", state + ""});
     }
     
     public void initDefaultCommand() {

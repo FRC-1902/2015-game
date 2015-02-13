@@ -18,8 +18,6 @@ public class RobotMap {
 	public static int leftArmPivotTalon = 4; //ID 4
 	public static int rightArmPivotTalon = 5; //ID 5
 	public static int rollerTalon = 0x00; //ID 8
-	public static int leftTouchSensor = 0; //ID 15
-	public static int rightTouchSensor = 1; //ID 16
 	public static int chuteTouchSensor = 14; //ID 31
 	public static int leftArmPivotPot = 1; //ID 22
 	public static int rightArmPivotPot = 2; //ID 23
@@ -30,12 +28,11 @@ public class RobotMap {
 	public static int drawerSlidesEncoderB = 9; //ID 28
 	public static int drawerSlidesOutLimit = 12; //ID 29
 	public static int drawerSlidesInLimit = 13; //ID 30
-	public static int canGrabberSolenoid = 0; //ID 24
+	public static int binGrabberSolenoid = 0; //ID 24
 	
 	//Lift Values
 	public static int liftVictor1 = 6; //ID 6
 	public static int liftVictor2 = 7; //ID 7
-	public static int totePusherSolenoid = 1; //ID 25
 	public static int liftEncoderA = 6; //ID 17
 	public static int liftEncoderB = 7; //ID 18
 	public static int liftTopLimit = 10; //ID 19
