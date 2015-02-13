@@ -18,17 +18,17 @@ public class IntakeArmsControlCommand extends Command {
     }
 
     protected void execute() {
-    	if (Math.abs(OI.xbox.getLeftTrigger()) > deadZone) {
+    	if (OI.xbox.getLeftTrigger() > deadZone) {
     		Robot.intakeArms.setArm(Arm.LEFT, State.CLOSED);
     	} else {
     		Robot.intakeArms.setArm(Arm.LEFT, State.OPEN);
     	}
     	
-    	if (Math.abs(OI.xbox.getRightTrigger()) > deadZone) {
+    	if (OI.xbox.getRightTrigger() > deadZone) {
     		Robot.intakeArms.setArm(Arm.RIGHT, State.CLOSED);
     	} else {
     		Robot.intakeArms.setArm(Arm.RIGHT, State.OPEN);
-    	}
+    	}  	
     }
 
     protected boolean isFinished() {

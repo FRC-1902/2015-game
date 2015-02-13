@@ -14,5 +14,8 @@ public class LightsSubsystem extends Subsystem {
 
     public void initDefaultCommand() {   	
     }
+    
+    //colors: orange green white black
+    //
 }
 

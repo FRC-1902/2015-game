@@ -1,7 +1,6 @@
 package com.explodingbacon.robot.commands;
 
 import com.explodingbacon.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 public class LiftPCommand extends Command {

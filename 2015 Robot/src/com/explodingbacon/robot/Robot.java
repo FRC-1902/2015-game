@@ -16,6 +16,7 @@
 package com.explodingbacon.robot;
 
 import java.io.File;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.explodingbacon.robot.commands.AutonomousCommand;
 import com.explodingbacon.robot.subsystems.AutonomousSubsystem;
 import com.explodingbacon.robot.subsystems.BinGrabberSubsystem;
@@ -32,6 +34,7 @@ import com.explodingbacon.robot.subsystems.DriveSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeSubsystem;
 import com.explodingbacon.robot.subsystems.LiftSubsystem;
+import com.explodingbacon.robot.subsystems.LiftSubsystem.LiftPThread;
                                                                              
 public class Robot extends IterativeRobot {
 
@@ -98,24 +101,27 @@ public class Robot extends IterativeRobot {
     }
 	
 	public void disabledPeriodic() {
-		SmartDashboard.putData("PDP", pdp);
 		Scheduler.getInstance().run();
+		periodic();
 	}
 
     public void autonomousInit() {
         if (autonomousCommand != null) autonomousCommand.start();
+        init();
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-		SmartDashboard.putData("PDP", pdp);
+		periodic();
         Scheduler.getInstance().run();
     }
 
     public void teleopInit() {
-        if (autonomousCommand != null) autonomousCommand.cancel();        
+        if (autonomousCommand != null) autonomousCommand.cancel();  
+        init();
+        OI.xbox.rumble(0.5f, 0.5f, 0.5);
     }
 
     /**
@@ -124,14 +130,15 @@ public class Robot extends IterativeRobot {
      */
     public void disabledInit(){
     	autonomous.disable();
+    	disabled();
     }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-		SmartDashboard.putData("PDP", pdp);		
         Scheduler.getInstance().run();
+		periodic();	
     }
     
     /**
@@ -139,7 +146,21 @@ public class Robot extends IterativeRobot {
      */
     public void testPeriodic() {
         LiveWindow.run();
-    }	
+    }
+    
+    public void init() {
+    	Robot.lift.startThread();
+    	Robot.intakeArms.startThread();
+    }
+    
+    public void periodic() {
+    	SmartDashboard.putData("PDP", pdp);    	
+    }
+    
+    public void disabled() {
+    	Robot.lift.stopThread();
+    	Robot.intakeArms.stopThread();
+    }
     
     public enum State {
     	OPEN,

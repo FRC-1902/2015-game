@@ -1,5 +1,6 @@
 package com.explodingbacon.robot.subsystems;
 
+import com.explodingbacon.robot.CodeThread;
 import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.Robot.State;
 import com.explodingbacon.robot.RobotMap;
@@ -14,11 +15,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeArmsSubsystem extends Subsystem {
 	
-	AnalogPotentiometer leftPot = new AnalogPotentiometer(RobotMap.leftArmPivotPot, 1, 0);
-	AnalogPotentiometer rightPot = new AnalogPotentiometer(RobotMap.rightArmPivotPot, 1, 0);
+	public AnalogPotentiometer leftPot = new AnalogPotentiometer(RobotMap.leftArmPivotPot, 1, 0);
+	public AnalogPotentiometer rightPot = new AnalogPotentiometer(RobotMap.rightArmPivotPot, 1, 0);
 	
-	Talon leftArm = new Talon(RobotMap.leftArmPivotTalon);
-	Talon rightArm = new Talon(RobotMap.rightArmPivotTalon);
+	public Talon leftArm = new Talon(RobotMap.leftArmPivotTalon);
+	public Talon rightArm = new Talon(RobotMap.rightArmPivotTalon);
+	
+	public IntakeArmsPivotThread pivotThread = new IntakeArmsPivotThread();
 	
 	double min = 0.2;
     double max = 0.7;
@@ -54,6 +57,7 @@ public class IntakeArmsSubsystem extends Subsystem {
     }
 	
 	public void absolutePivot() {
+		/*
 		double leftError, rightError, leftP, rightP, leftI, rightI, leftSetpoint, rightSetpoint;
 		leftI = 0;
 		rightI = 0;
@@ -83,17 +87,64 @@ public class IntakeArmsSubsystem extends Subsystem {
 			leftArm.set(leftSetpoint);
 			rightArm.set(rightSetpoint);
 		} while (!"pigs".equals("fly"));
+		*/
 	}
 
     public void initDefaultCommand() {
     	setDefaultCommand(new IntakeArmsControlCommand());
-        // Set the default command for a subsystem here.
-        //setDefaultCommand(new MySpecialCommand());
     }
     
     public enum Arm {
     	LEFT,
     	RIGHT
+    }
+    
+    public void startThread() {
+    	pivotThread = new IntakeArmsPivotThread();
+    	pivotThread.start();
+    }
+    
+    public void stopThread() {
+    	pivotThread.stop();
+    	pivotThread = null;
+    }
+    
+    public class IntakeArmsPivotThread extends CodeThread {
+    	
+		double leftError, rightError, leftP, rightP, leftI, rightI, leftSetpoint, rightSetpoint;    	
+    	
+    	public IntakeArmsPivotThread() {
+    		leftI = 0;
+    		rightI = 0;
+
+    		kP = SmartDashboard.getNumber("armsKP", kP);
+    		kI = SmartDashboard.getNumber("armsKI", kI);
+    		kI2 = SmartDashboard.getNumber("armsKI2", kI2);
+    		min = SmartDashboard.getNumber("armsMin", min);
+    		max = SmartDashboard.getNumber("armsMax", max);
+    	}
+    	
+    	@Override
+    	public void code() {
+    		leftError = leftTarget - leftPot.get();
+			rightError = rightTarget - rightPot.get();
+
+			leftP = leftError;
+			rightP = rightError;
+
+			leftI += leftError;
+			rightI += rightError;
+
+			leftSetpoint = Util.minMax(leftP * kP + leftI * kI, min, max);
+			leftSetpoint += leftI * kI2;
+			
+			rightSetpoint = Util.minMax(rightP * kP + rightI * kI, min, max);
+			rightSetpoint += rightI * kI2;
+
+			leftArm.set(leftSetpoint);
+			rightArm.set(rightSetpoint);
+    	}
+    	
     }
 }
 

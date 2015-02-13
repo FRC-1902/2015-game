@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-public class XboxController extends Joystick implements TimerUser {
+public class XboxController extends Joystick {
 
 	public Button a;
 	public Button b;
@@ -51,10 +51,11 @@ public class XboxController extends Joystick implements TimerUser {
 	}
 	
 	/**
-	 * See the documentation for Joystick.getPOV(int).
+	 * Gives the current Direction of the DPad.
+	 * @return The Direction of the DPad. Returns null if the DPad is not pressed.
 	 */
-	public double getDPad() { //Possibly read axises 5 and 6 for X and Y
-		return getPOV(0);
+	public Direction getDPad() {
+		return Direction.toDirection(getPOV(0));
 	}
 	
 	/**
@@ -93,19 +94,60 @@ public class XboxController extends Joystick implements TimerUser {
 	 */
 	public void rumble(float l, float r, double time) {
 		rumble(l, r);
-		rumbleTimer = new Timer(0.5, false, this).begin();
+		rumbleTimer = new Timer(0.5, false, new TimerUser() {
+			public void timer() {
+				rumble(0, 0);
+			}
+			public void timerStop() {
+				rumbleTimer = null;
+			}
+		}).start();
 	}
-
-	@Override
-	public void timerBegin() {}
-
-	@Override
-	public void timer() {
-		rumble(0, 0);
-	}
-
-	@Override
-	public void timerHalt() {
-		rumbleTimer = null;
+	
+	public enum Direction {
+		NORTH(0),
+		NORTH_EAST(45),
+		EAST(90),
+		SOUTH_EAST(135),
+		SOUTH(180),
+		SOUTH_WEST(225),
+		WEST(270),
+		NORTH_WEST(315);
+		
+		public static Direction[] allDirections = new Direction[]{Direction.NORTH, Direction.NORTH_EAST, Direction.EAST, Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST, Direction.NORTH_WEST};
+		public int angle;
+		
+		Direction(int angle) {
+			this.angle = angle;
+		}			
+		
+		public boolean isNorth() {
+			if (this == Direction.NORTH_WEST || this == Direction.NORTH || this == Direction.NORTH_EAST) return true;
+			return false;
+		}
+		
+		public boolean isEast() {
+			if (this == Direction.NORTH_EAST || this == Direction.EAST || this == Direction.SOUTH_EAST) return true;
+			return false;
+		}
+		
+		public boolean isSouth() {
+			if (this == Direction.SOUTH_WEST || this == Direction.SOUTH || this == Direction.SOUTH_EAST) return true;
+			return false;
+		}
+		
+		public boolean isWest() {
+			if (this == Direction.NORTH_WEST || this == Direction.WEST || this == Direction.SOUTH_WEST) return true;
+			return false;
+		}
+		
+		public static Direction toDirection(int angle) {
+			for (Direction d : allDirections) {
+				if (d.angle == angle) {
+					return d;
+				}
+			}
+			return null;
+		}
 	}
 }

@@ -11,7 +11,7 @@ public class RecordAutonomousToggleCommand extends Command {
 	public RecordAutonomousToggleCommand(boolean state) {
     	requires(Robot.autonomous);
     	this.state = state;
-    }
+	}
 	
     public RecordAutonomousToggleCommand() {
     	requires(Robot.autonomous);

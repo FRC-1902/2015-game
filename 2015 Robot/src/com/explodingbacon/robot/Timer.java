@@ -1,11 +1,12 @@
 package com.explodingbacon.robot;
 
-public class Timer extends Thread {
+public class Timer implements Runnable {
 
 	double seconds;
 	TimerUser user;
 	boolean loop = true;
 	boolean stop = false;
+	Thread thread;
 	
 	public Timer(double seconds, TimerUser user) {
 		this.seconds = seconds;
@@ -19,11 +20,12 @@ public class Timer extends Thread {
 	}
 	
 	/**
-	 * Starts the thread. Use this instead of start().
+	 * Starts the Timer.
 	 * @return This timer. To be used for method chaining.
 	 */
-	public Timer begin() {
-		super.start();
+	public Timer start() {
+		thread = new Thread(this);
+		thread.start();
 		return this;
 	}
 	
@@ -32,7 +34,6 @@ public class Timer extends Thread {
 	 */
 	@Override
 	public void run() {
-		user.timerBegin();
 		while (true) {
 			try {
 				if (stop) break;
@@ -43,13 +44,14 @@ public class Timer extends Thread {
 				e.printStackTrace();
 			}
 		}
-		user.timerHalt();
+		thread = null;
+		user.timerStop();
 	}
 
 	/**
-	 * Stops this thread. Use this instead of stop() or any other related functions.
+	 * Stops this timer.
 	 */
-	public void halt() {
+	public void stop() {
 		stop = true;
 	}	
 }

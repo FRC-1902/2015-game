@@ -110,7 +110,6 @@ public class DriveSubsystem extends Subsystem {
 			
 			rightError = Util.minMax(rightError, min, max);
 			leftError = Util.minMax(leftError, min, max);
-			//System.out.println("Gyro: " + gyro.getAngle() + ", AngleError: " + angleError);
 			
 			if (nextLeft != 0 && nextRight != 0) {
 				if (Util.sign(rightError) != rightSign && Util.sign(leftError) != leftSign) {

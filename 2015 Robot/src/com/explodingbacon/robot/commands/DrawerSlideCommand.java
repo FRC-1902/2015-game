@@ -2,7 +2,6 @@ package com.explodingbacon.robot.commands;
 
 import com.explodingbacon.robot.OI;
 import com.explodingbacon.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DrawerSlideCommand extends Command {

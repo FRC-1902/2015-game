@@ -9,9 +9,10 @@ import java.util.List;
 
 import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.RobotMap;
+import com.explodingbacon.robot.Timer;
+import com.explodingbacon.robot.TimerUser;
 
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class AutonomousSubsystem extends Subsystem {
@@ -19,6 +20,7 @@ public class AutonomousSubsystem extends Subsystem {
 	public List<String[]> data = new ArrayList<>();
 	public boolean recording = false;
 	public Solenoid light = new Solenoid(RobotMap.autonomousLight);
+	public Timer timer;
 
 	public void enable() {
 		recording = true;
@@ -26,10 +28,18 @@ public class AutonomousSubsystem extends Subsystem {
 		Robot.drive.leftEncoder.reset();
 		Robot.drive.rightEncoder.reset();
 		Robot.drive.gyro.reset();
-		Timer.delay(0.25);
+		edu.wpi.first.wpilibj.Timer.delay(0.25);
 		if (Math.abs(Robot.drive.leftEncoder.getDistance()) <= 15) {
 			light.set(true);
 		}
+		timer = new Timer(1.0, new TimerUser() {
+			public void timer() {
+				light.set(!light.get());
+			}
+			public void timerStop() {
+				timer = null;
+			}
+		});
 		System.out.println("Recording teleop actions for autonomous!");
 	}
 
