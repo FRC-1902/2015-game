@@ -2,6 +2,7 @@ package com.explodingbacon.robot.commands;
 
 import com.explodingbacon.robot.Robot;
 
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class RollerToggleCommand extends Command {
@@ -19,7 +20,7 @@ public class RollerToggleCommand extends Command {
 
     protected void initialize() {
     	if (state == null) {  		
-    		Robot.intake.setRoller(Robot.intake.roller.get() > 0 ? true : false);
+    		Robot.intake.setRoller(Robot.intake.roller.get() == Value.kOn ? true : false);
     	} else {
     		Robot.intake.setRoller(state);
     	}

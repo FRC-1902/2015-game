@@ -18,14 +18,15 @@ package com.explodingbacon.robot;
 import java.io.File;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import com.explodingbacon.robot.commands.AutonomousCommand;
 import com.explodingbacon.robot.subsystems.AutonomousSubsystem;
 import com.explodingbacon.robot.subsystems.BinGrabberSubsystem;
@@ -34,7 +35,6 @@ import com.explodingbacon.robot.subsystems.DriveSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeSubsystem;
 import com.explodingbacon.robot.subsystems.LiftSubsystem;
-import com.explodingbacon.robot.subsystems.LiftSubsystem.LiftPThread;
                                                                              
 public class Robot extends IterativeRobot {
 
@@ -79,7 +79,7 @@ public class Robot extends IterativeRobot {
 		ds = DriverStation.getInstance();
         System.out.println("Enabling intake arms and roller...");
 		intakeArms.setArms(State.OPEN);
-		intake.roller.set(1);		
+		intake.roller.set(Value.kOn);		
 		//intake.compressor.setClosedLoopControl(false);
 		System.out.println("Initializing AutonomousCommand...");
 		autonomousCommand = new AutonomousCommand();
@@ -97,6 +97,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Chooser", chooser);
 		SmartDashboard.putNumber("Delay", 0);
 		autonomousCommand.actuallyInit();
+		disabled();
 		System.out.println("Robot initialization complete!");
     }
 	
@@ -108,6 +109,10 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
         if (autonomousCommand != null) autonomousCommand.start();
         init();
+        Lights.chase(Lights.BRAKES, Lights.ORANGE, Lights.GREEN);
+        //lights.send(Char.BRAKES + anim);
+        //lights.send(Char.ELEVATOR + anim);
+        //lights.send(Char.TOTE_CHUTE + anim);
     }
 
     /**
@@ -121,7 +126,8 @@ public class Robot extends IterativeRobot {
     public void teleopInit() {
         if (autonomousCommand != null) autonomousCommand.cancel();  
         init();
-        OI.xbox.rumble(0.5f, 0.5f, 0.5);
+        OI.xbox.rumble(0.5f, 0.5f, 1);
+        teleopLights();
     }
 
     /**
@@ -141,6 +147,10 @@ public class Robot extends IterativeRobot {
 		periodic();	
     }
     
+    public void testInit() {
+    	Lights.send(new char[]{'t', 'v'});
+    }  
+    
     /**
      * This function is called periodically during test mode
      */
@@ -149,8 +159,8 @@ public class Robot extends IterativeRobot {
     }
     
     public void init() {
-    	Robot.lift.startThread();
-    	Robot.intakeArms.startThread();
+    	lift.startThread();
+    	intakeArms.startThread();    	
     }
     
     public void periodic() {
@@ -158,8 +168,27 @@ public class Robot extends IterativeRobot {
     }
     
     public void disabled() {
-    	Robot.lift.stopThread();
-    	Robot.intakeArms.stopThread();
+    	lift.stopThread();
+    	intakeArms.stopThread();
+        Lights.driverStation(Lights.BRAKES, getAllianceColor(), getDSLocation());
+        Lights.fade(Lights.ARC, Lights.RED, Lights.OFF);
+    }
+    
+    public char getAllianceColor() {
+    	return ds.getAlliance() == Alliance.Blue ? Lights.BLUE : Lights.RED;
+    }
+    
+    public char getDSLocation() {
+    	int location = ds.getLocation();
+    	if (location == 1) return Lights.DS_ID1;
+    	if (location == 2) return Lights.DS_ID2;
+    	if (location == 3) return Lights.DS_ID3;
+    	return '0';
+    }
+    
+    public void teleopLights() {
+    	Lights.fade(Lights.BRAKES, getAllianceColor(), Lights.GREEN);
+    	Lights.arcSpark(Lights.ARC);
     }
     
     public enum State {

@@ -6,12 +6,10 @@ import com.explodingbacon.robot.Robot.State;
 import com.explodingbacon.robot.RobotMap;
 import com.explodingbacon.robot.Util;
 import com.explodingbacon.robot.commands.IntakeArmsControlCommand;
-
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 
 public class IntakeArmsSubsystem extends Subsystem {
 	
@@ -105,8 +103,10 @@ public class IntakeArmsSubsystem extends Subsystem {
     }
     
     public void stopThread() {
-    	pivotThread.stop();
-    	pivotThread = null;
+    	if (pivotThread != null) {
+    		pivotThread.stop();
+    		pivotThread = null;
+    	}
     }
     
     public class IntakeArmsPivotThread extends CodeThread {

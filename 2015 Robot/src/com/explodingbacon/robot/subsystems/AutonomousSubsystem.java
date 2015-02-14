@@ -23,6 +23,7 @@ public class AutonomousSubsystem extends Subsystem {
 	public Timer timer;
 
 	public void enable() {
+		/*
 		recording = true;
 		data = new ArrayList<>();
 		Robot.drive.leftEncoder.reset();
@@ -41,9 +42,11 @@ public class AutonomousSubsystem extends Subsystem {
 			}
 		});
 		System.out.println("Recording teleop actions for autonomous!");
+		*/
 	}
 
 	public void disable() {
+		/*
 		File usbDir = new File("/u/.auto/");
 		if (usbDir.exists()) {
 			BufferedWriter bw;
@@ -69,6 +72,7 @@ public class AutonomousSubsystem extends Subsystem {
 		Robot.drive.leftEncoder.reset();
 		Robot.drive.rightEncoder.reset();
 		System.out.println("No longer recording teleop actions.");
+		*/
 	}
 
 	public void add(String[] add) {

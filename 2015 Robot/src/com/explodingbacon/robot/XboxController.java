@@ -94,7 +94,7 @@ public class XboxController extends Joystick {
 	 */
 	public void rumble(float l, float r, double time) {
 		rumble(l, r);
-		rumbleTimer = new Timer(0.5, false, new TimerUser() {
+		rumbleTimer = new Timer(time, false, new TimerUser() {
 			public void timer() {
 				rumble(0, 0);
 			}

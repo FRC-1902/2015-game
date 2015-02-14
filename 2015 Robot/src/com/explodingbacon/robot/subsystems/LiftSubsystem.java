@@ -17,8 +17,8 @@ public class LiftSubsystem extends Subsystem {
     public VictorSP lift1 = new VictorSP(RobotMap.liftVictor1);
     public VictorSP lift2 = new VictorSP(RobotMap.liftVictor2);
     public Encoder liftEncoder = new Encoder(RobotMap.liftEncoderA, RobotMap.liftEncoderB);
-    public DigitalInput topLimit = new DigitalInput(RobotMap.liftTopLimit);
-    public DigitalInput bottomLimit = new DigitalInput(RobotMap.liftBottomLimit);
+    //public DigitalInput topLimit = new DigitalInput(RobotMap.liftTopLimit);
+    //public DigitalInput bottomLimit = new DigitalInput(RobotMap.liftBottomLimit);
     public LiftPThread liftPThread = new LiftPThread();
     
     boolean withinTolerance = false;
@@ -110,8 +110,10 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public void stopThread() {
-    	liftPThread.stop();
-    	liftPThread = null;
+    	if (liftPThread != null) {
+    		liftPThread.stop();
+    		liftPThread = null;
+    	}
     }
     
     public class LiftPThread extends CodeThread {
@@ -132,6 +134,7 @@ public class LiftSubsystem extends Subsystem {
     	
     	@Override
     	public void code() {
+    		/*
     		if(topLimit.get()) setRaw(0);
     		else if(bottomLimit.get()) home();
     		else {
@@ -150,6 +153,7 @@ public class LiftSubsystem extends Subsystem {
     			if(Math.abs(setpoint) <= min) withinTolerance = true;
     			else withinTolerance = false;
     		}
+    		*/
     	}
     }    
 }
