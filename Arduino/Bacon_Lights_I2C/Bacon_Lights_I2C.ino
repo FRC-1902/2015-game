@@ -45,7 +45,6 @@ void setup()
 }
 void loop()
 {
-  //receiveI2C(0);
   advance();
 }
 
@@ -205,57 +204,7 @@ void allOff() /Breaks things
     everyX(1, 0, off, strips[i]);
   }
 }
-*/
-/*
-void recieveCustomColor(byte stripIndex) //Breaks things
-{
-  byte s, c[3];
-  for(i=0; i<3; i++)
-  {
-    s = 0;
-    while(Wire.peek() != '.')
-    {
-      if(Wire.available())
-      {
-        if(isdigit(Wire.peek()))
-        {
-          s *= 10;
-          s += Wire.read() - '0';
-        }
-        else
-        {
-          Wire.read();
-        }
-      }
-    }
-    Wire.read();
-    //Serial.println(s);
-    c[i] = s;
-  }
-  
-  colors[stripIndex] = Color(c[0], c[1], c[2]);
-}
-*/
-/*
-void recieveDriverStationPosition() //Breaks things
-{
-  while(true)
-  {
-    if(Wire.available())
-    {
-      if(isdigit(Wire.peek()))
-      {
-        ds = (Wire.read() - '0');
-        return;
-      }
-      else
-      {
-        Wire.read();
-      }
-    }
-  }
-}
-*/
+*/\
 void receiveI2C(int bytes)
 {
   digitalWrite(13, HIGH);
