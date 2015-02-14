@@ -1,6 +1,6 @@
 #include "Adafruit_WS2801.h"
 #include "SPI.h"
-//#include "ctype.h"
+#include "Wire.h"
 
 Adafruit_WS2801 arcReactor = Adafruit_WS2801(1, 5, 3);
 Adafruit_WS2801 brakeLights = Adafruit_WS2801(1, 8, 9);
@@ -18,7 +18,8 @@ void setup()
   test.begin();
   test.show();
   
-  Serial.begin(9600);
+  Wire.begin(0xA0);
+  Wire.onReceive(receiveI2C);
   
   off = Color(0, 0, 0);
   baconOrange = Color(255, 10, 0); //Final, Sarah approved
@@ -32,49 +33,11 @@ void setup()
   period = 12;
   wait = 75;
   
+  Serial.begin(9600);
   Serial.println("Initialized!");
 }
 void loop()
 {
-  if(Serial.available())
-  {
-    Serial.println(char(Serial.peek()));
-    switch(Serial.read())
-    {
-      //Set color
-      case('a'): colors[strip] = baconOrange; break;
-      case('s'): colors[strip] = baconGreen; break;
-      case('d'): colors[strip] = red; break;
-      case('f'): colors[strip] = Color(255, 255, 255); break;
-      case('g'): colors[strip] = off; break;
-      case('h'): colors[strip] = blue;
-      
-      //Set strip
-      case('q'): strip = 1; break;
-      case('w'): strip = 2; break;
-      case('e'): strip = 3; break;
-      case('t'): strip = 0; break;
-      
-      //Set state;
-      case('z'): state[strip] = 1; break; //Chase
-      case('x'): state[strip] = 2; break; //Pulse
-      case('c'): state[strip] = 3; break; //DS Output
-      
-      //Set variables
-      case('i'): isReversed[strip] = true; isStopped[strip] = false; break;
-      case('o'): isReversed[strip] = false; isStopped[strip] = false; break;
-      case('p'): isStopped[strip] = true; break;
-      
-      //Special
-      case('0'): allOff(); break;
-      case('1'): everyX(1, 0, colors[strip], strips[strip]); state[strip] = 0; break;
-      case('4'): colors2[strip] = colors[strip]; break;
-      
-      //Customs
-      case('8'): recieveDriverStationPosition(); break;
-      case('9'): recieveCustomColor(strip); break;
-    }
-  }
   advance();
 }
 
@@ -235,6 +198,51 @@ void recieveDriverStationPosition()
       {
         Serial.read();
       }
+    }
+  }
+}
+
+void receiveI2C(int bytes)
+{
+  Serial.println("Receiving");
+  while(Wire.available())
+  {
+    Serial.println(Wire.peek());
+    switch(Wire.read())
+    {
+      //Set color
+      case('a'): colors[strip] = baconOrange; break;
+      case('s'): colors[strip] = baconGreen; break;
+      case('d'): colors[strip] = red; break;
+      case('f'): colors[strip] = Color(255, 255, 255); break;
+      case('g'): colors[strip] = off; break;
+      case('h'): colors[strip] = blue;
+      
+      //Set strip
+      case('q'): strip = 1; break;
+      case('w'): strip = 2; break;
+      case('e'): strip = 3; break;
+      case('t'): strip = 0; break;
+      
+      //Set state;
+      case('z'): state[strip] = 1; break; //Chase
+      case('x'): state[strip] = 2; break; //Pulse
+      case('c'): state[strip] = 3; break; //DS Output
+      
+      //Set variables
+      case('i'): isReversed[strip] = true; isStopped[strip] = false; break;
+      case('o'): isReversed[strip] = false; isStopped[strip] = false; break;
+      case('p'): isStopped[strip] = true; break;
+      
+      //Special
+      case('0'): allOff(); break;
+      case('1'): everyX(1, 0, colors[strip], strips[strip]); state[strip] = 0; break;
+      case('4'): colors2[strip] = colors[strip]; break;
+      
+      //Customs
+      case('8'): recieveDriverStationPosition(); break;
+      case('9'): recieveCustomColor(strip); break;
+      //case('!'): Serial.println("Success!"); everyX(1, 0, Color(255, 255, 0), strips[0]); break; //DEBUG
     }
   }
 }
