@@ -99,7 +99,7 @@ public class IntakeArmsSubsystem extends Subsystem {
     
     public void startThread() {
     	pivotThread = new IntakeArmsPivotThread();
-    	pivotThread.start();
+    	//pivotThread.start();
     }
     
     public void stopThread() {

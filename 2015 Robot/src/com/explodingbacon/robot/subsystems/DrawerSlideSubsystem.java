@@ -16,7 +16,11 @@ public class DrawerSlideSubsystem extends Subsystem {
 	public Timer timer;
 	
 	public void setDrawerSlides(double d) {
-		drawerSlide.set(d);
+		if (Math.abs(d) > 0.1) {
+			drawerSlide.set(d);
+		} else {
+			drawerSlide.set(0);
+		}
 		if (d > 0) {
 			if (!seizure && Robot.ds.isEnabled()) {
 				seizure = true;

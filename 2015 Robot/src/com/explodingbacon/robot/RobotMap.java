@@ -2,10 +2,10 @@ package com.explodingbacon.robot;
 
 public class RobotMap {
 	//Drive Train Values
-	public static int leftDriveVictor1 = 0; //ID 0
-	public static int leftDriveVictor2 = 1; //ID 1
-	public static int rightDriveVictor1 = 2; //ID 3
-	public static int rightDriveVictor2 = 3; //ID 4
+	public static int leftDriveVictor1 = 9; //ID 0
+	public static int leftDriveVictor2 = 8; //ID 1
+	public static int rightDriveVictor1 = 7; //ID 3
+	public static int rightDriveVictor2 = 6; //ID 4
 	
 	public static int leftEncoderA = 0; //ID 11
 	public static int leftEncoderB = 1; //ID 12
@@ -14,10 +14,10 @@ public class RobotMap {
 	public static int gyro = 0; //ID 21
 	
 	//Intake Values
-	public static int leftIntakeTalon = 8; //ID 9
-	public static int rightIntakeTalon = 9; //ID 10
-	public static int leftArmPivotTalon = 4; //ID 4
-	public static int rightArmPivotTalon = 5; //ID 5
+	public static int leftIntakeTalon = 2; //ID 9
+	public static int rightIntakeTalon = 1; //ID 10
+	public static int leftArmPivotTalon = 0; //ID 4
+	public static int rightArmPivotTalon = 3; //ID 5
 	public static int rollerRelay = 0; //ID 8
 	
 	public static int chuteTouchSensor = 14; //ID 31
@@ -33,8 +33,8 @@ public class RobotMap {
 	public static int binGrabberSolenoid = 0; //ID 24
 	
 	//Lift Values
-	public static int liftVictor1 = 6; //ID 6
-	public static int liftVictor2 = 7; //ID 7
+	public static int liftVictor1 = 5; //ID 6
+	public static int liftVictor2 = 4; //ID 7
 	public static int liftEncoderA = 6; //ID 17
 	public static int liftEncoderB = 7; //ID 18
 	public static int liftTopLimit = 10; //ID 19

@@ -3,12 +3,15 @@ package com.explodingbacon.robot.subsystems;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
+
 import com.explodingbacon.robot.CodeThread;
 import com.explodingbacon.robot.OI;
 import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.RobotMap;
 import com.explodingbacon.robot.Util;
 import com.explodingbacon.robot.XboxController.Direction;
+import com.explodingbacon.robot.commands.LiftControlCommand;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
                                                                                                            
@@ -102,11 +105,12 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public void initDefaultCommand() {
+    	setDefaultCommand(new LiftControlCommand());
     }
     
     public void startThread() {
     	liftPThread = new LiftPThread();
-    	liftPThread.start();
+    	//liftPThread.start();
     }
     
     public void stopThread() {

@@ -58,7 +58,7 @@ public class DriveSubsystem extends Subsystem {
 	 **/
 	public void tankDrive(double left, double right) {
 		this.left1.set(-left);
-		this.left2.set(left);
+		this.left2.set(-left);
 		this.right1.set(right);
 		this.right2.set(right);
 		Robot.autonomous.add(new String[]{"drive", leftEncoder.getRaw() + "", rightEncoder.getRaw()  + "", gyro.getAngle() + ""});
@@ -72,7 +72,15 @@ public class DriveSubsystem extends Subsystem {
 	 * Uses a single joystick to drive the robot.
 	 **/
 	public void arcadeDrive(Joystick joy) {
-		tankDrive(joy.getY() - joy.getX(), joy.getY() + joy.getX());
+		double joyX = joy.getX();
+		double joyY = joy.getY();
+		if (Math.abs(joyX) < 0.1) {
+			joyX = 0;
+		}
+		if (Math.abs(joyY) < 0.1) {
+			joyY = 0;
+		}
+		tankDrive(joyY - joyX, joyY + joyX);
 	}
 
 	/**
@@ -134,10 +142,7 @@ public class DriveSubsystem extends Subsystem {
 			//System.out.println("Right is driving at " + rightError + " to " + right + ", and is at " + rightEncoder.getRaw() + ".");
 			//System.out.println("Left is driving at " + leftError + " to " + left + ", and is at " + leftEncoder.getRaw() + ".");
 			
-			right1.set(-rightError);
-			right2.set(-rightError);
-			left1.set(leftError);
-			left2.set(leftError);
+			tankDrive(leftError, -rightError);
 
 			if (((rightError + leftError) / 2) < min) {
 				if (angleError != 0) {
