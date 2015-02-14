@@ -5,13 +5,14 @@
 Adafruit_WS2801 arcReactor = Adafruit_WS2801(1, 5, 3);
 Adafruit_WS2801 brakeLights = Adafruit_WS2801(1, 8, 9);
 Adafruit_WS2801 elevatorLights = Adafruit_WS2801(1, 6, 7);
-Adafruit_WS2801 test = Adafruit_WS2801(61, 2, 4);
+Adafruit_WS2801 toteChute = Adafruit_WS2801(1, 10, 11);
+Adafruit_WS2801 test = Adafruit_WS2801(62, 2, 4);
 
 uint32_t baconGreen, baconOrange, red, blue, allianceColor, off, colors[5], colors2[5];
 byte state[4], strip, count, i, period, wait, complementArray[3], ds;
 boolean isReversed[4], isStopped[4];
 
-Adafruit_WS2801 strips[5] = {test, arcReactor, brakeLights, elevatorLights};
+Adafruit_WS2801 strips[5] = {test, arcReactor, brakeLights, elevatorLights, toteChute};
 
 void setup()
 {
@@ -58,6 +59,7 @@ void advance()
       case(2): if(!isStopped[i]) pulse(i); break;
       case(3): displayDS(i); break;
       case(4): insanityBacon(i); break;
+      case(5): arcReactorSpark(i); break;
     }
   }
   
@@ -90,16 +92,16 @@ void chase(byte stripIndex)
   bg = colors2[stripIndex];
   
   //delay(1);
-  /*
+  
   if(isReversed[stripIndex])
-  {*/
+  {
     c = count;
-  /*}
-  else`
+  }
+  else
   {
     c = period - count;
   }
-  */
+  
   //delay(1);
   
   everyX(1, 0, bg, strips[stripIndex]);
@@ -171,6 +173,29 @@ void insanityBacon(byte stripIndex)
     strips[stripIndex].setPixelColor(i, q);
   }
 }
+
+void arcReactorSpark(byte stripIndex)
+{
+  int q;
+  for(i=0; i<strips[stripIndex].numPixels(); i++)
+  {
+    switch(random(0, 10))
+    {
+      case(0): q = random(0, 255); break;
+      case(1): q = random(0, 150); break;
+      case(2): q = random(0, 125); break;
+      case(3): q = random(0, 100); break;
+      case(4): q = random(0, 50); break;
+      case(5): q = random(0, 25); break;
+      case(6): q = random(0, 10); break;
+      case(7): q = random(0, 10); break;
+      case(8): q = random(0, 10); break;
+      case(9): q = 0; break;
+    }
+    strips[stripIndex].setPixelColor(i, Color(q, q, q));
+  }
+}
+
 /*
 void allOff() /Breaks things
 {
@@ -252,6 +277,7 @@ void receiveI2C(int bytes)
       case('q'): strip = 1; break;
       case('w'): strip = 2; break;
       case('e'): strip = 3; break;
+      case('r'): strip = 4; break;
       case('t'): strip = 0; break;
       
       //Set state;
@@ -259,6 +285,7 @@ void receiveI2C(int bytes)
       case('x'): state[strip] = 2; break; //Pulse
       case('c'): state[strip] = 3; break; //DS Output
       case('v'): state[strip] = 4; break; //Insanity Bacon
+      case('b'): state[strip] = 5; break; //Arc Spark
       
       //Set variables
       case('i'): isReversed[strip] = true; isStopped[strip] = false; break;
