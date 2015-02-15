@@ -4,9 +4,7 @@ import com.explodingbacon.robot.Robot.State;
 import com.explodingbacon.robot.commands.BinGrabberToggleCommand;
 import com.explodingbacon.robot.commands.HumanPlayerStackCommand;
 import com.explodingbacon.robot.commands.IntakeToggleCommand;
-import com.explodingbacon.robot.commands.RecordAutonomousToggleCommand;
 import com.explodingbacon.robot.commands.RollerToggleCommand;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 
@@ -19,17 +17,13 @@ public class OI {
 	Button binGrabber;
 	Button toggleRoller;
 	Button humanPlayerStack;
-	Button recordAutoOn;	
-	Button recordAutoOff;
 	
 	public void init() {
-		intake = xbox.x;
-		reversedIntake = xbox.a;
+		intake = xbox.leftBumper;
+		reversedIntake = xbox.rightBumper;
 		binGrabber = xbox.y;
 		toggleRoller = xbox.b;
-		humanPlayerStack = xbox.rightBumper;
-		recordAutoOn = xbox.start;
-		recordAutoOff = xbox.select;
+		humanPlayerStack = xbox.start;
 		
 		//======================================================
 		
@@ -42,9 +36,6 @@ public class OI {
 		toggleRoller.whenPressed(new RollerToggleCommand());
 		
 		humanPlayerStack.whileHeld(new HumanPlayerStackCommand());
-		
-		recordAutoOn.whenPressed(new RecordAutonomousToggleCommand(true));
-		recordAutoOff.whenPressed(new RecordAutonomousToggleCommand(false));
 	}
 	
 	public OI() {

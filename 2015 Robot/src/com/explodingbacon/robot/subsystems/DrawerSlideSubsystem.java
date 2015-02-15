@@ -1,6 +1,6 @@
 package com.explodingbacon.robot.subsystems;
 
-import com.explodingbacon.robot.Lights;
+import com.explodingbacon.robot.Lights.Strip;
 import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.RobotMap;
 import com.explodingbacon.robot.Timer;
@@ -24,10 +24,10 @@ public class DrawerSlideSubsystem extends Subsystem {
 		if (d > 0) {
 			if (!seizure && Robot.ds.isEnabled()) {
 				seizure = true;
-				Lights.seizure(Lights.BRAKES);
-				Lights.seizure(Lights.ELEVATOR);
-				Lights.seizure(Lights.ARC);
-				Lights.seizure(Lights.TOTE_CHUTE);
+				Strip.BRAKES.seizure();
+				Strip.ELEVATOR.seizure();
+				Strip.ARC.seizure();
+				Strip.TOTE_CHUTE.seizure();
 			}
 		} else if (seizure) {
 			seizure = false;

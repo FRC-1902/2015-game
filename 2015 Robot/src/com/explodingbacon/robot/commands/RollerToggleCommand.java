@@ -20,7 +20,7 @@ public class RollerToggleCommand extends Command {
 
     protected void initialize() {
     	if (state == null) {  		
-    		Robot.intake.setRoller(Robot.intake.roller.get() == Value.kOn ? true : false);
+    		Robot.intake.setRoller(Robot.intake.roller.get() == Value.kForward ? false : true);
     	} else {
     		Robot.intake.setRoller(state);
     	}

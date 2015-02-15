@@ -27,6 +27,10 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.explodingbacon.robot.Lights.Action;
+import com.explodingbacon.robot.Lights.Color;
+import com.explodingbacon.robot.Lights.Strip;
 import com.explodingbacon.robot.commands.AutonomousCommand;
 import com.explodingbacon.robot.subsystems.AutonomousSubsystem;
 import com.explodingbacon.robot.subsystems.BinGrabberSubsystem;
@@ -109,7 +113,7 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
         if (autonomousCommand != null) autonomousCommand.start();
         init();
-        Lights.chase(Lights.BRAKES, Lights.ORANGE, Lights.GREEN);
+        Strip.BRAKES.chase(Color.ORANGE, Color.GREEN);
         //lights.send(Char.BRAKES + anim);
         //lights.send(Char.ELEVATOR + anim);
         //lights.send(Char.TOTE_CHUTE + anim);
@@ -147,10 +151,6 @@ public class Robot extends IterativeRobot {
 		periodic();	
     }
     
-    public void testInit() {
-    	Lights.send(new char[]{'t', 'v'});
-    }  
-    
     /**
      * This function is called periodically during test mode
      */
@@ -170,25 +170,25 @@ public class Robot extends IterativeRobot {
     public void disabled() {
     	lift.stopThread();
     	intakeArms.stopThread();
-        Lights.driverStation(Lights.BRAKES, getAllianceColor(), getDSLocation());
-        Lights.fade(Lights.ARC, Lights.RED, Lights.OFF);
+    	Strip.BRAKES.driverStation(getAllianceColor(), getDSLocation());
+    	Strip.ARC.fade(Color.RED, Color.OFF);
     }
     
-    public char getAllianceColor() {
-    	return ds.getAlliance() == Alliance.Blue ? Lights.BLUE : Lights.RED;
+    public Color getAllianceColor() {
+    	return ds.getAlliance() == Alliance.Blue ? Color.BLUE : Color.RED;
     }
     
-    public char getDSLocation() {
+    public Action getDSLocation() {
     	int location = ds.getLocation();
-    	if (location == 1) return Lights.DS_ID1;
-    	if (location == 2) return Lights.DS_ID2;
-    	if (location == 3) return Lights.DS_ID3;
-    	return '0';
+    	if (location == 1) return Action.DS_ID1;
+    	if (location == 2) return Action.DS_ID2;
+    	if (location == 3) return Action.DS_ID3;
+    	return Action.DS_ID1;
     }
     
     public void teleopLights() {
-    	Lights.fade(Lights.BRAKES, getAllianceColor(), Lights.GREEN);
-    	Lights.arcSpark(Lights.ARC);
+    	Strip.BRAKES.fade(getAllianceColor(), Color.GREEN);
+    	Strip.ARC.arcSpark();
     }
     
     public enum State {

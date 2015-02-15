@@ -1,17 +1,9 @@
 package com.explodingbacon.robot.subsystems;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.RobotMap;
 import com.explodingbacon.robot.Timer;
-import com.explodingbacon.robot.TimerUser;
-
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 

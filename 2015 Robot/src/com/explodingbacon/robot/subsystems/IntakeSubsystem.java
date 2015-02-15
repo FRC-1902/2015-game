@@ -5,6 +5,7 @@ import com.explodingbacon.robot.RobotMap;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Direction;
 import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -17,6 +18,10 @@ public class IntakeSubsystem extends Subsystem {
 	public DigitalInput chuteTouchSensor = new DigitalInput(RobotMap.chuteTouchSensor);
 	public double motorSpeed = 0;
 
+	public IntakeSubsystem() {
+		//roller.setDirection(Direction.kBoth);
+	}
+	
     public void setMotors(double d) {
     	leftIntake.set(-d);
     	rightIntake.set(d);
@@ -26,9 +31,9 @@ public class IntakeSubsystem extends Subsystem {
     
     public void setRoller(boolean status) {
     	if (status) {
-    		roller.set(Value.kOn);
+    		roller.set(Value.kForward);
     	} else {
-    		roller.set(Value.kOff);
+    		roller.set(Value.kReverse);
     	}
     	Robot.autonomous.add(new String[]{"roller", status + ""});    	
     }

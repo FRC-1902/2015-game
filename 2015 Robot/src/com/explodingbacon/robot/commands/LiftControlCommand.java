@@ -14,18 +14,19 @@ public class LiftControlCommand extends Command {
     protected void initialize() {
     }
 
-    protected void execute() {
-    	Direction d = OI.xbox.getDPad();
-    	if (d.isNorth()) {
-    		Robot.lift.setRaw(1);
-    	} else if (d.isSouth()) {
-    		Robot.lift.setRaw(-1);
-    	} else {
-    		Robot.lift.setRaw(0);
-    	}
-    }
+	protected void execute() {
+		Direction d = OI.xbox.getDPad();
+		if (d.isNorth()) {
+			Robot.lift.setRaw(-0.5);
+		} else if (d.isSouth()) {
+			Robot.lift.setRaw(0.5);
+		} else {
+			Robot.lift.setRaw(0);
+		}
+		System.out.println("Lift encoder: " + Robot.lift.liftEncoder.getRaw());
+	}
 
-    protected boolean isFinished() {
+	protected boolean isFinished() {
         return false;
     }
 

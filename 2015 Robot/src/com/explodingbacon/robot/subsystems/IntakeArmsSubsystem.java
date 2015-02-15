@@ -25,7 +25,7 @@ public class IntakeArmsSubsystem extends Subsystem {
     double max = 0.7;
     double kP = 0.5;
     double kI = 0.05;
-    double kI2 = 0.0005;
+    double kI2 = 0.0005;    
     
     public double leftTarget = 0;
     public double rightTarget = 0;

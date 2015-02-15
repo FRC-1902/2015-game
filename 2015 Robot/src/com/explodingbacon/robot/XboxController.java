@@ -112,9 +112,10 @@ public class XboxController extends Joystick {
 		SOUTH(180),
 		SOUTH_WEST(225),
 		WEST(270),
-		NORTH_WEST(315);
+		NORTH_WEST(315),
+		NONE(-1);
 		
-		public static Direction[] allDirections = new Direction[]{Direction.NORTH, Direction.NORTH_EAST, Direction.EAST, Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST, Direction.NORTH_WEST};
+		public static Direction[] allDirections = new Direction[]{Direction.NORTH, Direction.NORTH_EAST, Direction.EAST, Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST, Direction.NORTH_WEST, Direction.NONE};
 		public int angle;
 		
 		Direction(int angle) {

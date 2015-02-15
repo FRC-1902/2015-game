@@ -2,8 +2,6 @@ package com.explodingbacon.robot.commands;
 
 import com.explodingbacon.robot.OI;
 import com.explodingbacon.robot.Robot;
-import com.explodingbacon.robot.Robot.State;
-import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem.Arm;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class IntakeArmsControlCommand extends Command {
@@ -18,6 +16,7 @@ public class IntakeArmsControlCommand extends Command {
     }
 
     protected void execute() {
+    	/*
     	if (OI.xbox.getLeftTrigger() > deadZone) {
     		Robot.intakeArms.setArm(Arm.LEFT, State.CLOSED);
     	} else {
@@ -29,6 +28,19 @@ public class IntakeArmsControlCommand extends Command {
     	} else {
     		Robot.intakeArms.setArm(Arm.RIGHT, State.OPEN);
     	}  	
+    	*/
+    	double joyX = OI.xbox.getX() / 2; 
+    	if (Math.abs(joyX) < 0.1) {
+    		joyX = 0;
+    	}
+    	
+    	double joyX2 = OI.xbox.getX2() / 2; 
+    	if (Math.abs(joyX2) < 0.1) {
+    		joyX2 = 0;
+    	}
+   
+    	Robot.intakeArms.leftArm.set(joyX);
+    	Robot.intakeArms.rightArm.set(joyX2);
     }
 
     protected boolean isFinished() {

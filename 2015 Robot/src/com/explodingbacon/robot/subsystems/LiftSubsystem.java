@@ -1,17 +1,13 @@
 package com.explodingbacon.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.VictorSP;
-
 import com.explodingbacon.robot.CodeThread;
 import com.explodingbacon.robot.OI;
 import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.RobotMap;
-import com.explodingbacon.robot.Util;
 import com.explodingbacon.robot.XboxController.Direction;
 import com.explodingbacon.robot.commands.LiftControlCommand;
-
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
                                                                                                            
@@ -42,6 +38,7 @@ public class LiftSubsystem extends Subsystem {
 			SmartDashboard.putNumber("liftMin", min);
 			SmartDashboard.putNumber("liftMax", max);
 		}
+    	liftEncoder.reset();
     }
     
     public void setRaw(double motorValue) {
@@ -91,12 +88,10 @@ public class LiftSubsystem extends Subsystem {
     
     public void getTarget() {
     	Direction dir = OI.xbox.getDPad();
-    	if (dir != null) {
-    		if (dir.isNorth()) {
-    			target += 1;
-    		} else if (dir.isSouth()) {
-    			target -= 1;
-    		}
+    	if (dir.isNorth()) {
+    		target += 1;
+    	} else if (dir.isSouth()) {
+    		target -= 1;
     	}
     }
     
