@@ -17,9 +17,9 @@ public class LiftControlCommand extends Command {
 	protected void execute() {
 		Direction d = OI.xbox.getDPad();
 		if (d.isNorth()) {
-			Robot.lift.setRaw(-0.5);
-		} else if (d.isSouth()) {
 			Robot.lift.setRaw(0.5);
+		} else if (d.isSouth()) {
+			Robot.lift.setRaw(-0.5);
 		} else {
 			Robot.lift.setRaw(0);
 		}

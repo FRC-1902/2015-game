@@ -14,7 +14,7 @@ public class DrawerSlideCommand extends Command {
     }
 
     protected void execute() {
-    	Robot.drawerSlides.setDrawerSlides((OI.xbox.getLeftTrigger() - OI.xbox.getRightTrigger()) * 0.25);
+    	Robot.drawerSlides.setDrawerSlides((OI.xbox.getRightTrigger() - OI.xbox.getLeftTrigger()) * 0.5);
     }
 
     protected boolean isFinished() {

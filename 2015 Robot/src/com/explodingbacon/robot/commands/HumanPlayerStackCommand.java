@@ -1,17 +1,17 @@
 package com.explodingbacon.robot.commands;
 
+import com.explodingbacon.robot.Lights.Color;
+import com.explodingbacon.robot.Lights.Strip;
 import com.explodingbacon.robot.Robot;
-import com.explodingbacon.robot.Robot.State;
-
+import com.explodingbacon.robot.subsystems.LiftSubsystem.Position;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-
 
 public class HumanPlayerStackCommand extends Command {
 	
     public HumanPlayerStackCommand() {
         requires(Robot.drive);
         requires(Robot.intake);
-        requires(Robot.intakeArms);
         requires(Robot.lift);       
     }
 
@@ -20,42 +20,23 @@ public class HumanPlayerStackCommand extends Command {
 
     protected void execute() {
     	int totesDone = 0;
-    	Robot.intakeArms.setArms(State.OPEN);
-    	Robot.lift.target = 1;
+    	Robot.intake.arms.set(true);
+    	Robot.lift.target = Position.ONE_TOTE_UP;
     	while (!Robot.lift.atTarget()) {}
     	while (totesDone < 6) {
-			boolean toteThroughChute = false;
-			boolean grabbedTote = false;
-			boolean liftHasTote = false;
-    		while (!"pigs".equals("fly")) { //while true
-    			if (Robot.intake.chuteTouchSensor.get()) {
-    				toteThroughChute = true;
-    			}
-    			if (toteThroughChute) {
-    				//TODO disable feed-a-tote indicator light
-    				if (!grabbedTote) {
-    					Robot.intake.setMotors(1);
-    					Robot.intakeArms.setArms(State.CLOSED);
-    				}
-    				boolean weHaveTheTote = true; //TODO implement
-    				if (weHaveTheTote || grabbedTote) {
-    					grabbedTote = true;
-    					Robot.intake.setMotors(0);
-    					if (!liftHasTote) Robot.lift.target = 0;    					
-    					if (Robot.lift.atTarget() || liftHasTote) {
-    						liftHasTote = true;
-    						Robot.lift.target = 1;
-    						if (Robot.lift.atTarget()) {
-    							totesDone++;
-    							break;
-    						}
-    					}
-    				}
-    			} else {
-    				//TODO enable feed-a-tote indicator light
-    			}
-    		}
-    		
+    		Strip.TOTE_CHUTE.chase(Color.WHITE, Color.GREEN);
+    		while (!Robot.intake.chuteTouchSensor.get()) {}
+    		Strip.TOTE_CHUTE.fade(Color.ORANGE, Color.WHITE);
+    		Robot.intake.setMotors(1);
+    		Robot.intake.arms.set(true);
+    		Timer.delay(2);
+    		Robot.intake.setMotors(0);
+    		Robot.intake.arms.set(false);
+    		Robot.lift.target = Position.BOTTOM;   
+    		while (!Robot.lift.atTarget()) {}
+    		Robot.lift.target = Position.ONE_TOTE_UP;
+    		while (!Robot.lift.atTarget()) {}
+    		totesDone++; 
     	}
     }
 

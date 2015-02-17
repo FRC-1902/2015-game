@@ -1,10 +1,10 @@
-/* _    _                                      _   _____       _           _   
-  | |  | |                                    | | |  __ \     | |         | |  
-  | |  | |_ __  _ __   __ _ _ __ ___   ___  __| | | |__) |___ | |__   ___ | |_ 
-  | |  | | '_ \| '_ \ / _` | '_ ` _ \ / _ \/ _` | |  _  // _ \| '_ \ / _ \| __|
-  | |__| | | | | | | | (_| | | | | | |  __/ (_| | | | \ \ (_) | |_) | (_) | |_ 
-   \____/|_| |_|_| |_|\__,_|_| |_| |_|\___|\__,_| |_|  \_\___/|_.__/ \___/ \__|
-  
+/*  
+  ______          _      _     _  __ _   
+  | ___ \        | |    | |   (_)/ _| |  
+  | |_/ /__  _ __| | __ | |    _| |_| |_ 
+  |  __/ _ \| '__| |/ / | |   | |  _| __|
+  | | | (_) | |  |   <  | |___| | | | |_ 
+  \_|  \___/|_|  |_|\_\ \_____/_|_|  \__|                                          
   
   Written for FIRST's 2015 FRC game "Recycle Rush"!
   
@@ -16,18 +16,15 @@
 package com.explodingbacon.robot;
 
 import java.io.File;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import com.explodingbacon.robot.Lights.Action;
 import com.explodingbacon.robot.Lights.Color;
 import com.explodingbacon.robot.Lights.Strip;
@@ -36,7 +33,6 @@ import com.explodingbacon.robot.subsystems.AutonomousSubsystem;
 import com.explodingbacon.robot.subsystems.BinGrabberSubsystem;
 import com.explodingbacon.robot.subsystems.DrawerSlideSubsystem;
 import com.explodingbacon.robot.subsystems.DriveSubsystem;
-import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeSubsystem;
 import com.explodingbacon.robot.subsystems.LiftSubsystem;
                                                                              
@@ -44,7 +40,6 @@ public class Robot extends IterativeRobot {
 
 	public static DriveSubsystem drive;
 	public static IntakeSubsystem intake;
-	public static IntakeArmsSubsystem intakeArms;
 	public static BinGrabberSubsystem binGrabber;
 	public static LiftSubsystem lift;
 	public static DrawerSlideSubsystem drawerSlides;
@@ -66,7 +61,6 @@ public class Robot extends IterativeRobot {
 		System.out.println("Initializing IntakeSubsystem...");
 		intake = new IntakeSubsystem();
 		System.out.println("Initializing IntakeArmsSubsystem...");
-		intakeArms = new IntakeArmsSubsystem();
 		System.out.println("Initializing BinGrabberSubsystem");
 		binGrabber = new BinGrabberSubsystem();
 		System.out.println("Initializing LiftSubsystem...");
@@ -82,8 +76,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("Intializing Driver Station...");
 		ds = DriverStation.getInstance();
         System.out.println("Enabling intake arms and roller...");
-		intakeArms.setArms(State.OPEN);
-		intake.roller.set(Value.kOn);		
+		//intake.roller.set(Value.kOn);		
 		//intake.compressor.setClosedLoopControl(false);
 		System.out.println("Initializing AutonomousCommand...");
 		autonomousCommand = new AutonomousCommand();
@@ -132,6 +125,11 @@ public class Robot extends IterativeRobot {
         init();
         OI.xbox.rumble(0.5f, 0.5f, 1);
         teleopLights();
+        if (OI.xbox.select.get()) {
+        	Robot.intake.compressor.setClosedLoopControl(false);
+        } else {
+        	Robot.intake.compressor.setClosedLoopControl(true);
+        }
     }
 
     /**
@@ -160,7 +158,6 @@ public class Robot extends IterativeRobot {
     
     public void init() {
     	lift.startThread();
-    	intakeArms.startThread();    	
     }
     
     public void periodic() {
@@ -169,7 +166,6 @@ public class Robot extends IterativeRobot {
     
     public void disabled() {
     	lift.stopThread();
-    	intakeArms.stopThread();
     	Strip.BRAKES.driverStation(getAllianceColor(), getDSLocation());
     	Strip.ARC.fade(Color.RED, Color.OFF);
     }

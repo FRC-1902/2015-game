@@ -3,8 +3,10 @@ package com.explodingbacon.robot;
 import com.explodingbacon.robot.Robot.State;
 import com.explodingbacon.robot.commands.BinGrabberToggleCommand;
 import com.explodingbacon.robot.commands.HumanPlayerStackCommand;
+import com.explodingbacon.robot.commands.IntakeArmToggleCommand;
 import com.explodingbacon.robot.commands.IntakeToggleCommand;
 import com.explodingbacon.robot.commands.RollerToggleCommand;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 
@@ -13,6 +15,7 @@ public class OI {
 	public static XboxController xbox = new XboxController(1);
 	
 	Button intake;
+	Button intakeArms;
 	Button reversedIntake;
 	Button binGrabber;
 	Button toggleRoller;
@@ -20,6 +23,7 @@ public class OI {
 	
 	public void init() {
 		intake = xbox.leftBumper;
+		intakeArms = xbox.x;
 		reversedIntake = xbox.rightBumper;
 		binGrabber = xbox.y;
 		toggleRoller = xbox.b;
@@ -28,6 +32,9 @@ public class OI {
 		//======================================================
 		
 		intake.whenPressed(new IntakeToggleCommand());
+		
+		intakeArms.whenPressed(new IntakeArmToggleCommand(true));
+		intakeArms.whenReleased(new IntakeArmToggleCommand(false));
 		
 		reversedIntake.whenPressed(new IntakeToggleCommand(State.BACKWARDS));
 		

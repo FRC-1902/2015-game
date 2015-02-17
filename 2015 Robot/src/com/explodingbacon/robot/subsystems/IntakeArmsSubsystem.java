@@ -1,3 +1,4 @@
+/*
 package com.explodingbacon.robot.subsystems;
 
 import com.explodingbacon.robot.CodeThread;
@@ -55,7 +56,6 @@ public class IntakeArmsSubsystem extends Subsystem {
     }
 	
 	public void absolutePivot() {
-		/*
 		double leftError, rightError, leftP, rightP, leftI, rightI, leftSetpoint, rightSetpoint;
 		leftI = 0;
 		rightI = 0;
@@ -85,7 +85,6 @@ public class IntakeArmsSubsystem extends Subsystem {
 			leftArm.set(leftSetpoint);
 			rightArm.set(rightSetpoint);
 		} while (!"pigs".equals("fly"));
-		*/
 	}
 
     public void initDefaultCommand() {
@@ -146,5 +145,5 @@ public class IntakeArmsSubsystem extends Subsystem {
     	}
     	
     }
-}
+}*/
 

@@ -18,7 +18,7 @@ public class DriveSubsystem extends Subsystem {
 	public VictorSP left2 = new VictorSP(RobotMap.leftDriveVictor2);
 	public VictorSP right1 = new VictorSP(RobotMap.rightDriveVictor1);
 	public VictorSP right2 = new VictorSP(RobotMap.rightDriveVictor2);
-	public Encoder leftEncoder = new Encoder(RobotMap.leftEncoderA, RobotMap.leftEncoderB, true);
+	public Encoder leftEncoder = new Encoder(RobotMap.leftEncoderA, RobotMap.leftEncoderB); //75
 	public Encoder rightEncoder = new Encoder(RobotMap.rightEncoderA, RobotMap.rightEncoderB);
 	public Gyro gyro = new Gyro(RobotMap.gyro);
 	public boolean arcadeDrive = true;
@@ -66,6 +66,8 @@ public class DriveSubsystem extends Subsystem {
 			leftEncoder.reset();
 			rightEncoder.reset();
 		}
+		System.out.println("Gyro: " + gyro.getAngle());
+    	//System.out.println("Left encoder: " + Robot.drive.leftEncoder.getRaw() + ", Right encoder: " + Robot.drive.rightEncoder.getRaw());
 	}
 
 	/**

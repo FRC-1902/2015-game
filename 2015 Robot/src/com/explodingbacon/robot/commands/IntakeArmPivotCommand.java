@@ -1,3 +1,4 @@
+/*
 package com.explodingbacon.robot.commands;
 
 import com.explodingbacon.robot.Robot;
@@ -34,3 +35,4 @@ public class IntakeArmPivotCommand extends Command {
     protected void interrupted() {
     }
 }
+*/

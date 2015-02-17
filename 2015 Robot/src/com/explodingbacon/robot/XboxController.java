@@ -26,8 +26,8 @@ public class XboxController extends Joystick {
 		b = new JoystickButton(this, 2);
 		x = new JoystickButton(this, 3);
 		y = new JoystickButton(this, 4);
-		start = new JoystickButton(this, 7);
-		select = new JoystickButton(this, 8);
+		start = new JoystickButton(this, 8);
+		select = new JoystickButton(this, 7);
 		leftBumper = new JoystickButton(this, 5);
 		rightBumper = new JoystickButton(this, 6);
 		leftJoyButton = new JoystickButton(this, 9);

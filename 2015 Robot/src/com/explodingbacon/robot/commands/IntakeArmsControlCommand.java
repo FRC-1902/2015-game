@@ -1,4 +1,4 @@
-package com.explodingbacon.robot.commands;
+/*package com.explodingbacon.robot.commands;
 
 import com.explodingbacon.robot.OI;
 import com.explodingbacon.robot.Robot;
@@ -16,7 +16,6 @@ public class IntakeArmsControlCommand extends Command {
     }
 
     protected void execute() {
-    	/*
     	if (OI.xbox.getLeftTrigger() > deadZone) {
     		Robot.intakeArms.setArm(Arm.LEFT, State.CLOSED);
     	} else {
@@ -28,7 +27,6 @@ public class IntakeArmsControlCommand extends Command {
     	} else {
     		Robot.intakeArms.setArm(Arm.RIGHT, State.OPEN);
     	}  	
-    	*/
     	double joyX = OI.xbox.getX() / 2; 
     	if (Math.abs(joyX) < 0.1) {
     		joyX = 0;
@@ -53,3 +51,4 @@ public class IntakeArmsControlCommand extends Command {
     protected void interrupted() {
     }
 }
+*/

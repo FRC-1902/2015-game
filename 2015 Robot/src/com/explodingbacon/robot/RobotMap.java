@@ -16,6 +16,7 @@ public class RobotMap {
 	//Intake Values
 	public static int leftIntakeTalon = 2; //ID 9
 	public static int rightIntakeTalon = 1; //ID 10
+	public static int intakeArmsSolenoid = 1;
 	public static int leftArmPivotTalon = 0; //ID 4
 	public static int rightArmPivotTalon = 3; //ID 5
 	public static int rollerRelay = 0; //ID 8
@@ -37,8 +38,8 @@ public class RobotMap {
 	public static int liftVictor2 = 4; //ID 7
 	public static int liftEncoderA = 6; //ID 17
 	public static int liftEncoderB = 7; //ID 18
-	public static int liftTopLimit = 10; //ID 19
-	public static int liftBottomLimit = 11; //ID 20
+	public static int liftTopLimit = 4; //ID 19
+	public static int liftBottomLimit = 5; //ID 20
 	
 	//TODO: Remove
 	public static int autonomousLight = 6;  //Legacy

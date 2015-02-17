@@ -7,11 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.explodingbacon.robot.Robot;
-import com.explodingbacon.robot.Robot.State;
-import com.explodingbacon.robot.subsystems.IntakeArmsSubsystem.Arm;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -57,10 +53,8 @@ public class AutonomousCommand extends Command {
 					Robot.intake.setMotors(Double.parseDouble(s[1]));
 				} else if (s[0].equals("roller")) {
 					Robot.intake.setRoller(Boolean.parseBoolean(s[1]));	
-				} else if (s[0].equals("intakeArm")) {
-					Robot.intakeArms.setArm(Arm.valueOf(s[1]), State.valueOf(s[2]));
+				} else if (s[0].equals("intakeArm")) {					
 				} else if (s[0].equals("binGrabber")) {
-					Robot.binGrabber.setGrabber(Boolean.parseBoolean(s[1]));
 				} else if (s[0].equals("lift")) {
 					Robot.lift.setRaw(Double.parseDouble(s[1]));
 				} else if (s[0].equals("drawerSlides")) {
