@@ -71,17 +71,6 @@ void advance()
   count %= period;
 }
 
-void everyX(byte skip, byte offset, uint32_t color, Adafruit_WS2801 strip)
-{
-  byte i;
-  for(i=offset; i<strip.numPixels(); i+=skip)
-  {
-    strip.setPixelColor(i, color);
-    //delay(1);
-  }
-  return;
-}
-
 void chase(byte stripIndex)
 {
   byte c;
@@ -204,7 +193,19 @@ void allOff() /Breaks things
     everyX(1, 0, off, strips[i]);
   }
 }
-*/\
+*/
+
+void everyX(byte skip, byte offset, uint32_t color, Adafruit_WS2801 strip)
+{
+  byte i;
+  for(i=offset; i<strip.numPixels(); i+=skip)
+  {
+    strip.setPixelColor(i, color);
+    //delay(1);
+  }
+  return;
+}
+
 void receiveI2C(int bytes)
 {
   digitalWrite(13, HIGH);
@@ -257,17 +258,6 @@ void receiveI2C(int bytes)
   digitalWrite(13, LOW);
 }
 
-uint32_t Color(byte r, byte g, byte b)
-{
-  uint32_t c;
-  c = r;
-  c <<= 8;
-  c |= g;
-  c <<= 8;
-  c |= b;
-  return c;
-}
-
 void undoRGB(uint32_t c)
 {
   byte r, g, b;
@@ -277,6 +267,17 @@ void undoRGB(uint32_t c)
   complementArray[1] = c;
   c >>= 8;
   complementArray[0] = c;
+}
+
+uint32_t Color(byte r, byte g, byte b)
+{
+  uint32_t c;
+  c = r;
+  c <<= 8;
+  c |= g;
+  c <<= 8;
+  c |= b;
+  return c;
 }
 
 uint32_t Wheel(byte WheelPos)
