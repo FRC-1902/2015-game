@@ -34,15 +34,15 @@ public class AutonomousCommand extends Command {
 			if (!commands.isEmpty()) {
 				String[] s = commands.get(0);
 				if (s[0].equals("drive")) {
-					double left = Double.parseDouble(s[1]);
-					double right = Double.parseDouble(s[2]);
+					double left = Robot.inchToEncoder(Double.parseDouble(s[1]));
+					double right = Robot.inchToEncoder(Double.parseDouble(s[2]));
 					if (Math.abs(left) != 0 && Math.abs(right) != 0) {
 						String[] next = null;
 						if (commands.size() > 1) {
 							next = commands.get(1);
 						}
 						if (next != null && next[0].equals("drive")) {
-							Robot.drive.encoderDrive(left, right, Double.parseDouble(next[1]), Double.parseDouble(next[2]));
+							Robot.drive.encoderDrive(left, right, Robot.inchToEncoder(Double.parseDouble(next[1])), Robot.inchToEncoder(Double.parseDouble(next[2])));
 						} else {
 							Robot.drive.encoderDrive(left, right, 0, 0);
 						}
@@ -108,7 +108,7 @@ public class AutonomousCommand extends Command {
 					double left = Double.parseDouble(s[1]);
 					double right = Double.parseDouble(s[2]);
 					int merges = 0;
-					double min = 200;
+					double min = 1;
 					if (Math.abs(left) < min && Math.abs(right) < min) {
 						boolean stopMerge = false;
 						for (String[] s2 : commands) {

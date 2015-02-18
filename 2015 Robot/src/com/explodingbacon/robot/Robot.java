@@ -16,6 +16,7 @@
 package com.explodingbacon.robot;
 
 import java.io.File;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.explodingbacon.robot.Lights.Action;
 import com.explodingbacon.robot.Lights.Color;
 import com.explodingbacon.robot.Lights.Strip;
@@ -53,32 +55,18 @@ public class Robot extends IterativeRobot {
 
     AutonomousCommand autonomousCommand = null;
 
-    //Initialize our subsystems, autonomous, and Operator Interface (OI)
     public void robotInit() {
+    	System.out.println("Initializing the Robot...");
 		self = this;
-		System.out.println("Initializing DriveSubsystem...");
 		drive = new DriveSubsystem();
-		System.out.println("Initializing IntakeSubsystem...");
 		intake = new IntakeSubsystem();
-		System.out.println("Initializing IntakeArmsSubsystem...");
-		System.out.println("Initializing BinGrabberSubsystem");
 		binGrabber = new BinGrabberSubsystem();
-		System.out.println("Initializing LiftSubsystem...");
 		lift = new LiftSubsystem();
-		System.out.println("Initializing DrawerSlideSubsystem...");
 		drawerSlides = new DrawerSlideSubsystem();
-		System.out.println("Initializing AutonomousSubsystem...");
 		autonomous = new AutonomousSubsystem();
-		System.out.println("Initializing OI...");
 		oi = new OI();
-		System.out.println("Initializing Power Distribution Panel...");
 		pdp = new PowerDistributionPanel();
-		System.out.println("Intializing Driver Station...");
 		ds = DriverStation.getInstance();
-        System.out.println("Enabling intake arms and roller...");
-		//intake.roller.set(Value.kOn);		
-		//intake.compressor.setClosedLoopControl(false);
-		System.out.println("Initializing AutonomousCommand...");
 		autonomousCommand = new AutonomousCommand();
 		chooser.initTable(NetworkTable.getTable("TableThing"));
 		File usbDir = new File("/u/.auto/");
@@ -106,15 +94,9 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
         if (autonomousCommand != null) autonomousCommand.start();
         init();
-        Strip.BRAKES.chase(Color.ORANGE, Color.GREEN);
-        //lights.send(Char.BRAKES + anim);
-        //lights.send(Char.ELEVATOR + anim);
-        //lights.send(Char.TOTE_CHUTE + anim);
+        Strip.BACK.chase(Color.ORANGE, Color.GREEN);
     }
 
-    /**
-     * This function is called periodically during autonomous
-     */
     public void autonomousPeriodic() {
 		periodic();
         Scheduler.getInstance().run();
@@ -132,28 +114,19 @@ public class Robot extends IterativeRobot {
         }
     }
 
-    /**
-     * This function is called when the disabled button is hit.
-     * You can use it to reset subsystems before shutting down.
-     */
     public void disabledInit(){
     	autonomous.disable();
     	disabled();
     }
 
-    /**
-     * This function is called periodically during operator control
-     */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
 		periodic();	
     }
     
-    /**
-     * This function is called periodically during test mode
-     */
     public void testPeriodic() {
         LiveWindow.run();
+        periodic();
     }
     
     public void init() {
@@ -161,13 +134,22 @@ public class Robot extends IterativeRobot {
     }
     
     public void periodic() {
-    	SmartDashboard.putData("PDP", pdp);    	
+    	SmartDashboard.putData("PDP", pdp);
+    	OI.xbox.updateDPad();
     }
     
     public void disabled() {
     	lift.stopThread();
-    	Strip.BRAKES.driverStation(getAllianceColor(), getDSLocation());
+    	Strip.TOTE_CHUTE.driverStation(getAllianceColor(), getDSLocation());
+    	Strip.BACK.driverStation(getAllianceColor(), getDSLocation());
+    	Strip.ELEVATOR.chase(Color.OFF, getAllianceColor());
     	Strip.ARC.fade(Color.RED, Color.OFF);
+    }    
+    
+    public void teleopLights() {
+    	Strip.BACK.fade(getAllianceColor(), Color.GREEN);
+    	Strip.ARC.arcSpark();
+    	Strip.ELEVATOR.setColor(Color.ORANGE);
     }
     
     public Color getAllianceColor() {
@@ -182,15 +164,14 @@ public class Robot extends IterativeRobot {
     	return Action.DS_ID1;
     }
     
-    public void teleopLights() {
-    	Strip.BRAKES.fade(getAllianceColor(), Color.GREEN);
-    	Strip.ARC.arcSpark();
-    }
-    
     public enum State {
     	OPEN,
     	CLOSED,
     	FORWARDS,
     	BACKWARDS
+    }
+    
+    public static double inchToEncoder(double encoder) {
+    	return encoder / (Math.PI * 6) * 75;
     }
 }

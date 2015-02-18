@@ -2,6 +2,7 @@ package com.explodingbacon.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.InternalButton;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class XboxController extends Joystick {
@@ -16,6 +17,10 @@ public class XboxController extends Joystick {
 	public Button rightBumper;
 	public Button leftJoyButton;
 	public Button rightJoyButton;
+	public InternalButton dpadUp;
+	public InternalButton dpadRight;
+	public InternalButton dpadDown;
+	public InternalButton dpadLeft;
 	public float rumbleL = 0;
 	public float rumbleR = 0;
 	public Timer rumbleTimer;
@@ -32,6 +37,10 @@ public class XboxController extends Joystick {
 		rightBumper = new JoystickButton(this, 6);
 		leftJoyButton = new JoystickButton(this, 9);
 		rightJoyButton = new JoystickButton(this, 10);
+		dpadUp = new InternalButton();
+		dpadRight = new InternalButton();
+		dpadDown = new InternalButton();
+		dpadLeft = new InternalButton();
 	}
 	
 	/**
@@ -104,41 +113,53 @@ public class XboxController extends Joystick {
 		}).start();
 	}
 	
+	/**
+	 * Used to update the DPad button values. Use this before trying to read any DPad 
+	 * buttons. This isn't needed for getDPad().
+	 */
+	public void updateDPad() {
+		Direction d = getDPad();
+    	dpadUp.setPressed(d.isUp());
+    	dpadRight.setPressed(d.isRight());
+    	dpadDown.setPressed(d.isDown());
+    	dpadLeft.setPressed(d.isLeft());
+	}
+	
 	public enum Direction {
-		NORTH(0),
-		NORTH_EAST(45),
-		EAST(90),
-		SOUTH_EAST(135),
-		SOUTH(180),
-		SOUTH_WEST(225),
-		WEST(270),
-		NORTH_WEST(315),
+		UP(0),
+		UP_RIGHT(45),
+		RIGHT(90),
+		DOWN_RIGHT(135),
+		DOWN(180),
+		DOWN_LEFT(225),
+		LEFT(270),
+		UP_LEFT(315),
 		NONE(-1);
 		
-		public static Direction[] allDirections = new Direction[]{Direction.NORTH, Direction.NORTH_EAST, Direction.EAST, Direction.SOUTH_EAST, Direction.SOUTH, Direction.SOUTH_WEST, Direction.WEST, Direction.NORTH_WEST, Direction.NONE};
+		public static Direction[] allDirections = new Direction[]{Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT, Direction.DOWN, Direction.DOWN_LEFT, Direction.LEFT, Direction.UP_LEFT, Direction.NONE};
 		public int angle;
 		
 		Direction(int angle) {
 			this.angle = angle;
 		}			
 		
-		public boolean isNorth() {
-			if (this == Direction.NORTH_WEST || this == Direction.NORTH || this == Direction.NORTH_EAST) return true;
+		public boolean isUp() {
+			if (this == Direction.UP_LEFT || this == Direction.UP || this == Direction.UP_RIGHT) return true;
 			return false;
 		}
 		
-		public boolean isEast() {
-			if (this == Direction.NORTH_EAST || this == Direction.EAST || this == Direction.SOUTH_EAST) return true;
+		public boolean isRight() {
+			if (this == Direction.UP_RIGHT || this == Direction.RIGHT || this == Direction.DOWN_RIGHT) return true;
 			return false;
 		}
 		
-		public boolean isSouth() {
-			if (this == Direction.SOUTH_WEST || this == Direction.SOUTH || this == Direction.SOUTH_EAST) return true;
+		public boolean isDown() {
+			if (this == Direction.DOWN_LEFT || this == Direction.DOWN || this == Direction.DOWN_RIGHT) return true;
 			return false;
 		}
 		
-		public boolean isWest() {
-			if (this == Direction.NORTH_WEST || this == Direction.WEST || this == Direction.SOUTH_WEST) return true;
+		public boolean isLeft() {
+			if (this == Direction.UP_LEFT || this == Direction.LEFT || this == Direction.DOWN_LEFT) return true;
 			return false;
 		}
 		

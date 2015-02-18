@@ -5,10 +5,10 @@ public class Lights {
 	private static RIODuino rioDuino = new RIODuino();
 	
 	public enum Strip {
-		BRAKES('t'),
+		BACK('t'),
+		TOTE_CHUTE('r'),
 		ELEVATOR('e'),
-		ARC('q'),
-		TOTE_CHUTE('r');
+		ARC('q');
 		
 		char data;
 		
@@ -22,6 +22,10 @@ public class Lights {
 		
 		public void chase(Color color1, Color color2) {
 			send(new Object[]{this, color1, Action.PUSH, color2, Action.CHASE});
+		}
+		
+		public void chase(Color color1, Color color2, Action direction) {
+			send(new Object[]{this, color1, Action.PUSH, color2, direction, Action.CHASE});
 		}
 		
 		public void fade(Color color1, Color color2) {
@@ -66,8 +70,8 @@ public class Lights {
 		FADE('x'),
 		PUSH ('4'),
 		FREEZE('p'),
-		DIRECTION_1('i'),
-		DIRECTION_2('o'),
+		FORWARD('i'),
+		REVERSE('o'),
 		DS_ID1('6'),
 		DS_ID2('7'),
 		DS_ID3('8'),

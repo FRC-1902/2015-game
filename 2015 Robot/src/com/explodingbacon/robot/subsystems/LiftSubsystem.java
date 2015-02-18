@@ -2,14 +2,19 @@ package com.explodingbacon.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
 
 import com.explodingbacon.robot.CodeThread;
+import com.explodingbacon.robot.Lights.Action;
+import com.explodingbacon.robot.Lights.Color;
+import com.explodingbacon.robot.Lights.Strip;
 import com.explodingbacon.robot.OI;
 import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.RobotMap;
 import com.explodingbacon.robot.Util;
 import com.explodingbacon.robot.XboxController.Direction;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
                                                                                                            
@@ -22,18 +27,24 @@ public class LiftSubsystem extends Subsystem {
     public DigitalInput bottomLimit = new DigitalInput(RobotMap.liftBottomLimit);
     public LiftPThread liftPThread = new LiftPThread();
     
-    boolean withinTolerance = false;
+    boolean atTarget = false;
+    boolean easingDown = false;
     
     double min = 0.2;
     double max = 0.3;
-    double kP = 0.075;
+    double kP = 0.0025;
     double kI = 0;
     double kI2 = 0;
     
-    public double target = 0;
+    double error, setpoint, p;
+    
+    public int target = Position.DONT_MOVE;
+    public int privateTarget = Position.BOTTOM;
+    public int loopTarget = privateTarget;
+    public int deadzone = 50;
     
     public LiftSubsystem() {
-    	if (/*Robot.self.isTest()*/ true) {
+    	if (Robot.self.isTest()) {
 			SmartDashboard.putNumber("Change", 1);
 			SmartDashboard.putNumber("liftKP", kP);
 			SmartDashboard.putNumber("liftKI", kI);
@@ -41,44 +52,51 @@ public class LiftSubsystem extends Subsystem {
 			SmartDashboard.putNumber("liftMin", min);
 			SmartDashboard.putNumber("liftMax", max);
 		}
+    	liftEncoder.setDistancePerPulse(1);
     	liftEncoder.reset();
     }
     
     public void setRaw(double motorValue) {
 		lift1.set(-motorValue);
 		lift2.set(-motorValue);
+		if (motorValue > 0) {
+			Strip.ELEVATOR.chase(Color.ORANGE, Color.GREEN);
+		} else if (motorValue < 0) {
+			Strip.ELEVATOR.chase(Color.ORANGE, Color.GREEN, Action.REVERSE);
+		} else {
+			Strip.ELEVATOR.setColor(Color.ORANGE);
+		}
 		Robot.autonomous.add(new String[]{"lift", motorValue + ""});
-    }
-    
-    public void home() {
-    	setRaw(0);
-    	
-    	liftEncoder.reset();
     }
     
     public void getTarget() {
     	Direction dir = OI.xbox.getDPad();
-    	if (dir.isNorth()) {
+    	if (dir.isUp()) {
     		if (!atTop()) {
-    			target = Position.ONE_TOTE_UP;
+    			target = Position.TOP;
+    			privateTarget = Position.TOP;
     		}
-    	} else if (dir.isSouth()) {
+    	} else if (dir.isDown()) {
     		if (!atBottom()) {
     			target = Position.BOTTOM;
+    			privateTarget = Position.BOTTOM;
     		}
     	}
-    	//target = Util.minMax(target, Position.BOTTOM, Position.TOP);
+    	if (OI.xbox.a.get()) { 
+    		target = Position.SCORING; 
+    		privateTarget = Position.SCORING; 
+    		}
     }
     
     public boolean atTarget() {
-    	return withinTolerance; 
+    	return atTarget; 
     }
     
     public boolean atTop() {
     	boolean status = false;
     	status = topLimit.get();
     	if (!status) {
-    		status = liftEncoder.getRaw() >= Position.TOP;
+    		status = Math.abs(Position.TOP - liftEncoder.getRaw()) <= deadzone;
     	}
     	return status;
     }
@@ -87,18 +105,19 @@ public class LiftSubsystem extends Subsystem {
     	boolean status = false;
     	status = bottomLimit.get();
     	if (!status) {
-    		status = liftEncoder.getRaw() <= Position.BOTTOM;
+    		status = Math.abs(Position.BOTTOM - liftEncoder.getRaw()) <= deadzone;
     	}
     	return status;
     }
     
-    public void initDefaultCommand() {
-    	//setDefaultCommand(new LiftControlCommand());
-    }
+    public void initDefaultCommand() {}
     
     public void startThread() {
     	liftPThread = new LiftPThread();
     	liftPThread.start();
+    	setRaw(0);
+    	target = Position.DONT_MOVE;
+    	atTarget = true;
     }
     
     public void stopThread() {
@@ -110,19 +129,16 @@ public class LiftSubsystem extends Subsystem {
     
     public class LiftPThread extends CodeThread {
     	
-    	double error, p, i, setpoint;
     	boolean turnedOff = false;
+    	double moveSpeed = 0.3;
     	
     	public LiftPThread() {
-        	i = 0;
-        	
-        	getTarget();
-        	
         	kP = SmartDashboard.getNumber("liftKP", kP);
     		kI = SmartDashboard.getNumber("liftKI", kI);
     		kI2 = SmartDashboard.getNumber("liftKI2", kI2);
     		min = SmartDashboard.getNumber("liftMin", min);
     		max = SmartDashboard.getNumber("liftMax", max);
+    		
     	}
     	
     	@Override
@@ -131,8 +147,84 @@ public class LiftSubsystem extends Subsystem {
     		
     		System.out.println("Lift encoder: " + Robot.lift.liftEncoder.getRaw());
     		
-    		getTarget();
+    		double max = 0.6;
     		
+    		if(!OI.xbox.getDPad().isDown())
+    		{
+    			if(easingDown)
+    			{
+    				target = Position.BOTTOM;
+    				privateTarget = Position.BOTTOM;
+    				easingDown = false;
+    			}
+    			getTarget();
+    		}
+    		else
+    		{
+    			easingDown = true;
+    			privateTarget -= 0.25;
+    			if(privateTarget <= 0) privateTarget = 0;
+    		}
+    		
+    		loopTarget = privateTarget;
+    		
+    		//if(atTarget && privateTarget > 100) loopTarget -= 20;
+    		
+    		error = loopTarget - liftEncoder.getRaw();
+    		
+    		p = error;
+    		
+    		setpoint = p*kP;
+    		
+    		if(Math.abs(error) < deadzone || (Util.sign(error) == -1 && atBottom()) || (Util.sign(error) == 1 && atTop()))
+    		{
+    			setpoint = 0;
+    			atTarget = true;
+    			target = Position.DONT_MOVE;
+    		}
+    		else
+    		{
+    			atTarget = false;
+    		}
+    		
+    		setpoint = Util.minMax(setpoint, 0, (OI.xbox.getDPad().isDown() ? 0.3 : max));
+    		
+    		setRaw(setpoint);
+    		/*
+    		if (target != Position.DONT_MOVE && target != Position.STOPPED) {
+    			atTarget = false;
+    		}
+    		
+    		if (target == Position.BOTTOM) {
+    			if (!atBottom()) {
+    				setRaw(-moveSpeed);
+    			} else {
+    				target = Position.STOPPED;    			
+    			}   			
+    		} else if (target == Position.TOP) {
+    			if (!atTop()) {
+    				setRaw(moveSpeed * 2);
+    			} else {
+    				target = Position.STOPPED;    			
+    			} 
+    		} else if (target == Position.SCORING) {
+    			double distance = Position.SCORING - liftEncoder.getRaw();
+    			double speed = (moveSpeed  * 2)* Util.sign(distance);
+    			if (Math.abs(distance) > deadZone) {
+    				setRaw(speed);
+    			} else {
+    				target = Position.STOPPED;
+    			}
+    		}
+    		if (target == Position.STOPPED) {
+    			atTarget = true;
+    			target = Position.DONT_MOVE;
+    		}
+    		*/
+    		
+    		
+    		
+    		/*
     		SmartDashboard.putNumber("Target", target);
     		SmartDashboard.putBoolean("Top Limit", topLimit.get());
     		SmartDashboard.putBoolean("Bottom Limit", bottomLimit.get());
@@ -158,9 +250,9 @@ public class LiftSubsystem extends Subsystem {
 
     		if(Math.abs(setpoint) <= min) withinTolerance = true;
     		else withinTolerance = false;
-    		   		
+    		*/   		
 			if (Robot.ds.isOperatorControl()) {
-				if (liftEncoder.getRate() > 10) {
+				if (Math.abs(liftEncoder.getRate()) > 10) {
     				OI.xbox.rumble(0.2f, 0.2f);
     				turnedOff = false;
     			} else {
@@ -175,9 +267,11 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public class Position {
+    	public static final int DONT_MOVE = -2;
+    	public static final int STOPPED = -1;
     	public static final int BOTTOM = 0;
-    	public static final int ONE_TOTE_UP = 1700;
-    	public static final int TOP = 2100;
+    	public static final int SCORING = 1700;
+    	public static final int TOP = 2300;
     }
 }
 

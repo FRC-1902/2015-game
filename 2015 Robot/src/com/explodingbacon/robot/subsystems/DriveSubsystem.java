@@ -66,7 +66,7 @@ public class DriveSubsystem extends Subsystem {
 			leftEncoder.reset();
 			rightEncoder.reset();
 		}
-		System.out.println("Gyro: " + gyro.getAngle());
+		//System.out.println("Gyro: " + gyro.getAngle());
     	//System.out.println("Left encoder: " + Robot.drive.leftEncoder.getRaw() + ", Right encoder: " + Robot.drive.rightEncoder.getRaw());
 	}
 
@@ -161,7 +161,8 @@ public class DriveSubsystem extends Subsystem {
 	 **/
 	public void gyroTurn(double angle, boolean adjustment) {
 		double p;
-		boolean exit = false;
+		boolean exit = false;                      
+		
 		
 		double kP = SmartDashboard.getNumber("gyroKP", gyroKP); //Tuning variable for proportional term.
 		double kI = SmartDashboard.getNumber("gyroKI", gyroKI); 

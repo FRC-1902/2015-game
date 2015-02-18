@@ -8,7 +8,6 @@ public class BinGrabberSubsystem extends Subsystem {
     
     public Solenoid binGrabber = new Solenoid(RobotMap.binGrabberSolenoid);
     
-    public void initDefaultCommand() {
-    }
+    public void initDefaultCommand() {}
 }
 

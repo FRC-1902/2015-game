@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class HumanPlayerStackCommand extends Command {
 	
+	public int totes = 0;
+	
     public HumanPlayerStackCommand() {
         requires(Robot.drive);
         requires(Robot.intake);
@@ -16,14 +18,10 @@ public class HumanPlayerStackCommand extends Command {
     }
 
     protected void initialize() {
-    }
-
-    protected void execute() {
-    	int totesDone = 0;
     	Robot.intake.arms.set(true);
-    	Robot.lift.target = Position.ONE_TOTE_UP;
+    	Robot.lift.target = Position.TOP;
     	while (!Robot.lift.atTarget()) {}
-    	while (totesDone < 6) {
+    	while (totes < 6) {
     		Strip.TOTE_CHUTE.chase(Color.WHITE, Color.GREEN);
     		while (!Robot.intake.chuteTouchSensor.get()) {}
     		Strip.TOTE_CHUTE.fade(Color.ORANGE, Color.WHITE);
@@ -34,14 +32,17 @@ public class HumanPlayerStackCommand extends Command {
     		Robot.intake.arms.set(false);
     		Robot.lift.target = Position.BOTTOM;   
     		while (!Robot.lift.atTarget()) {}
-    		Robot.lift.target = Position.ONE_TOTE_UP;
+    		Robot.lift.target = Position.TOP;
     		while (!Robot.lift.atTarget()) {}
-    		totesDone++; 
+    		totes++; 
     	}
     }
 
+    protected void execute() {
+    }
+
     protected boolean isFinished() {
-        return false;
+        return true;
     }
 
     protected void end() {

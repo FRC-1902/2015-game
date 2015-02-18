@@ -26,8 +26,8 @@ public class IntakeSubsystem extends Subsystem {
 	}
 	
     public void setMotors(double d) {
-    	leftIntake.set(-d);
-    	rightIntake.set(d);
+    	leftIntake.set(d);
+    	rightIntake.set(-d);
     	motorSpeed = d;
     	Robot.autonomous.add(new String[]{"intakeMotor", d + ""});
     }
