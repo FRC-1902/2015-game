@@ -2,14 +2,13 @@ package com.explodingbacon.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.InternalButton;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class XboxController extends Joystick {
 
 	public Button a;
 	public Button b;
-	public Button x;
+	public Button x; 
 	public Button y;
 	public Button start;
 	public Button select;
@@ -17,8 +16,6 @@ public class XboxController extends Joystick {
 	public Button rightBumper;
 	public Button leftJoyButton;
 	public Button rightJoyButton;
-	public float rumbleL = 0;
-	public float rumbleR = 0;
 	public Timer rumbleTimer;
 	
 	public XboxController(int port) {
@@ -81,8 +78,6 @@ public class XboxController extends Joystick {
 	 * @param r The right rumble value.
 	 */
 	public void rumble(float l, float r) {
-		rumbleL = l;
-		rumbleR = r;
 		setRumble(RumbleType.kLeftRumble, l);
 		setRumble(RumbleType.kRightRumble, r);
 	}
@@ -91,11 +86,11 @@ public class XboxController extends Joystick {
 	 * Makes the controller rumble for X seconds.
 	 * @param l The left rumble value.
 	 * @param r The right rumble value.
-	 * @param time How long the controller should rumble.
+	 * @param seconds How long the controller should rumble.
 	 */
-	public void rumble(float l, float r, double time) {
+	public void rumble(float l, float r, double seconds) {
 		rumble(l, r);
-		rumbleTimer = new Timer(time, false, new TimerUser() {
+		rumbleTimer = new Timer(seconds, false, new TimerUser() {
 			public void timer() {
 				rumble(0, 0);
 			}
@@ -114,6 +109,7 @@ public class XboxController extends Joystick {
 		DOWN_LEFT(225),
 		LEFT(270),
 		UP_LEFT(315),
+		
 		NONE(-1);
 		
 		public static Direction[] allDirections = new Direction[]{Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT, Direction.DOWN, Direction.DOWN_LEFT, Direction.LEFT, Direction.UP_LEFT, Direction.NONE};

@@ -61,8 +61,6 @@ public class AutonomousCommand extends Command {
 					Robot.drawerSlides.setDrawerSlides(Double.parseDouble(s[1]));
 				}
 				commands.remove(commands.get(0));
-			} else {
-				Robot.autonomous.light.set(true);
 			}
 		} else {
 			actuallyInit();	
@@ -73,9 +71,7 @@ public class AutonomousCommand extends Command {
 		Robot.drive.leftEncoder.reset();
 		Robot.drive.rightEncoder.reset();
 		Robot.drive.gyro.reset();
-		Robot.autonomous.light.set(true);
 		Timer.delay(2);
-		Robot.autonomous.light.set(false);
 		commands = new ArrayList<>();
 		List<String[]> mergedCommands = new ArrayList<>();
 		List<String[]> dataSource = new ArrayList<>();
@@ -160,6 +156,5 @@ public class AutonomousCommand extends Command {
 	public void wrapUp() {
 		initialized = false;
 		Robot.drive.tankDrive(0, 0);
-		Robot.autonomous.light.set(false);
 	}
 }

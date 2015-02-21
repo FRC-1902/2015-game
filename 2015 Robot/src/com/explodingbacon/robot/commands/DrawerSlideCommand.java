@@ -14,7 +14,11 @@ public class DrawerSlideCommand extends Command {
     }
 
     protected void execute() {
-    	Robot.drawerSlides.setDrawerSlides((OI.xbox.getRightTrigger() - OI.xbox.getLeftTrigger()) * 0.5);
+    	double speed = (OI.xbox.getRightTrigger() - OI.xbox.getLeftTrigger()) * 0.5;
+    	Robot.drawerSlides.setDrawerSlides(speed);
+    	if (speed > 0 && !Robot.binGrabber.binGrabber.get()) {
+    		Robot.binGrabber.binGrabber.set(true);
+    	}
     }
 
     protected boolean isFinished() {

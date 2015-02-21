@@ -14,7 +14,6 @@ import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.RobotMap;
 import com.explodingbacon.robot.Util;
 import com.explodingbacon.robot.XboxController.Direction;
-import com.explodingbacon.robot.commands.LiftControlCommand;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -69,7 +68,7 @@ public class LiftSubsystem extends Subsystem {
 		}
 		Robot.autonomous.add(new String[]{"lift", motorValue + ""});
     }
-    
+
     public void getTarget() {
     	Direction dir = OI.xbox.getDPad();
     	if (dir.isUp()) {
@@ -83,14 +82,23 @@ public class LiftSubsystem extends Subsystem {
     			privateTarget = Position.BOTTOM;
     		}
     	}
-    	if (OI.xbox.a.get()) { 
+    	if (Robot.oi.liftScoring.get()) { 
     		target = Position.SCORING; 
     		privateTarget = Position.SCORING; 
-    		}
+    	}
     }
     
     public boolean atTarget() {
     	return atTarget; 
+    }
+    
+    public void waitForTarget() {
+    	while (!atTarget()) {Timer.delay(0.1);};
+    }
+    
+    public void setTargetAndWait(int i) {
+    	target = i;
+    	waitForTarget();
     }
     
     public boolean atTop() {
@@ -112,7 +120,7 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public void initDefaultCommand() {
-    	setDefaultCommand(new LiftControlCommand());
+    	//setDefaultCommand(new LiftCommand());
     }
     
     public void startThread() {
@@ -132,8 +140,8 @@ public class LiftSubsystem extends Subsystem {
     
     public class LiftPThread extends CodeThread {
     	
-    	boolean turnedOff = false;
-    	double moveSpeed = 0.3;
+    	double max = 0.6;
+    	boolean xboxTurnedOff = false;
     	
     	public LiftPThread() {
         	kP = SmartDashboard.getNumber("liftKP", kP);
@@ -148,22 +156,17 @@ public class LiftSubsystem extends Subsystem {
     	public void code() {
     		if (bottomLimit.get()) liftEncoder.reset();
     		
-    		System.out.println("Lift encoder: " + Robot.lift.liftEncoder.getRaw());
+    		//System.out.println("Lift encoder: " + Robot.lift.liftEncoder.getRaw());
     		
-    		double max = 0.6;
-    		
-    		if(!OI.xbox.getDPad().isDown())
-    		{
-    			if(easingDown)
-    			{
+    		if(!OI.xbox.getDPad().isDown()) {
+    			if(easingDown) {
     				target = Position.BOTTOM;
     				privateTarget = Position.BOTTOM;
     				easingDown = false;
     			}
     			getTarget();
     		}
-    		else
-    		{
+    		else {
     			easingDown = true;
     			privateTarget -= 0.25;
     			if(privateTarget <= 0) privateTarget = 0;
@@ -179,89 +182,27 @@ public class LiftSubsystem extends Subsystem {
     		
     		setpoint = p*kP;
     		
-    		if(Math.abs(error) < deadzone || (Util.sign(error) == -1 && atBottom()) || (Util.sign(error) == 1 && atTop()))
-    		{
+    		if(Math.abs(error) < deadzone || (Util.sign(error) == -1 && atBottom()) || (Util.sign(error) == 1 && atTop())) {
     			setpoint = 0;
     			atTarget = true;
     			target = Position.DONT_MOVE;
     		}
-    		else
-    		{
+    		else {
     			atTarget = false;
     		}
     		
     		setpoint = Util.minMax(setpoint, 0, (OI.xbox.getDPad().isDown() ? 0.3 : max));
     		
     		setRaw(setpoint);
-    		/*
-    		if (target != Position.DONT_MOVE && target != Position.STOPPED) {
-    			atTarget = false;
-    		}
     		
-    		if (target == Position.BOTTOM) {
-    			if (!atBottom()) {
-    				setRaw(-moveSpeed);
-    			} else {
-    				target = Position.STOPPED;    			
-    			}   			
-    		} else if (target == Position.TOP) {
-    			if (!atTop()) {
-    				setRaw(moveSpeed * 2);
-    			} else {
-    				target = Position.STOPPED;    			
-    			} 
-    		} else if (target == Position.SCORING) {
-    			double distance = Position.SCORING - liftEncoder.getRaw();
-    			double speed = (moveSpeed  * 2)* Util.sign(distance);
-    			if (Math.abs(distance) > deadZone) {
-    				setRaw(speed);
-    			} else {
-    				target = Position.STOPPED;
-    			}
-    		}
-    		if (target == Position.STOPPED) {
-    			atTarget = true;
-    			target = Position.DONT_MOVE;
-    		}
-    		*/
-    		
-    		
-    		
-    		/*
-    		SmartDashboard.putNumber("Target", target);
-    		SmartDashboard.putBoolean("Top Limit", topLimit.get());
-    		SmartDashboard.putBoolean("Bottom Limit", bottomLimit.get());
-    		
-    		error = target - liftEncoder.getRaw();
-
-    		p = error;
-
-    		i += error;
-
-    		System.out.println("Raw set: " + (p*kP + i*kI));
-
-    		setpoint = Util.minMax((p*kP + i*kI), min, max);
-    		//setpoint += i*kI2;
-    		
-    		if (atTop() && Util.sign(setpoint) == 1) {
-    			setpoint = 0;
-    		} else if (atBottom() && Util.sign(setpoint) == -1) {
-    			setpoint = 0;
-    		}
-
-    		setRaw(setpoint);
-
-    		if(Math.abs(setpoint) <= min) withinTolerance = true;
-    		else withinTolerance = false;
-    		*/   		
-			if (Robot.ds.isOperatorControl()) {
+			if (Robot.ds.isOperatorControl() && !Robot.ds.isDisabled()) {
 				if (Math.abs(liftEncoder.getRate()) > 10) {
     				OI.xbox.rumble(0.2f, 0.2f);
-    				turnedOff = false;
+    				xboxTurnedOff = false;
     			} else {
-    				if (!turnedOff) {
+    				if (!xboxTurnedOff) {
     					OI.xbox.rumble(0, 0);
-    					turnedOff = true;
+    					xboxTurnedOff = true;
     				}
     			}
 				

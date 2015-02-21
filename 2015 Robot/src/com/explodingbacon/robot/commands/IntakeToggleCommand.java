@@ -21,13 +21,13 @@ public class IntakeToggleCommand extends Command {
     
     public IntakeToggleCommand(State dir) {
         requires(Robot.intake);
-        this.sign = dir == State.FORWARDS ? 1 : -1;
+        sign = dir == State.FORWARDS ? 1 : -1;
     }
     
     public IntakeToggleCommand(boolean state, State dir) {
         requires(Robot.intake);
         this.state = state;
-        this.sign = dir == State.FORWARDS ? 1 : -1;
+        sign = dir == State.FORWARDS ? 1 : -1;
     }
 
     protected void initialize() {
@@ -38,7 +38,11 @@ public class IntakeToggleCommand extends Command {
     			Robot.intake.setMotors(Math.abs(Robot.intake.motorSpeed) > 0 ? 0 : 1 * sign);
     		}
     	} else {
-    		Robot.intake.setMotors(state ? 1 * sign : 0);
+    		if (!(Robot.oi.intake.get() && !Robot.oi.reversedIntake.get()) || !(!Robot.oi.intake.get() && Robot.oi.reversedIntake.get())) {
+    			Robot.intake.setMotors(state ? 1 * sign : 0);
+    		} else {
+    			Robot.intake.setMotors(1 * sign);
+    		}
     	}
     }
 

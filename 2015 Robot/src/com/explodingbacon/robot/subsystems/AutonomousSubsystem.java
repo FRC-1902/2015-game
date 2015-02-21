@@ -2,16 +2,13 @@ package com.explodingbacon.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.explodingbacon.robot.RobotMap;
 import com.explodingbacon.robot.Timer;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class AutonomousSubsystem extends Subsystem {
 
 	public List<String[]> data = new ArrayList<>();
 	public boolean recording = false;
-	public Solenoid light = new Solenoid(RobotMap.autonomousLight);
 	public Timer timer;
 
 	public void enable() {

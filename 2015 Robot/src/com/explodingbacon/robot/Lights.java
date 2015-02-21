@@ -2,7 +2,7 @@ package com.explodingbacon.robot;
 
 public class Lights {
     	
-	private static RIODuino rioDuino = new RIODuino();
+	private static RIODuino rioDuino = new RIODuino(); //The RIODuino has been disabled. To re-enable it, uncomment the code in the RIODuino class.
 	
 	public enum Strip {
 		BACK('t'),

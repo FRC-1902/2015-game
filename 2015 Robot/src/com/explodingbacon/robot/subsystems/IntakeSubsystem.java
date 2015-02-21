@@ -2,7 +2,6 @@ package com.explodingbacon.robot.subsystems;
 
 import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.RobotMap;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
@@ -19,7 +18,6 @@ public class IntakeSubsystem extends Subsystem {
     public Relay roller = new Relay(RobotMap.rollerRelay);
 	public DigitalInput chuteTouchSensor = new DigitalInput(RobotMap.chuteTouchSensor);
 	public double motorSpeed = 0;
-	public Compressor compressor = new Compressor();
 
 	public IntakeSubsystem() {
 		roller.setDirection(Direction.kForward);

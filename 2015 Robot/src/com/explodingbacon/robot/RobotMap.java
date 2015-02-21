@@ -40,7 +40,4 @@ public class RobotMap {
 	public static int liftEncoderB = 7; //ID 18
 	public static int liftTopLimit = 4; //ID 19
 	public static int liftBottomLimit = 5; //ID 20
-	
-	//TODO: Remove
-	public static int autonomousLight = 6;  //Legacy
 }

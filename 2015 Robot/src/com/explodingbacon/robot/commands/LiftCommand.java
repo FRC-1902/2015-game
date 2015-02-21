@@ -5,9 +5,9 @@ import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.XboxController.Direction;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class LiftControlCommand extends Command {
+public class LiftCommand extends Command {
 
-    public LiftControlCommand() {
+    public LiftCommand() {
         requires(Robot.lift);
     }
 
@@ -23,7 +23,7 @@ public class LiftControlCommand extends Command {
 		} else {
 			Robot.lift.setRaw(0);
 		}
-		System.out.println("Lift encoder: " + Robot.lift.liftEncoder.getRaw());
+		//System.out.println("Lift encoder: " + Robot.lift.liftEncoder.getRaw());
 	}
 
 	protected boolean isFinished() {

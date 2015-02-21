@@ -61,13 +61,6 @@ public class DriveSubsystem extends Subsystem {
 		this.left2.set(-left);
 		this.right1.set(right);
 		this.right2.set(right);
-		Robot.autonomous.add(new String[]{"drive", leftEncoder.getRaw() + "", rightEncoder.getRaw()  + "", gyro.getAngle() + ""});
-		if (Robot.autonomous.recording) {
-			leftEncoder.reset();
-			rightEncoder.reset();
-		}
-		//System.out.println("Gyro: " + gyro.getAngle());
-    	//System.out.println("Left encoder: " + Robot.drive.leftEncoder.getRaw() + ", Right encoder: " + Robot.drive.rightEncoder.getRaw());
 	}
 
 	/**
@@ -144,7 +137,7 @@ public class DriveSubsystem extends Subsystem {
 			//System.out.println("Right is driving at " + rightError + " to " + right + ", and is at " + rightEncoder.getRaw() + ".");
 			//System.out.println("Left is driving at " + leftError + " to " + left + ", and is at " + leftEncoder.getRaw() + ".");
 			
-			tankDrive(leftError, -rightError);
+			tankDrive(leftError, rightError);
 
 			if (((rightError + leftError) / 2) < min) {
 				if (angleError != 0) {
@@ -193,10 +186,7 @@ public class DriveSubsystem extends Subsystem {
 			
 			//System.out.println("Going " + motorValue + " to " + angle + " degrees, and is at " + gyro.getAngle() + iString + ", I is " + (kI*i));
 			
-			right1.set(-motorValue);
-			right2.set(-motorValue);
-			left1.set(-motorValue);
-			left2.set(-motorValue);
+			tankDrive(motorValue, -motorValue);
 
 			if(Math.abs(error) < 2) exit = true;
 		}

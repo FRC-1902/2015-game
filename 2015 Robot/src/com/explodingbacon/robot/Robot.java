@@ -106,12 +106,7 @@ public class Robot extends IterativeRobot {
         if (autonomousCommand != null) autonomousCommand.cancel();  
         init();
         OI.xbox.rumble(0.5f, 0.5f, 1);
-        teleopLights();
-        if (OI.xbox.select.get()) {
-        	Robot.intake.compressor.setClosedLoopControl(false);
-        } else {
-        	Robot.intake.compressor.setClosedLoopControl(true);
-        }
+        teleopLights();       
     }
 
     public void disabledInit(){

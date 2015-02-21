@@ -2,17 +2,15 @@ package com.explodingbacon.robot;
 
 import java.util.ArrayList;
 import java.util.List;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.I2C.Port;
 
 public class RIODuino extends CodeThread {
 	
 	private List<byte[]> bytesToAdd = new ArrayList<>();
 	private List<byte[]> bytesToWrite = new ArrayList<>();	
-	private I2C i2c = new I2C(Port.kMXP, 0xA0);
+	//private I2C i2c = new I2C(Port.kMXP, 0xA0);
 		
 	public RIODuino() {
-		start();
+		//start();
 	}
 	
 	public void send(byte[] bytes) {
@@ -21,6 +19,7 @@ public class RIODuino extends CodeThread {
 	
 	@Override
 	public void code() {
+		/*
 		for (int i=0; i < bytesToAdd.size(); i++) {
 			bytesToWrite.add(bytesToAdd.get(i));
 		}
@@ -36,5 +35,6 @@ public class RIODuino extends CodeThread {
 			}
 		}
 		bytesToWrite.clear();
+		*/
 	}	
 } 
