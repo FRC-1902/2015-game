@@ -135,7 +135,6 @@ public class Robot extends IterativeRobot {
     
     public void periodic() {
     	SmartDashboard.putData("PDP", pdp);
-    	OI.xbox.updateDPad();
     }
     
     public void disabled() {

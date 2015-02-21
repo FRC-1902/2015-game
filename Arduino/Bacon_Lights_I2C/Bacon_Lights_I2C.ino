@@ -55,7 +55,7 @@ void advance()
     switch(state[i])
     {
       case(1): if(!isStopped[i]) chase(i); break;
-      case(2): if(!isStopped[i]) pulse(i); break;
+      case(2): pulse(i); break;
       case(3): displayDS(i); break;
       case(4): insanityBacon(i); break;
       case(5): arcReactorSpark(i); break;
@@ -134,7 +134,7 @@ void pulse(byte stripIndex)
   everyX(1, 0, color, strips[stripIndex]);
 }
 
-void displayDS(int stripIndex)
+void displayDS(byte stripIndex)
 {
   byte c = millis() / 1000;
   c %= 4;

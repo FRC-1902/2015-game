@@ -17,10 +17,6 @@ public class XboxController extends Joystick {
 	public Button rightBumper;
 	public Button leftJoyButton;
 	public Button rightJoyButton;
-	public InternalButton dpadUp;
-	public InternalButton dpadRight;
-	public InternalButton dpadDown;
-	public InternalButton dpadLeft;
 	public float rumbleL = 0;
 	public float rumbleR = 0;
 	public Timer rumbleTimer;
@@ -37,10 +33,6 @@ public class XboxController extends Joystick {
 		rightBumper = new JoystickButton(this, 6);
 		leftJoyButton = new JoystickButton(this, 9);
 		rightJoyButton = new JoystickButton(this, 10);
-		dpadUp = new InternalButton();
-		dpadRight = new InternalButton();
-		dpadDown = new InternalButton();
-		dpadLeft = new InternalButton();
 	}
 	
 	/**
@@ -111,18 +103,6 @@ public class XboxController extends Joystick {
 				rumbleTimer = null;
 			}
 		}).start();
-	}
-	
-	/**
-	 * Used to update the DPad button values. Use this before trying to read any DPad 
-	 * buttons. This isn't needed for getDPad().
-	 */
-	public void updateDPad() {
-		Direction d = getDPad();
-    	dpadUp.setPressed(d.isUp());
-    	dpadRight.setPressed(d.isRight());
-    	dpadDown.setPressed(d.isDown());
-    	dpadLeft.setPressed(d.isLeft());
 	}
 	
 	public enum Direction {

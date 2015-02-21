@@ -14,6 +14,7 @@ import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.RobotMap;
 import com.explodingbacon.robot.Util;
 import com.explodingbacon.robot.XboxController.Direction;
+import com.explodingbacon.robot.commands.LiftControlCommand;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -110,7 +111,9 @@ public class LiftSubsystem extends Subsystem {
     	return status;
     }
     
-    public void initDefaultCommand() {}
+    public void initDefaultCommand() {
+    	setDefaultCommand(new LiftControlCommand());
+    }
     
     public void startThread() {
     	liftPThread = new LiftPThread();
