@@ -23,12 +23,14 @@ public class DriveSubsystem extends Subsystem {
 	public Gyro gyro = new Gyro(RobotMap.gyro);
 	public boolean arcadeDrive = true;
 	
-	public double encoderKP = 0.01;
-	public double encoderKAngleP = 0.15;
+	public double slow = 0.3;
+	
+	public double encoderKP = 0.13;
+	public double encoderKAngleP = 1.95;
 	public double encoderMin = 0.3;
 	public double encoderMax = 0.5;
 	
-	public double gyroKP = 0.02;
+	public double gyroKP = 0.01; //0.02
 	public double gyroKI = 0.00025;
 	public double gyroKI2 = 0.000025;
 	public double gyroMin = 0.2;
@@ -40,7 +42,8 @@ public class DriveSubsystem extends Subsystem {
 		leftEncoder.reset();
 		rightEncoder.reset();
 		gyro.reset();
-		if (Robot.self.isTest()) {
+		//if (Robot.self.isTest()) {
+		
 			SmartDashboard.putNumber("encoderKP", encoderKP);
 			SmartDashboard.putNumber("encoderKAngleP", encoderKAngleP);
 			SmartDashboard.putNumber("encoderMin", encoderMin);
@@ -50,7 +53,8 @@ public class DriveSubsystem extends Subsystem {
 			SmartDashboard.putNumber("gyroKI2", gyroKI2);
 			SmartDashboard.putNumber("gyroMin", gyroMin);
 			SmartDashboard.putNumber("gyroMax", gyroMax);
-		}
+		
+		//}
 	}
 
 	/**
@@ -69,6 +73,12 @@ public class DriveSubsystem extends Subsystem {
 	public void arcadeDrive(Joystick joy) {
 		double joyX = joy.getX();
 		double joyY = joy.getY();
+		
+		if(Robot.oi.driveSlow.get()){
+			joyX *= slow;
+			joyY *= slow;
+		}
+		
 		if (Math.abs(joyX) < 0.1) {
 			joyX = 0;
 		}
@@ -135,11 +145,12 @@ public class DriveSubsystem extends Subsystem {
 			}			
 
 			//System.out.println("Right is driving at " + rightError + " to " + right + ", and is at " + rightEncoder.getRaw() + ".");
-			//System.out.println("Left is driving at " + leftError + " to " + left + ", and is at " + leftEncoder.getRaw() + ".");
+			//
+			System.out.println("Left is driving at " + leftError + " to " + left + ", and is at " + leftEncoder.getRaw() + ".");
 			
-			tankDrive(leftError, rightError);
+			tankDrive(-leftError, -rightError);
 
-			if (((rightError + leftError) / 2) < min) {
+			if (Math.abs(((rightError + leftError)) / 2) < min) {
 				if (angleError != 0) {
 					gyroTurn(Robot.angle, true);
 				}
@@ -149,6 +160,9 @@ public class DriveSubsystem extends Subsystem {
 		System.out.println("Encoder drive finished!");	
 	}
 	
+	public void inchDrive(double l, double r, double nL, double nR) {
+		encoderDrive(inchToEncoder(l), inchToEncoder(r), nL, nR);
+	}
 	/**
 	 * PI loop that turns the robot to angle.
 	 **/
@@ -195,6 +209,10 @@ public class DriveSubsystem extends Subsystem {
 		}
 		System.out.println("Gyro turn finished!");	
 	}	
+	
+    public double inchToEncoder(double inches) {
+    	return inches / (Math.PI * 6) * 3400;
+    }
 
 	public void initDefaultCommand() {
 		setDefaultCommand(new DriveCommand());

@@ -6,22 +6,22 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class RollerToggleCommand extends Command {
 
-	Boolean state = null;
+	Boolean status = null;
 	
 	public RollerToggleCommand() {
         requires(Robot.intake);
     }
 	
-    public RollerToggleCommand(boolean state) {
+    public RollerToggleCommand(boolean status) {
         requires(Robot.intake);
-        this.state = state;
+        this.status = status;
     }
 
     protected void initialize() {
-    	if (state == null) { 
+    	if (status == null) { 
     		Robot.intake.setRoller(Robot.intake.roller.get() == Value.kOn ? false : true);
     	} else {
-    		Robot.intake.setRoller(state);
+    		Robot.intake.setRoller(status);
     	}
     }
 

@@ -2,7 +2,7 @@ package com.explodingbacon.robot;
 
 public class Lights {
     	
-	private static RIODuino rioDuino = new RIODuino(); //The RIODuino has been disabled. To re-enable it, uncomment the code in the RIODuino class.
+	private static RIODuino rioDuino = new RIODuino();
 	
 	public enum Strip {
 		BACK('t'),
@@ -87,6 +87,7 @@ public class Lights {
 	}
 	
 	public static void send(Object[] objects) {
+		/*
 		byte[] bytes = new byte[objects.length];
 		int index = 0;
 		for (Object o : objects) {
@@ -94,6 +95,7 @@ public class Lights {
 			index++;
 		}
 		rioDuino.send(bytes);
+		*/
 	}
 	
 	public static char getData(Object o) {

@@ -34,31 +34,39 @@ public class AutonomousCommand extends Command {
 			if (!commands.isEmpty()) {
 				String[] s = commands.get(0);
 				if (s[0].equals("drive")) {
-					double left = Robot.inchToEncoder(Double.parseDouble(s[1]));
-					double right = Robot.inchToEncoder(Double.parseDouble(s[2]));
+					double left = Double.parseDouble(s[1]);
+					double right = Double.parseDouble(s[2]);
 					if (Math.abs(left) != 0 && Math.abs(right) != 0) {
 						String[] next = null;
 						if (commands.size() > 1) {
 							next = commands.get(1);
 						}
 						if (next != null && next[0].equals("drive")) {
-							Robot.drive.encoderDrive(left, right, Robot.inchToEncoder(Double.parseDouble(next[1])), Robot.inchToEncoder(Double.parseDouble(next[2])));
+							Robot.drive.inchDrive(left, right, Double.parseDouble(next[1]), Double.parseDouble(next[2]));
 						} else {
-							Robot.drive.encoderDrive(left, right, 0, 0);
+							Robot.drive.inchDrive(left, right, 0, 0);
 						}
 					}
 				} else if (s[0].equals("turn")) {
 					Robot.drive.gyroTurn(Double.parseDouble(s[1]), false);
-				} else if (s[0].equals("intakeMotor")) {
+				} else if (s[0].equals("intake")) {
 					Robot.intake.setMotors(Double.parseDouble(s[1]));
 				} else if (s[0].equals("roller")) {
 					Robot.intake.setRoller(Boolean.parseBoolean(s[1]));	
-				} else if (s[0].equals("intakeArm")) {					
-				} else if (s[0].equals("binGrabber")) {
+				} else if (s[0].equals("intakeArms")) {		
+					Robot.intake.arms.set(Boolean.parseBoolean(s[1]));
+				} else if (s[0].equals("wings")) {
+					Robot.wings.set(Boolean.parseBoolean(s[1]));
 				} else if (s[0].equals("lift")) {
-					Robot.lift.setRaw(Double.parseDouble(s[1]));
+					Robot.lift.target = Robot.lift.stringToTarget(s[1]);
+				} else if (s[0].equals("liftWait")) {
+					Robot.lift.setTargetAndWait(Robot.lift.stringToTarget(s[1]));
 				} else if (s[0].equals("drawerSlides")) {
 					Robot.drawerSlides.setDrawerSlides(Double.parseDouble(s[1]));
+				} else if (s[0].equals("wait")) {
+					Timer.delay(Double.parseDouble(s[1]));
+				} else {
+					System.out.println("Unknown autonomous command: " + s[0]);
 				}
 				commands.remove(commands.get(0));
 			}
@@ -71,18 +79,20 @@ public class AutonomousCommand extends Command {
 		Robot.drive.leftEncoder.reset();
 		Robot.drive.rightEncoder.reset();
 		Robot.drive.gyro.reset();
-		Timer.delay(2);
 		commands = new ArrayList<>();
 		List<String[]> mergedCommands = new ArrayList<>();
 		List<String[]> dataSource = new ArrayList<>();
 		if (Robot.autonomous.data.isEmpty()) {
 			File file = (File) Robot.chooser.getSelected();
 			if (file != null && file.exists()) {
-				System.out.println("Attempting to read Autonomous data from '" + file.getName() + "'...");
+				//System.out.println("Attempting to read Autonomous data from '" + file.getName() + "'...");
 				try {
 					BufferedReader br = new BufferedReader(new FileReader(file));
-					for (String s : br.readLine().split("]")) {
-						dataSource.add(s.split(":"));
+					String line = br.readLine();
+					if (line != null) {
+						for (String s : line.split("]")) {
+							dataSource.add(s.split(":"));
+						}
 					}
 					br.close();
 				} catch (FileNotFoundException e) {
@@ -129,7 +139,7 @@ public class AutonomousCommand extends Command {
 					if (merges > 0) {
 						s[1] = left + "";
 						s[2] = right + "";
-						System.out.println("Merged " + merges + " command(s) into " + left + " left and " + right + " right.");
+						System.out.println("Merged " + merges + " drive command(s) into " + left + " left and " + right + " right.");
 					}
 				}
 				commands.add(s);
@@ -138,6 +148,7 @@ public class AutonomousCommand extends Command {
 		Robot.angle = 0;
 		initialized = true;
 		didDelay = false;
+		Robot.intake.control = false;
 		System.out.println("Autonomous has finished initializing.");
 	}
 
@@ -155,6 +166,7 @@ public class AutonomousCommand extends Command {
 
 	public void wrapUp() {
 		initialized = false;
+		Robot.intake.control = true;
 		Robot.drive.tankDrive(0, 0);
 	}
 }

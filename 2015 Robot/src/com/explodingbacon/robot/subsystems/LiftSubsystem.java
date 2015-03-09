@@ -38,10 +38,12 @@ public class LiftSubsystem extends Subsystem {
     
     double error, setpoint, p;
     
-    public int target = Position.DONT_MOVE;
-    public int privateTarget = Position.BOTTOM;
-    public int loopTarget = privateTarget;
+    public int target = Position.BOTTOM;
+    public int oldTarget = Position.BOTTOM;
+    public int loopTarget = target;
     public int deadzone = 50;
+    
+	int absurdNegativeNumber = -999999;
     
     public LiftSubsystem() {
     	if (Robot.self.isTest()) {
@@ -71,34 +73,42 @@ public class LiftSubsystem extends Subsystem {
 
     public void getTarget() {
     	Direction dir = OI.xbox.getDPad();
-    	if (dir.isUp()) {
-    		if (!atTop()) {
-    			target = Position.TOP;
-    			privateTarget = Position.TOP;
-    		}
-    	} else if (dir.isDown()) {
-    		if (!atBottom()) {
-    			target = Position.BOTTOM;
-    			privateTarget = Position.BOTTOM;
-    		}
-    	}
-    	if (Robot.oi.liftScoring.get()) { 
-    		target = Position.SCORING; 
-    		privateTarget = Position.SCORING; 
-    	}
-    }
-    
-    public boolean atTarget() {
-    	return atTarget; 
-    }
+		if (dir.isUp()) {
+			target = Position.TOP;
+		} else if (dir.isDown()) {
+			target = Position.BOTTOM;
+		}
+
+		if (Robot.oi.liftScoring.get()) {
+			target = Position.SCORING;
+		}
+
+		if (OI.xbox.leftJoyButton.get()) {
+			target = absurdNegativeNumber;
+		} else if (target == absurdNegativeNumber) {
+			target = liftEncoder.getRaw();
+		}
+	}
     
     public void waitForTarget() {
-    	while (!atTarget()) {Timer.delay(0.1);};
+    	while (!atTarget) {Timer.delay(0.05);};
     }
     
     public void setTargetAndWait(int i) {
     	target = i;
+    	atTarget = false;
     	waitForTarget();
+    }
+    
+    public int stringToTarget(String s) {
+    	if (s.equalsIgnoreCase("bottom")) {
+    		return Position.BOTTOM;
+    	} else if (s.equalsIgnoreCase("scoring")) {
+    		return Position.SCORING;
+    	} else if (s.equalsIgnoreCase("top")) {
+    		return Position.TOP;
+    	}
+    	return -1;
     }
     
     public boolean atTop() {
@@ -107,28 +117,27 @@ public class LiftSubsystem extends Subsystem {
     	if (!status) {
     		status = Math.abs(Position.TOP - liftEncoder.getRaw()) <= deadzone;
     	}
+    	if(OI.xbox.y.get()) status = false;
     	return status;
     }
     
-    public boolean atBottom() {
+    public boolean atBottom(boolean override) {
     	boolean status = false;
     	status = bottomLimit.get();
-    	if (!status) {
+    	if (!status && !override) {
     		status = Math.abs(Position.BOTTOM - liftEncoder.getRaw()) <= deadzone;
     	}
     	return status;
     }
     
-    public void initDefaultCommand() {
-    	//setDefaultCommand(new LiftCommand());
-    }
+    public void initDefaultCommand() {}
     
     public void startThread() {
     	liftPThread = new LiftPThread();
     	liftPThread.start();
     	setRaw(0);
-    	target = Position.DONT_MOVE;
-    	atTarget = true;
+    	target = liftEncoder.getRaw();
+    	atTarget = false;
     }
     
     public void stopThread() {
@@ -148,33 +157,40 @@ public class LiftSubsystem extends Subsystem {
     		kI = SmartDashboard.getNumber("liftKI", kI);
     		kI2 = SmartDashboard.getNumber("liftKI2", kI2);
     		min = SmartDashboard.getNumber("liftMin", min);
-    		max = SmartDashboard.getNumber("liftMax", max);
-    		
+    		max = SmartDashboard.getNumber("liftMax", max);    		
     	}
     	
     	@Override
     	public void code() {
-    		if (bottomLimit.get()) liftEncoder.reset();
+    		if (bottomLimit.get()) {
+    			liftEncoder.reset();
+    			if (target < 0) {
+    				target = 0;
+    			}
+    		}
+    		/*
+    		SmartDashboard.putBoolean("Top Limit", topLimit.get());
+    		SmartDashboard.putBoolean("Bottom Limit", bottomLimit.get());
     		
+    		SmartDashboard.putNumber("Target", target);
+    		*/
     		//System.out.println("Lift encoder: " + Robot.lift.liftEncoder.getRaw());
-    		
+
     		if(!OI.xbox.getDPad().isDown()) {
     			if(easingDown) {
     				target = Position.BOTTOM;
-    				privateTarget = Position.BOTTOM;
     				easingDown = false;
     			}
     			getTarget();
-    		}
-    		else {
+    		} else {
     			easingDown = true;
-    			privateTarget -= 0.25;
-    			if(privateTarget <= 0) privateTarget = 0;
+    			target -= 0.25;
+    			if(target < 0) target = 0;
     		}
     		
-    		loopTarget = privateTarget;
+    		//SmartDashboard.putNumber("Target", target);
     		
-    		//if(atTarget && privateTarget > 100) loopTarget -= 20;
+    		loopTarget = target;
     		
     		error = loopTarget - liftEncoder.getRaw();
     		
@@ -182,21 +198,25 @@ public class LiftSubsystem extends Subsystem {
     		
     		setpoint = p*kP;
     		
-    		if(Math.abs(error) < deadzone || (Util.sign(error) == -1 && atBottom()) || (Util.sign(error) == 1 && atTop())) {
+    		double appropriateMax = OI.xbox.getDPad().isDown() ? 0.3 : max;
+    		
+    		setpoint = Math.abs(setpoint) > appropriateMax ? appropriateMax * Util.sign(setpoint) : setpoint;
+    		
+    		//setpoint = Util.minMax(setpoint, 0, (OI.xbox.getDPad().isDown() ? 0.3 : max));
+    		
+    		if(Math.abs(error) < deadzone || (Util.sign(error) == -1 && atBottom(OI.xbox.leftJoyButton.get())) || (Util.sign(error) == 1 && atTop())) {
     			setpoint = 0;
     			atTarget = true;
-    			target = Position.DONT_MOVE;
-    		}
-    		else {
+    		} else {
     			atTarget = false;
     		}
     		
-    		setpoint = Util.minMax(setpoint, 0, (OI.xbox.getDPad().isDown() ? 0.3 : max));
-    		
+    		if(target == absurdNegativeNumber) setpoint = -0.2;
+    		    		
     		setRaw(setpoint);
     		
 			if (Robot.ds.isOperatorControl() && !Robot.ds.isDisabled()) {
-				if (Math.abs(liftEncoder.getRate()) > 10) {
+				if (Math.abs(liftEncoder.getRate()) > 5) {
     				OI.xbox.rumble(0.2f, 0.2f);
     				xboxTurnedOff = false;
     			} else {
@@ -205,17 +225,14 @@ public class LiftSubsystem extends Subsystem {
     					xboxTurnedOff = true;
     				}
     			}
-				
     		}
     	}
     }
     
     public class Position {
-    	public static final int DONT_MOVE = -2;
-    	public static final int STOPPED = -1;
     	public static final int BOTTOM = 0;
-    	public static final int SCORING = 1700;
-    	public static final int TOP = 2300;
+    	public static final int SCORING = 800;
+    	public static final int TOP = 2200;
     }
 }
 

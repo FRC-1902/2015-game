@@ -16,8 +16,8 @@ public class DrawerSlideCommand extends Command {
     protected void execute() {
     	double speed = (OI.xbox.getRightTrigger() - OI.xbox.getLeftTrigger()) * 0.5;
     	Robot.drawerSlides.setDrawerSlides(speed);
-    	if (speed > 0 && !Robot.binGrabber.binGrabber.get()) {
-    		Robot.binGrabber.binGrabber.set(true);
+    	if (speed > 0 && !Robot.wings.wings.get()) {
+    		Robot.wings.set(true);
     	}
     }
 

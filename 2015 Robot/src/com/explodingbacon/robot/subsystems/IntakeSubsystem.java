@@ -2,6 +2,9 @@ package com.explodingbacon.robot.subsystems;
 
 import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.RobotMap;
+import com.explodingbacon.robot.commands.IntakeControlCommand;
+
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Direction;
@@ -17,7 +20,9 @@ public class IntakeSubsystem extends Subsystem {
     public Solenoid arms = new Solenoid(RobotMap.intakeArmsSolenoid);
     public Relay roller = new Relay(RobotMap.rollerRelay);
 	public DigitalInput chuteTouchSensor = new DigitalInput(RobotMap.chuteTouchSensor);
+	public Compressor compressor = new Compressor();
 	public double motorSpeed = 0;
+	public boolean control = true;
 
 	public IntakeSubsystem() {
 		roller.setDirection(Direction.kForward);
@@ -30,6 +35,11 @@ public class IntakeSubsystem extends Subsystem {
     	Robot.autonomous.add(new String[]{"intakeMotor", d + ""});
     }
     
+    public boolean getRoller() {
+    	if (roller.get() == Value.kOn) return true;
+    	return false;
+    }
+    
     public void setRoller(boolean status) {
     	if (status) {
     		roller.set(Value.kOn);
@@ -38,8 +48,9 @@ public class IntakeSubsystem extends Subsystem {
     	}
     	Robot.autonomous.add(new String[]{"roller", status + ""});    	
     }
-    
+   
     public void initDefaultCommand() {
+    	setDefaultCommand(new IntakeControlCommand());
     }
 }
 

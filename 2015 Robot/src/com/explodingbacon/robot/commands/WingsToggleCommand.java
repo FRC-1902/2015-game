@@ -3,21 +3,21 @@ package com.explodingbacon.robot.commands;
 import com.explodingbacon.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class BinGrabberToggleCommand extends Command {
+public class WingsToggleCommand extends Command {
 
 	public Boolean state = null;
 	
-    public BinGrabberToggleCommand() {
-    	requires(Robot.binGrabber);
+    public WingsToggleCommand() {
+    	requires(Robot.wings);
     }
     
-    public BinGrabberToggleCommand(boolean state) {
-    	requires(Robot.binGrabber);
+    public WingsToggleCommand(boolean state) {
+    	requires(Robot.wings);
     	this.state = state;
     }
 
     protected void initialize() {
-    	Robot.binGrabber.binGrabber.set(state == null ? !Robot.binGrabber.binGrabber.get() : state);
+    	Robot.wings.wings.set(state == null ? !Robot.wings.wings.get() : state);
     }
 
     protected void execute() {  	

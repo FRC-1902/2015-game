@@ -10,7 +10,7 @@
   
   Written by Ryan Shavell and Dominic Canora.
   
-  All code is either sample code provided by FIRST or is hand-written by team 1902.
+  All code is either sample code provided by FIRST or hand-written by team 1902.
 
 */
 package com.explodingbacon.robot;
@@ -32,7 +32,7 @@ import com.explodingbacon.robot.Lights.Color;
 import com.explodingbacon.robot.Lights.Strip;
 import com.explodingbacon.robot.commands.AutonomousCommand;
 import com.explodingbacon.robot.subsystems.AutonomousSubsystem;
-import com.explodingbacon.robot.subsystems.BinGrabberSubsystem;
+import com.explodingbacon.robot.subsystems.Wings;
 import com.explodingbacon.robot.subsystems.DrawerSlideSubsystem;
 import com.explodingbacon.robot.subsystems.DriveSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeSubsystem;
@@ -42,7 +42,7 @@ public class Robot extends IterativeRobot {
 
 	public static DriveSubsystem drive;
 	public static IntakeSubsystem intake;
-	public static BinGrabberSubsystem binGrabber;
+	public static Wings wings;
 	public static LiftSubsystem lift;
 	public static DrawerSlideSubsystem drawerSlides;
 	public static AutonomousSubsystem autonomous;
@@ -52,6 +52,7 @@ public class Robot extends IterativeRobot {
 	public static Robot self;
 	public static double angle = 0;
 	public static SendableChooser chooser = new SendableChooser();	
+	public static ToteStackThread tst;
 
     AutonomousCommand autonomousCommand = null;
 
@@ -60,7 +61,7 @@ public class Robot extends IterativeRobot {
 		self = this;
 		drive = new DriveSubsystem();
 		intake = new IntakeSubsystem();
-		binGrabber = new BinGrabberSubsystem();
+		wings = new Wings();
 		lift = new LiftSubsystem();
 		drawerSlides = new DrawerSlideSubsystem();
 		autonomous = new AutonomousSubsystem();
@@ -68,12 +69,14 @@ public class Robot extends IterativeRobot {
 		pdp = new PowerDistributionPanel();
 		ds = DriverStation.getInstance();
 		autonomousCommand = new AutonomousCommand();
+		tst = new ToteStackThread();
+	//	intake.compressor.setClosedLoopControl(false);
 		chooser.initTable(NetworkTable.getTable("TableThing"));
-		File usbDir = new File("/u/.auto/");
+		File usbDir = new File("/u/auto/");
 		if (usbDir != null && usbDir.exists()) {
 			for (File f : usbDir.listFiles()) {
-				chooser.addDefault("default.auto", new File("/u/.auto/default.auto"));
-				if (f.getName().contains(".auto")) {
+				chooser.addDefault("default.auto", new File("/u/auto/default.auto"));
+				if (f.getName().contains("auto")) {
 					System.out.println("Found a valid autonomous file named '" + f.getName() + "'.");
 					chooser.addObject(f.getName(), f);
 				}
@@ -81,7 +84,6 @@ public class Robot extends IterativeRobot {
 		}
 		SmartDashboard.putData("Chooser", chooser);
 		SmartDashboard.putNumber("Delay", 0);
-		autonomousCommand.actuallyInit();
 		disabled();
 		System.out.println("Robot initialization complete!");
     }
@@ -92,7 +94,9 @@ public class Robot extends IterativeRobot {
 	}
 
     public void autonomousInit() {
-        if (autonomousCommand != null) autonomousCommand.start();
+        if (autonomousCommand != null) {
+        	autonomousCommand.start();
+        }
         init();
         Strip.BACK.chase(Color.ORANGE, Color.GREEN);
     }
@@ -163,9 +167,5 @@ public class Robot extends IterativeRobot {
     	CLOSED,
     	FORWARDS,
     	BACKWARDS
-    }
-    
-    public static double inchToEncoder(double encoder) {
-    	return encoder / (Math.PI * 6) * 75;
     }
 }
