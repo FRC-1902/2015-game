@@ -31,11 +31,11 @@ public class RobotMap {
 	public static int drawerSlidesEncoderB = 9; //ID 28
 	public static int drawerSlidesOutLimit = 12; //ID 29
 	public static int drawerSlidesInLimit = 13; //ID 30
-	public static int wings = 0; //ID 24
 	
 	//Lift Values
 	public static int liftVictor1 = 5; //ID 6
 	public static int liftVictor2 = 4; //ID 7
+	public static int liftPiston = 0; //No ID yet
 	public static int liftEncoderA = 6; //ID 17
 	public static int liftEncoderB = 7; //ID 18
 	public static int liftTopLimit = 4; //ID 19

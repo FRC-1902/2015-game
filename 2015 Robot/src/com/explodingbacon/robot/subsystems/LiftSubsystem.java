@@ -2,6 +2,7 @@ package com.explodingbacon.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.VictorSP;
 
@@ -22,6 +23,7 @@ public class LiftSubsystem extends Subsystem {
     
     public VictorSP lift1 = new VictorSP(RobotMap.liftVictor1);
     public VictorSP lift2 = new VictorSP(RobotMap.liftVictor2);
+    public Solenoid liftPiston = new Solenoid(RobotMap.liftPiston);
     public Encoder liftEncoder = new Encoder(RobotMap.liftEncoderA, RobotMap.liftEncoderB); //256 clicks
     public DigitalInput topLimit = new DigitalInput(RobotMap.liftTopLimit);
     public DigitalInput bottomLimit = new DigitalInput(RobotMap.liftBottomLimit);
@@ -41,7 +43,7 @@ public class LiftSubsystem extends Subsystem {
     public int target = Position.BOTTOM;
     public int oldTarget = Position.BOTTOM;
     public int loopTarget = target;
-    public int deadzone = 50;
+    public int deadzone = 25;
     
 	int absurdNegativeNumber = -999999;
     
@@ -56,6 +58,11 @@ public class LiftSubsystem extends Subsystem {
 		}
     	liftEncoder.setDistancePerPulse(1);
     	liftEncoder.reset();
+    }
+    
+    public void setPiston(Boolean on)
+    {
+    	liftPiston.set(on);
     }
     
     public void setRaw(double motorValue) {
@@ -75,7 +82,7 @@ public class LiftSubsystem extends Subsystem {
     	Direction dir = OI.xbox.getDPad();
 		if (dir.isUp()) {
 			target = Position.TOP;
-		} else if (dir.isDown()) {
+		} else if (dir.isDown() || Robot.oi.liftDownFast.get()) {
 			target = Position.BOTTOM;
 		}
 
@@ -128,6 +135,21 @@ public class LiftSubsystem extends Subsystem {
     		status = Math.abs(Position.BOTTOM - liftEncoder.getRaw()) <= deadzone;
     	}
     	return status;
+    }
+    
+    public void stackTote() {
+    	boolean oldControl = Robot.intake.control;
+    	Robot.intake.control = false;
+		Strip.TOTE_CHUTE.fade(Color.ORANGE, Color.WHITE);		
+		Robot.lift.setTargetAndWait(Position.TOP);
+		Robot.intake.arms.set(true);
+		Robot.intake.setMotors(1);
+		Timer.delay(1.25);
+		Robot.intake.setMotors(0);
+		Robot.intake.arms.set(false);
+		Robot.lift.setTargetAndWait(Position.BOTTOM);
+		Robot.lift.setTargetAndWait(Position.TOP);
+		if (oldControl) Robot.intake.control = true;
     }
     
     public void initDefaultCommand() {}
@@ -198,7 +220,7 @@ public class LiftSubsystem extends Subsystem {
     		
     		setpoint = p*kP;
     		
-    		double appropriateMax = OI.xbox.getDPad().isDown() ? 0.3 : max;
+    		double appropriateMax = OI.xbox.getDPad().isDown() ? (Robot.oi.liftDownFast.get() ? 1 : 0.3) : max;
     		
     		setpoint = Math.abs(setpoint) > appropriateMax ? appropriateMax * Util.sign(setpoint) : setpoint;
     		
@@ -209,6 +231,10 @@ public class LiftSubsystem extends Subsystem {
     			atTarget = true;
     		} else {
     			atTarget = false;
+    		}
+    		
+    		if (Robot.oi.liftDownFast.get() && setpoint < 0) {
+    			setpoint = -1;
     		}
     		
     		if(target == absurdNegativeNumber) setpoint = -0.2;
@@ -232,7 +258,7 @@ public class LiftSubsystem extends Subsystem {
     public class Position {
     	public static final int BOTTOM = 0;
     	public static final int SCORING = 800;
-    	public static final int TOP = 2200;
+    	public static final int TOP = 2150;
     }
 }
 

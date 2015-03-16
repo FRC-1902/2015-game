@@ -51,18 +51,23 @@ public class AutonomousCommand extends Command {
 					Robot.drive.gyroTurn(Double.parseDouble(s[1]), false);
 				} else if (s[0].equals("intake")) {
 					Robot.intake.setMotors(Double.parseDouble(s[1]));
+				} else if (s[0].equals("intakeI")) {
+					Robot.intake.leftIntake.set(Double.parseDouble(s[1]));
+					Robot.intake.rightIntake.set(Double.parseDouble(s[1]));
 				} else if (s[0].equals("roller")) {
 					Robot.intake.setRoller(Boolean.parseBoolean(s[1]));	
 				} else if (s[0].equals("intakeArms")) {		
 					Robot.intake.arms.set(Boolean.parseBoolean(s[1]));
-				} else if (s[0].equals("wings")) {
-					Robot.wings.set(Boolean.parseBoolean(s[1]));
 				} else if (s[0].equals("lift")) {
 					Robot.lift.target = Robot.lift.stringToTarget(s[1]);
+				} else if (s[0].equals("toteTongue")) {
+					Robot.lift.liftPiston.set(Boolean.parseBoolean(s[1]));
 				} else if (s[0].equals("liftWait")) {
 					Robot.lift.setTargetAndWait(Robot.lift.stringToTarget(s[1]));
 				} else if (s[0].equals("drawerSlides")) {
 					Robot.drawerSlides.setDrawerSlides(Double.parseDouble(s[1]));
+				} else if (s[0].equals("stackTote")) {
+					Robot.lift.stackTote();
 				} else if (s[0].equals("wait")) {
 					Timer.delay(Double.parseDouble(s[1]));
 				} else {

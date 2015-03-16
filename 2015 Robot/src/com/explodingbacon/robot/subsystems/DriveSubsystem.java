@@ -23,7 +23,7 @@ public class DriveSubsystem extends Subsystem {
 	public Gyro gyro = new Gyro(RobotMap.gyro);
 	public boolean arcadeDrive = true;
 	
-	public double slow = 0.3;
+	public double slow = 0.4;
 	
 	public double encoderKP = 0.13;
 	public double encoderKAngleP = 1.95;
@@ -34,7 +34,7 @@ public class DriveSubsystem extends Subsystem {
 	public double gyroKI = 0.00025;
 	public double gyroKI2 = 0.000025;
 	public double gyroMin = 0.2;
-	public double gyroMax = 0.4;
+	public double gyroMax = 0.35;
 	
 	public DriveSubsystem() {
 		leftEncoder.setDistancePerPulse(1);

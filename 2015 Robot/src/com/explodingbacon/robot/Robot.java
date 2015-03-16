@@ -16,7 +16,6 @@
 package com.explodingbacon.robot;
 
 import java.io.File;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -26,13 +25,11 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import com.explodingbacon.robot.Lights.Action;
 import com.explodingbacon.robot.Lights.Color;
 import com.explodingbacon.robot.Lights.Strip;
 import com.explodingbacon.robot.commands.AutonomousCommand;
 import com.explodingbacon.robot.subsystems.AutonomousSubsystem;
-import com.explodingbacon.robot.subsystems.Wings;
 import com.explodingbacon.robot.subsystems.DrawerSlideSubsystem;
 import com.explodingbacon.robot.subsystems.DriveSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeSubsystem;
@@ -42,7 +39,6 @@ public class Robot extends IterativeRobot {
 
 	public static DriveSubsystem drive;
 	public static IntakeSubsystem intake;
-	public static Wings wings;
 	public static LiftSubsystem lift;
 	public static DrawerSlideSubsystem drawerSlides;
 	public static AutonomousSubsystem autonomous;
@@ -54,14 +50,24 @@ public class Robot extends IterativeRobot {
 	public static SendableChooser chooser = new SendableChooser();	
 	public static ToteStackThread tst;
 
-    AutonomousCommand autonomousCommand = null;
+	Timer chooserUpdater = new Timer(10, new TimerUser() {
+		@Override
+		public void timer() {
+			SmartDashboard.putData("Chooser", chooser);
+		}
 
-    public void robotInit() {
-    	System.out.println("Initializing the Robot...");
+		@Override
+		public void timerStop() {			
+		}		
+	});
+
+	AutonomousCommand autonomousCommand = null;
+
+	public void robotInit() {
+		System.out.println("Initializing the Robot...");
 		self = this;
 		drive = new DriveSubsystem();
 		intake = new IntakeSubsystem();
-		wings = new Wings();
 		lift = new LiftSubsystem();
 		drawerSlides = new DrawerSlideSubsystem();
 		autonomous = new AutonomousSubsystem();
@@ -70,56 +76,58 @@ public class Robot extends IterativeRobot {
 		ds = DriverStation.getInstance();
 		autonomousCommand = new AutonomousCommand();
 		tst = new ToteStackThread();
-	//	intake.compressor.setClosedLoopControl(false);
+		//	intake.compressor.setClosedLoopControl(false);
 		chooser.initTable(NetworkTable.getTable("TableThing"));
 		File usbDir = new File("/u/auto/");
 		if (usbDir != null && usbDir.exists()) {
 			for (File f : usbDir.listFiles()) {
 				chooser.addDefault("default.auto", new File("/u/auto/default.auto"));
 				if (f.getName().contains("auto")) {
-					System.out.println("Found a valid autonomous file named '" + f.getName() + "'.");
+					//System.out.println("Found a valid autonomous file named '" + f.getName() + "'.");
 					chooser.addObject(f.getName(), f);
 				}
 			}
 		}
-		SmartDashboard.putData("Chooser", chooser);
+		chooserUpdater.start();
+		chooserUpdater.user.timer();
 		SmartDashboard.putNumber("Delay", 0);
 		disabled();
 		System.out.println("Robot initialization complete!");
-    }
-	
+	}
+
 	public void disabledPeriodic() {
 		Scheduler.getInstance().run();
 		periodic();
 	}
 
-    public void autonomousInit() {
-        if (autonomousCommand != null) {
-        	autonomousCommand.start();
-        }
-        init();
-        Strip.BACK.chase(Color.ORANGE, Color.GREEN);
-    }
+	public void autonomousInit() {
+		if (autonomousCommand != null) {
+			autonomousCommand.start();
+		}
+		init();
+		Strip.BACK.chase(Color.ORANGE, Color.GREEN);
+	}
 
-    public void autonomousPeriodic() {
+	public void autonomousPeriodic() {
 		periodic();
-        Scheduler.getInstance().run();
-    }
+		Scheduler.getInstance().run();
+	}
 
-    public void teleopInit() {
-        if (autonomousCommand != null) autonomousCommand.cancel();  
-        init();
-        OI.xbox.rumble(0.5f, 0.5f, 1);
-        teleopLights();       
-    }
+	public void teleopInit() {
+		if (autonomousCommand != null) autonomousCommand.cancel();  
+		init();
+		OI.xbox.rumble(0.5f, 0.5f, 1);
+		teleopLights();       
+		lift.liftPiston.set(false);
+	}
 
-    public void disabledInit(){
-    	autonomous.disable();
-    	disabled();
-    }
+	public void disabledInit(){
+		autonomous.disable();
+		disabled();
+	}
 
-    public void teleopPeriodic() {
-        Scheduler.getInstance().run();
+	public void teleopPeriodic() {
+		Scheduler.getInstance().run();
 		periodic();	
     }
     
