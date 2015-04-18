@@ -1,7 +1,6 @@
 package com.explodingbacon.robot.commands;
 
 import com.explodingbacon.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 public class IntakeControlCommand extends Command {
@@ -11,8 +10,7 @@ public class IntakeControlCommand extends Command {
 	}
 	
 	@Override
-	protected void initialize() {
-	}
+	protected void initialize() {}
 
 	@Override
 	protected void execute() {
@@ -48,10 +46,8 @@ public class IntakeControlCommand extends Command {
 	}
 
 	@Override
-	protected void end() {		
-	}
+	protected void end() {}
 
 	@Override
-	protected void interrupted() {		
-	}
+	protected void interrupted() {}
 }

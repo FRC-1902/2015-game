@@ -2,6 +2,8 @@ package com.explodingbacon.robot;
 
 import com.explodingbacon.robot.Lights.Color;
 import com.explodingbacon.robot.Lights.Strip;
+import com.explodingbacon.robot.subsystems.LiftSubsystem.Position;
+
 import edu.wpi.first.wpilibj.Timer;
 
 public class ToteStackThread extends CodeThread {
@@ -14,6 +16,7 @@ public class ToteStackThread extends CodeThread {
 
 	public void code() {
 		if (Robot.oi.toteStack.get()) {
+			Robot.lift.setTarget(Position.TOP);
 			wasTrue = true;
 			Robot.intake.setRoller(true);
 			Strip.TOTE_CHUTE.chase(Color.WHITE, Color.GREEN);
@@ -27,7 +30,9 @@ public class ToteStackThread extends CodeThread {
 				}
 			}
 			if (Robot.oi.toteStack.get()) {
-				Robot.lift.stackTote();
+				//Robot.lift.stackTote();;		
+				Robot.lift.setTargetAndWait(Position.BOTTOM);
+				Robot.lift.setTargetAndWait(Position.TOP);
 			}
 		} else {
 			if (wasTrue) {

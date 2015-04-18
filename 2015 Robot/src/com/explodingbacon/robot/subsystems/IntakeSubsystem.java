@@ -1,9 +1,7 @@
 package com.explodingbacon.robot.subsystems;
 
-import com.explodingbacon.robot.Robot;
 import com.explodingbacon.robot.RobotMap;
 import com.explodingbacon.robot.commands.IntakeControlCommand;
-
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Relay;
@@ -32,7 +30,6 @@ public class IntakeSubsystem extends Subsystem {
     	leftIntake.set(d);
     	rightIntake.set(-d);
     	motorSpeed = d;
-    	Robot.autonomous.add(new String[]{"intakeMotor", d + ""});
     }
     
     public boolean getRoller() {
@@ -45,8 +42,7 @@ public class IntakeSubsystem extends Subsystem {
     		roller.set(Value.kOn);
     	} else {
     		roller.set(Value.kOff);
-    	}
-    	Robot.autonomous.add(new String[]{"roller", status + ""});    	
+    	} 	
     }
    
     public void initDefaultCommand() {

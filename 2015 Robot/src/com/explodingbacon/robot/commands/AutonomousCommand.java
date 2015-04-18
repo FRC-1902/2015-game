@@ -19,11 +19,10 @@ public class AutonomousCommand extends Command {
 	boolean didDelay = false;
 
 	public AutonomousCommand() {
-		requires(Robot.autonomous);
+		requires(Robot.drive);
 	}
 
-	protected void initialize() {
-	}
+	protected void initialize() {}
 
 	protected void execute() {
 		if (initialized) {
@@ -35,7 +34,7 @@ public class AutonomousCommand extends Command {
 				String[] s = commands.get(0);
 				if (s[0].equals("drive")) {
 					double left = Double.parseDouble(s[1]);
-					double right = Double.parseDouble(s[2]);
+					double right = Double.parseDouble(s[1]);
 					if (Math.abs(left) != 0 && Math.abs(right) != 0) {
 						String[] next = null;
 						if (commands.size() > 1) {
@@ -53,7 +52,7 @@ public class AutonomousCommand extends Command {
 					Robot.intake.setMotors(Double.parseDouble(s[1]));
 				} else if (s[0].equals("intakeI")) {
 					Robot.intake.leftIntake.set(Double.parseDouble(s[1]));
-					Robot.intake.rightIntake.set(Double.parseDouble(s[1]));
+					Robot.intake.rightIntake.set(Double.parseDouble(s[2]));
 				} else if (s[0].equals("roller")) {
 					Robot.intake.setRoller(Boolean.parseBoolean(s[1]));	
 				} else if (s[0].equals("intakeArms")) {		
@@ -64,14 +63,20 @@ public class AutonomousCommand extends Command {
 					Robot.lift.liftPiston.set(Boolean.parseBoolean(s[1]));
 				} else if (s[0].equals("liftWait")) {
 					Robot.lift.setTargetAndWait(Robot.lift.stringToTarget(s[1]));
-				} else if (s[0].equals("drawerSlides")) {
-					Robot.drawerSlides.setDrawerSlides(Double.parseDouble(s[1]));
+				} else if (s[0].equals("tusks")) {
+					Robot.tusks.set(Double.parseDouble(s[1]));
+				} else if (s[0].equals("toucans")) {
+					Robot.toucans.set(Boolean.parseBoolean(s[1]));
 				} else if (s[0].equals("stackTote")) {
 					Robot.lift.stackTote();
 				} else if (s[0].equals("wait")) {
 					Timer.delay(Double.parseDouble(s[1]));
 				} else {
-					System.out.println("Unknown autonomous command: " + s[0]);
+					String fullCommand = "";
+					for (String part : s) {
+						fullCommand = fullCommand + part + (!s[s.length - 1].equals(part) ? " " : "");
+					}
+					System.out.println("Unknown autonomous command '" + fullCommand + "'");
 				}
 				commands.remove(commands.get(0));
 			}
@@ -84,37 +89,32 @@ public class AutonomousCommand extends Command {
 		Robot.drive.leftEncoder.reset();
 		Robot.drive.rightEncoder.reset();
 		Robot.drive.gyro.reset();
-		commands = new ArrayList<>();
-		List<String[]> mergedCommands = new ArrayList<>();
+		commands = new ArrayList<>();;
 		List<String[]> dataSource = new ArrayList<>();
-		if (Robot.autonomous.data.isEmpty()) {
-			File file = (File) Robot.chooser.getSelected();
-			if (file != null && file.exists()) {
-				//System.out.println("Attempting to read Autonomous data from '" + file.getName() + "'...");
-				try {
-					BufferedReader br = new BufferedReader(new FileReader(file));
-					String line = br.readLine();
-					if (line != null) {
-						for (String s : line.split("]")) {
-							dataSource.add(s.split(":"));
-						}
+		File file = (File) Robot.chooser.getSelected();
+		if (file != null && file.exists()) {
+			//System.out.println("Attempting to read Autonomous data from '" + file.getName() + "'...");
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(file));
+				String line = br.readLine();
+				if (line != null) {
+					for (String s : line.split("]")) {
+						dataSource.add(s.split(":"));
 					}
-					br.close();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
-				System.out.println("Read Autonomous data from '" + file.getName() + "'!");
-			} else {
-				System.out.println("No default autonomous found! Doing nothing...");
+				br.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+			System.out.println("Read Autonomous data from '" + file.getName() + "'!");
 		} else {
-			dataSource = new ArrayList<>(Robot.autonomous.data);
-			System.out.println("Got Autonomous data from recorded teleop actions.");
+			System.out.println("No autonomous found! Doing nothing.");
 		}
 		for (String[] s : dataSource) {
-			if (!mergedCommands.contains(s)) {
+			commands.add(s);
+			/*if (!mergedCommands.contains(s)) {
 				if (s[0].equals("drive")) {
 					double left = Double.parseDouble(s[1]);
 					double right = Double.parseDouble(s[2]);
@@ -149,12 +149,13 @@ public class AutonomousCommand extends Command {
 				}
 				commands.add(s);
 			}
+			*/
 		}
 		Robot.angle = 0;
 		initialized = true;
 		didDelay = false;
 		Robot.intake.control = false;
-		System.out.println("Autonomous has finished initializing.");
+		System.out.println("Autonomous initialized.");
 	}
 
 	protected boolean isFinished() {

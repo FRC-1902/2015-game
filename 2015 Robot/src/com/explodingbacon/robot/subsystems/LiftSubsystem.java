@@ -75,7 +75,6 @@ public class LiftSubsystem extends Subsystem {
 		} else {
 			Strip.ELEVATOR.setColor(Color.ORANGE);
 		}
-		Robot.autonomous.add(new String[]{"lift", motorValue + ""});
     }
 
     public void getTarget() {
@@ -97,13 +96,17 @@ public class LiftSubsystem extends Subsystem {
 		}
 	}
     
+    public void setTarget(int i) {
+    	target = i;
+    	atTarget = false;
+    }
+    
     public void waitForTarget() {
     	while (!atTarget) {Timer.delay(0.05);};
     }
     
     public void setTargetAndWait(int i) {
-    	target = i;
-    	atTarget = false;
+    	setTarget(i);
     	waitForTarget();
     }
     
@@ -114,6 +117,8 @@ public class LiftSubsystem extends Subsystem {
     		return Position.SCORING;
     	} else if (s.equalsIgnoreCase("top")) {
     		return Position.TOP;
+    	} else if (s.equalsIgnoreCase("trueBottom")) {
+    		return absurdNegativeNumber;
     	}
     	return -1;
     }
@@ -237,7 +242,14 @@ public class LiftSubsystem extends Subsystem {
     			setpoint = -1;
     		}
     		
-    		if(target == absurdNegativeNumber) setpoint = -0.2;
+    		if(target == absurdNegativeNumber) {
+    			if (!bottomLimit.get()) {
+    				setpoint = -0.2;
+    			} else {
+    				setpoint = 0;
+    				liftEncoder.reset();
+    			}
+    		}
     		    		
     		setRaw(setpoint);
     		

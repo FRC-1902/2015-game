@@ -17,7 +17,7 @@ public class Util {
     
     /**
      * If d is bigger than max, set it to max. If it is lower than min, set it to 0. 
-     * @return Returns a min-maxed version of d.
+     * @return A min-maxed version of d.
      */
 	public static double minMax(double d, double min, double max) {
 		double minMaxed = d;

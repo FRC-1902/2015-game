@@ -208,7 +208,9 @@ public class DriveSubsystem extends Subsystem {
 			Robot.angle = angle;
 		}
 		System.out.println("Gyro turn finished!");	
-	}	
+	}
+	
+	boolean lastHeld = false;
 	
     public double inchToEncoder(double inches) {
     	return inches / (Math.PI * 6) * 3400;

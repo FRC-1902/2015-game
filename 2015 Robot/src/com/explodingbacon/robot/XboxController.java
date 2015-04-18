@@ -73,7 +73,7 @@ public class XboxController extends Joystick {
 	}
 	
 	/**
-	 * Sets the rumble value of the left and right rumble motors.
+	 * Makes the controller rumble.
 	 * @param l The left rumble value.
 	 * @param r The right rumble value.
 	 */
@@ -120,23 +120,19 @@ public class XboxController extends Joystick {
 		}			
 		
 		public boolean isUp() {
-			if (this == Direction.UP_LEFT || this == Direction.UP || this == Direction.UP_RIGHT) return true;
-			return false;
+			return (this == Direction.UP_LEFT || this == Direction.UP || this == Direction.UP_RIGHT);
 		}
 		
 		public boolean isRight() {
-			if (this == Direction.UP_RIGHT || this == Direction.RIGHT || this == Direction.DOWN_RIGHT) return true;
-			return false;
+			return (this == Direction.UP_RIGHT || this == Direction.RIGHT || this == Direction.DOWN_RIGHT);
 		}
 		
 		public boolean isDown() {
-			if (this == Direction.DOWN_LEFT || this == Direction.DOWN || this == Direction.DOWN_RIGHT) return true;
-			return false;
+			return (this == Direction.DOWN_LEFT || this == Direction.DOWN || this == Direction.DOWN_RIGHT);
 		}
 		
 		public boolean isLeft() {
-			if (this == Direction.UP_LEFT || this == Direction.LEFT || this == Direction.DOWN_LEFT) return true;
-			return false;
+			return (this == Direction.UP_LEFT || this == Direction.LEFT || this == Direction.DOWN_LEFT);
 		}
 		
 		public static Direction toDirection(int angle) {

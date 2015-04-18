@@ -16,6 +16,7 @@
 package com.explodingbacon.robot;
 
 import java.io.File;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -29,19 +30,19 @@ import com.explodingbacon.robot.Lights.Action;
 import com.explodingbacon.robot.Lights.Color;
 import com.explodingbacon.robot.Lights.Strip;
 import com.explodingbacon.robot.commands.AutonomousCommand;
-import com.explodingbacon.robot.subsystems.AutonomousSubsystem;
-import com.explodingbacon.robot.subsystems.DrawerSlideSubsystem;
+import com.explodingbacon.robot.subsystems.TuskSubsystem;
 import com.explodingbacon.robot.subsystems.DriveSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeSubsystem;
 import com.explodingbacon.robot.subsystems.LiftSubsystem;
+import com.explodingbacon.robot.subsystems.ToucanSubsystem;
                                                                              
 public class Robot extends IterativeRobot {
 
 	public static DriveSubsystem drive;
 	public static IntakeSubsystem intake;
 	public static LiftSubsystem lift;
-	public static DrawerSlideSubsystem drawerSlides;
-	public static AutonomousSubsystem autonomous;
+	public static TuskSubsystem tusks;
+	public static ToucanSubsystem toucans;
 	public static OI oi;
 	public static PowerDistributionPanel pdp;
 	public static DriverStation ds;
@@ -64,13 +65,13 @@ public class Robot extends IterativeRobot {
 	AutonomousCommand autonomousCommand = null;
 
 	public void robotInit() {
-		System.out.println("Initializing the Robot...");
+		System.out.println("Pork Lift initializing...");
 		self = this;
 		drive = new DriveSubsystem();
 		intake = new IntakeSubsystem();
 		lift = new LiftSubsystem();
-		drawerSlides = new DrawerSlideSubsystem();
-		autonomous = new AutonomousSubsystem();
+		tusks = new TuskSubsystem();
+		toucans = new ToucanSubsystem();
 		oi = new OI();
 		pdp = new PowerDistributionPanel();
 		ds = DriverStation.getInstance();
@@ -92,7 +93,7 @@ public class Robot extends IterativeRobot {
 		chooserUpdater.user.timer();
 		SmartDashboard.putNumber("Delay", 0);
 		disabled();
-		System.out.println("Robot initialization complete!");
+		System.out.println("Pork Lift initialized!");
 	}
 
 	public void disabledPeriodic() {
@@ -122,7 +123,6 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void disabledInit(){
-		autonomous.disable();
 		disabled();
 	}
 
