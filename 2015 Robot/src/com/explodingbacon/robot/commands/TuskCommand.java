@@ -15,7 +15,7 @@ public class TuskCommand extends Command {
     protected void execute() {
     	double speed = OI.xbox.getLeftTrigger() - OI.xbox.getRightTrigger();
     	if (Math.abs(speed) > 0.1) {
-    		Robot.tusks.set(speed * 0.1);
+    		Robot.tusks.set(speed * 0.5);
     	} else {
     		Robot.tusks.set(0);
     	}

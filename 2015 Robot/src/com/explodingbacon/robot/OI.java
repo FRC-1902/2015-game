@@ -3,7 +3,6 @@ package com.explodingbacon.robot;
 import com.explodingbacon.robot.commands.LiftPistonCommand;
 import com.explodingbacon.robot.commands.RollerToggleCommand;
 import com.explodingbacon.robot.commands.ToucanToggleCommand;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -21,7 +20,6 @@ public class OI {
 	public Button doToteStack;
 	public Button liftScoring;
 	public Button liftPiston;
-	public Button liftDownFast;
 	public Button toucans;
 	public Button liftWithDrive;
 	
@@ -35,7 +33,6 @@ public class OI {
 		doToteStack = xbox.select;
 		liftScoring = xbox.a;
 		liftPiston = new JoystickButton(left, 8);
-		liftDownFast = xbox.rightJoyButton;
 		toucans = new JoystickButton(left, 2);
 		liftWithDrive = new JoystickButton(left, 6);
 				

@@ -5,7 +5,9 @@ import com.explodingbacon.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveCommand extends Command {
-
+	
+	int scalar = 10;
+	
     public DriveCommand() {
         requires(Robot.drive);
     }
@@ -18,7 +20,8 @@ public class DriveCommand extends Command {
     	Robot.drive.arcadeDrive(OI.left);
     	if (Robot.oi.liftWithDrive.get()) {
 			if (lastHeld) {
-				Robot.lift.target += (Robot.drive.leftEncoder.getRaw() + Robot.drive.rightEncoder.getRaw()) / 2;
+				int driveChangeClicks = ((Robot.drive.leftEncoder.getRaw() + Robot.drive.rightEncoder.getRaw()) / 2);
+				Robot.lift.target += (driveChangeClicks / scalar);
 				Robot.drive.leftEncoder.reset();
 				Robot.drive.rightEncoder.reset();
 			} else {
