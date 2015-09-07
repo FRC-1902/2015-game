@@ -12,6 +12,7 @@ import com.explodingbacon.robot.Lights.Color;
 import com.explodingbacon.robot.Lights.Strip;
 import com.explodingbacon.robot.OI;
 import com.explodingbacon.robot.Robot;
+import com.explodingbacon.robot.Robot.ControlType;
 import com.explodingbacon.robot.RobotMap;
 import com.explodingbacon.robot.Util;
 import com.explodingbacon.robot.XboxController.Direction;
@@ -198,16 +199,21 @@ public class LiftSubsystem extends Subsystem {
     		*/
     		//System.out.println("Lift encoder: " + Robot.lift.liftEncoder.getRaw());
 
-    		if(!OI.xbox.getDPad().isDown()) {
-    			if(easingDown) {
-    				target = Position.BOTTOM;
-    				easingDown = false;
+    		if (Robot.controlType != ControlType.SIMPLE) {
+    			if(!OI.xbox.getDPad().isDown()) {
+    				if(easingDown) {
+    					target = Position.BOTTOM;
+    					easingDown = false;
+    				}
+    				getTarget();
+    			} else {
+    				easingDown = true;
+    				target -= 0.25;
+    				if(target < 0) target = 0;
     			}
-    			getTarget();
     		} else {
-    			easingDown = true;
-    			target -= 0.25;
-    			if(target < 0) target = 0;
+    			//TODO find a good amount to multiply by
+    			target += OI.xbox.getY() * 5;
     		}
     		
         	//TODO Comment this out if things break

@@ -89,7 +89,7 @@ public class AutonomousCommand extends Command {
 		Robot.drive.gyro.reset();
 		commands = new ArrayList<>();;
 		List<String[]> dataSource = new ArrayList<>();
-		File file = (File) Robot.chooser.getSelected();
+		File file = (File) Robot.autoChooser.getSelected();
 		if (file != null && file.exists()) {
 			//System.out.println("Attempting to read Autonomous data from '" + file.getName() + "'...");
 			try {

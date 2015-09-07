@@ -16,7 +16,6 @@
 package com.explodingbacon.robot;
 
 import java.io.File;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -47,15 +46,17 @@ public class Robot extends IterativeRobot {
 	public static DriverStation ds;
 	public static Robot self;
 	public static double angle = 0;
-	public static SendableChooser chooser = new SendableChooser();	
+	public static SendableChooser autoChooser = new SendableChooser();	
+	public static SendableChooser controlTypeChooser = new SendableChooser();	
 	public static ToteStackThread tst;
 	
-	public static boolean arcade = true;
+	public static boolean arcadeDrive = true;
+	public static ControlType controlType = ControlType.COMPLEX;
 
 	Timer chooserUpdater = new Timer(10, new TimerUser() {
 		@Override
 		public void timer() {
-			SmartDashboard.putData("Chooser", chooser);
+			SmartDashboard.putData("Chooser", autoChooser);
 		}
 
 		@Override
@@ -78,19 +79,24 @@ public class Robot extends IterativeRobot {
 		autonomousCommand = new AutonomousCommand();
 		tst = new ToteStackThread();
 		//	intake.compressor.setClosedLoopControl(false);
-		chooser.initTable(NetworkTable.getTable("TableThing"));
+		autoChooser.initTable(NetworkTable.getTable("TableThing"));
 		File usbDir = new File("/u/auto/");
 		if (usbDir != null && usbDir.exists()) {
 			for (File f : usbDir.listFiles()) {
-				chooser.addDefault("default.auto", new File("/u/auto/default.auto"));
+				autoChooser.addDefault("default.auto", new File("/u/auto/default.auto"));
 				if (f.getName().contains("auto")) {
 					//System.out.println("Found a valid autonomous file named '" + f.getName() + "'.");
-					chooser.addObject(f.getName(), f);
+					autoChooser.addObject(f.getName(), f);
 				}
 			}
 		}
 		chooserUpdater.start();
 		chooserUpdater.user.timer();
+		controlTypeChooser.initTable(NetworkTable.getTable("TableThing"));
+		controlTypeChooser.addDefault("Complex Controls (Experienced Driver)", ControlType.COMPLEX);
+		controlTypeChooser.addObject("Normal Controls (Team member)", ControlType.NORMAL);
+		controlTypeChooser.addObject("Simple Controls (New member/Guest driver)", ControlType.SIMPLE);
+		SmartDashboard.putData("Control Type Chooser", controlTypeChooser);
 		SmartDashboard.putNumber("Delay", 0);
 		SmartDashboard.putBoolean("Arcade Drive", true);
 		disabled();
@@ -137,15 +143,9 @@ public class Robot extends IterativeRobot {
     public void init() {
     	lift.startThread();
 		
-		arcade = SmartDashboard.getBoolean("Arcade Drive", true);
-		if (arcade) {
-			OI.right = null;
-			OI.xbox = new XboxController(1);
-		} else {			
-			OI.right = new Joystick(1);
-			OI.xbox = new XboxController(2);
-		}
-		oi.init();
+		arcadeDrive = SmartDashboard.getBoolean("Arcade Drive", true);		
+		controlType = (ControlType) controlTypeChooser.getSelected();
+		oi.initControls();
 		
 		OI.xbox.rumble(0.5f, 0.5f, 1);
 		teleopLights();       
@@ -187,5 +187,11 @@ public class Robot extends IterativeRobot {
     	CLOSED,
     	FORWARDS,
     	BACKWARDS
+    }
+    
+    public enum ControlType {
+    	COMPLEX,
+    	NORMAL,
+    	SIMPLE
     }
 }
