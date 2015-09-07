@@ -64,9 +64,7 @@ public class AutonomousCommand extends Command {
 				} else if (s[0].equals("liftWait")) {
 					Robot.lift.setTargetAndWait(Robot.lift.stringToTarget(s[1]));
 				} else if (s[0].equals("tusks")) {
-					Robot.tusks.set(Double.parseDouble(s[1]));
-				} else if (s[0].equals("toucans")) {
-					Robot.toucans.set(Boolean.parseBoolean(s[1]));
+					Robot.drawerSlides.set(Double.parseDouble(s[1]));				
 				} else if (s[0].equals("stackTote")) {
 					Robot.lift.stackTote();
 				} else if (s[0].equals("wait")) {

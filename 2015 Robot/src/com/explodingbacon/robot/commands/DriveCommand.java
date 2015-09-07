@@ -17,7 +17,11 @@ public class DriveCommand extends Command {
     boolean lastHeld = false;
     
     protected void execute() {
-    	Robot.drive.arcadeDrive(OI.left);
+    	if (Robot.arcade) {
+    		Robot.drive.arcadeDrive(OI.left);
+    	} else {
+    		Robot.drive.tankDrive(OI.left.getY(), OI.right.getY());
+    	}
     	if (Robot.oi.liftWithDrive.get()) {
 			if (lastHeld) {
 				int driveChangeClicks = ((Robot.drive.leftEncoder.getRaw() + Robot.drive.rightEncoder.getRaw()) / 2);

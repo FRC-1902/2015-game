@@ -42,7 +42,7 @@ public class DriveSubsystem extends Subsystem {
 		leftEncoder.reset();
 		rightEncoder.reset();
 		gyro.reset();
-		//if (Robot.self.isTest()) {
+		if (Robot.self.isTest()) {
 		
 			SmartDashboard.putNumber("encoderKP", encoderKP);
 			SmartDashboard.putNumber("encoderKAngleP", encoderKAngleP);
@@ -54,7 +54,7 @@ public class DriveSubsystem extends Subsystem {
 			SmartDashboard.putNumber("gyroMin", gyroMin);
 			SmartDashboard.putNumber("gyroMax", gyroMax);
 		
-		//}
+		}
 	}
 
 	/**
@@ -163,6 +163,7 @@ public class DriveSubsystem extends Subsystem {
 	public void inchDrive(double l, double r, double nL, double nR) {
 		encoderDrive(inchToEncoder(l), inchToEncoder(r), nL, nR);
 	}
+	
 	/**
 	 * PI loop that turns the robot to angle.
 	 **/

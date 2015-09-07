@@ -10,7 +10,7 @@
   
   Written by Ryan Shavell and Dominic Canora.
   
-  All code is either sample code provided by FIRST or hand-written by team 1902.
+  All code is either sample code provided by FIRST or written by team 1902.
 
 */
 package com.explodingbacon.robot;
@@ -20,6 +20,7 @@ import java.io.File;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -30,19 +31,17 @@ import com.explodingbacon.robot.Lights.Action;
 import com.explodingbacon.robot.Lights.Color;
 import com.explodingbacon.robot.Lights.Strip;
 import com.explodingbacon.robot.commands.AutonomousCommand;
-import com.explodingbacon.robot.subsystems.TuskSubsystem;
+import com.explodingbacon.robot.subsystems.DrawerSlideSubsystem;
 import com.explodingbacon.robot.subsystems.DriveSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeSubsystem;
 import com.explodingbacon.robot.subsystems.LiftSubsystem;
-import com.explodingbacon.robot.subsystems.ToucanSubsystem;
                                                                              
 public class Robot extends IterativeRobot {
 
 	public static DriveSubsystem drive;
 	public static IntakeSubsystem intake;
 	public static LiftSubsystem lift;
-	public static TuskSubsystem tusks;
-	public static ToucanSubsystem toucans;
+	public static DrawerSlideSubsystem drawerSlides;
 	public static OI oi;
 	public static PowerDistributionPanel pdp;
 	public static DriverStation ds;
@@ -50,6 +49,8 @@ public class Robot extends IterativeRobot {
 	public static double angle = 0;
 	public static SendableChooser chooser = new SendableChooser();	
 	public static ToteStackThread tst;
+	
+	public static boolean arcade = true;
 
 	Timer chooserUpdater = new Timer(10, new TimerUser() {
 		@Override
@@ -70,8 +71,7 @@ public class Robot extends IterativeRobot {
 		drive = new DriveSubsystem();
 		intake = new IntakeSubsystem();
 		lift = new LiftSubsystem();
-		tusks = new TuskSubsystem();
-		toucans = new ToucanSubsystem();
+		drawerSlides = new DrawerSlideSubsystem();
 		oi = new OI();
 		pdp = new PowerDistributionPanel();
 		ds = DriverStation.getInstance();
@@ -92,6 +92,7 @@ public class Robot extends IterativeRobot {
 		chooserUpdater.start();
 		chooserUpdater.user.timer();
 		SmartDashboard.putNumber("Delay", 0);
+		SmartDashboard.putBoolean("Arcade Drive", true);
 		disabled();
 		System.out.println("Pork Lift initialized!");
 	}
@@ -116,10 +117,7 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		if (autonomousCommand != null) autonomousCommand.cancel();  
-		init();
-		OI.xbox.rumble(0.5f, 0.5f, 1);
-		teleopLights();       
-		lift.liftPiston.set(false);
+		init();		
 	}
 
 	public void disabledInit(){
@@ -138,6 +136,20 @@ public class Robot extends IterativeRobot {
     
     public void init() {
     	lift.startThread();
+		
+		arcade = SmartDashboard.getBoolean("Arcade Drive", true);
+		if (arcade) {
+			OI.right = null;
+			OI.xbox = new XboxController(1);
+		} else {			
+			OI.right = new Joystick(1);
+			OI.xbox = new XboxController(2);
+		}
+		oi.init();
+		
+		OI.xbox.rumble(0.5f, 0.5f, 1);
+		teleopLights();       
+		lift.liftPiston.set(false);
     }
     
     public void periodic() {

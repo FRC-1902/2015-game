@@ -4,10 +4,10 @@ import com.explodingbacon.robot.OI;
 import com.explodingbacon.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class TuskCommand extends Command {
+public class DrawerSlidesCommand extends Command {
 
-    public TuskCommand() {
-        requires(Robot.tusks);
+    public DrawerSlidesCommand() {
+        requires(Robot.drawerSlides);
     }
 
     protected void initialize() {}
@@ -15,9 +15,9 @@ public class TuskCommand extends Command {
     protected void execute() {
     	double speed = OI.xbox.getLeftTrigger() - OI.xbox.getRightTrigger();
     	if (Math.abs(speed) > 0.1) {
-    		Robot.tusks.set(speed * 0.5);
+    		Robot.drawerSlides.set(speed * 0.5);
     	} else {
-    		Robot.tusks.set(0);
+    		Robot.drawerSlides.set(0);
     	}
     }
 

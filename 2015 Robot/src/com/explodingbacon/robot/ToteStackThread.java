@@ -30,7 +30,6 @@ public class ToteStackThread extends CodeThread {
 				}
 			}
 			if (Robot.oi.toteStack.get()) {
-				//Robot.lift.stackTote();;		
 				Robot.lift.setTargetAndWait(Position.BOTTOM);
 				Robot.lift.setTargetAndWait(Position.TOP);
 			}

@@ -22,11 +22,9 @@ public class RobotMap {
 	public static int rollerRelay = 0; //ID 8
 	
 	public static int chuteTouchSensor = 8; //ID 31
-	public static int leftArmPivotPot = 1; //ID 22
-	public static int rightArmPivotPot = 2; //ID 23
 	
 	//Top of Lift
-	public static int tusksTalonSRX = 0x00; //ID 26
+	public static int drawerSlidesSRX = 0x00; //ID 26
 	public static int drawerSlidesEncoderA = 8; //ID 27
 	public static int drawerSlidesEncoderB = 9; //ID 28
 	public static int drawerSlidesOutLimit = 12; //ID 29
@@ -40,7 +38,4 @@ public class RobotMap {
 	public static int liftEncoderB = 7; //ID 18
 	public static int liftTopLimit = 4; //ID 19
 	public static int liftBottomLimit = 5; //ID 20
-	
-	//Toucan Values
-	public static int toucans = 9000; //Get real ID
 }
