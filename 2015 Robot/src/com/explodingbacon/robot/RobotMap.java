@@ -16,7 +16,7 @@ public class RobotMap {
 	//Intake Values
 	public static int leftIntakeTalon = 2; //ID 9
 	public static int rightIntakeTalon = 1; //ID 10
-	public static int intakeArmsSolenoid = 1;
+	public static int intakeArmsSolenoid = 4; //EMPTY
 	public static int leftArmPivotTalon = 0; //ID 4
 	public static int rightArmPivotTalon = 3; //ID 5
 	public static int rollerRelay = 0; //ID 8
@@ -38,4 +38,7 @@ public class RobotMap {
 	public static int liftEncoderB = 7; //ID 18
 	public static int liftTopLimit = 4; //ID 19
 	public static int liftBottomLimit = 5; //ID 20
+	
+	//Tote stops Value
+	public static int toteStopSolenoid = 1;
 }

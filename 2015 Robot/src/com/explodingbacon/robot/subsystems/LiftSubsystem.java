@@ -85,7 +85,7 @@ public class LiftSubsystem extends Subsystem {
 			target = Position.BOTTOM;
 		}
 
-		if (Robot.oi.liftScoring.get()) {
+		if (Robot.oi.liftScoring.get() || (Robot.controlType == ControlType.NORMAL && (OI.xbox.getDPad().isLeft() || OI.xbox.getDPad().isRight()))) {
 			target = Position.SCORING;
 		}
 		
@@ -124,15 +124,13 @@ public class LiftSubsystem extends Subsystem {
     	if (!status) {
     		status = Math.abs(Position.TOP - liftEncoder.getRaw()) <= deadzone;
     	}
-    	if(OI.xbox.getY() > 0.85) status = false;
     	return status;
     }
     
     public boolean atBottom() {
     	boolean status = false;
     	status = bottomLimit.get();
-    	boolean override = OI.xbox.getY() < -0.85;
-    	if (!status && !override) {
+    	if (!status) {
     		status = Math.abs(Position.BOTTOM - liftEncoder.getRaw()) <= deadzone;
     	}
     	return status;
@@ -199,24 +197,19 @@ public class LiftSubsystem extends Subsystem {
     		*/
     		//System.out.println("Lift encoder: " + Robot.lift.liftEncoder.getRaw());
 
-    		if (Robot.controlType != ControlType.SIMPLE) {
-    			if(!OI.xbox.getDPad().isDown()) {
-    				if(easingDown) {
-    					target = Position.BOTTOM;
-    					easingDown = false;
-    				}
-    				getTarget();
-    			} else {
-    				easingDown = true;
-    				target -= 0.25;
-    				if(target < 0) target = 0;
+    		if(!OI.xbox.getDPad().isDown()) {
+    			if(easingDown) {
+    				target = Position.BOTTOM;
+    				easingDown = false;
     			}
+    			getTarget();
     		} else {
-    			//TODO find a good amount to multiply by
-    			target += OI.xbox.getY() * 5;
-    		}
-    		
-        	//TODO Comment this out if things break
+    			easingDown = true;
+    			target -= 0.25;
+    			if(target < 0) target = 0;
+    		}   		
+
+    		//TODO Comment this out if things break
     		if(isManual && !OI.xbox.y.get()) target = liftEncoder.getRaw();
     		
     		if(target < 0) target = 0;

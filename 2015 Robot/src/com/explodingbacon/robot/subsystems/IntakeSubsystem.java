@@ -38,11 +38,7 @@ public class IntakeSubsystem extends Subsystem {
     }
     
     public void setRoller(boolean status) {
-    	if (status) {
-    		roller.set(Value.kOn);
-    	} else {
-    		roller.set(Value.kOff);
-    	} 	
+    	roller.set(status ? Value.kOn : Value.kOff);
     }
    
     public void initDefaultCommand() {

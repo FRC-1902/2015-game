@@ -2,6 +2,8 @@ package com.explodingbacon.robot.commands;
 
 import com.explodingbacon.robot.OI;
 import com.explodingbacon.robot.Robot;
+import com.explodingbacon.robot.Robot.ControlType;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveCommand extends Command {
@@ -15,12 +17,20 @@ public class DriveCommand extends Command {
     protected void initialize() {}
 
     boolean lastHeld = false;
-    
+
     protected void execute() {
-    	if (Robot.arcadeDrive) {
-    		Robot.drive.arcadeDrive(OI.left);
+    	if (Robot.controlType != ControlType.SINGLEPLAYER) {
+    		if (Robot.arcadeDrive) {
+    			Robot.drive.arcadeDrive(OI.left);
+    		} else {
+    			Robot.drive.tankDrive(OI.left.getY(), OI.right.getY());
+    		}
     	} else {
-    		Robot.drive.tankDrive(OI.left.getY(), OI.right.getY());
+    		if (Math.abs(OI.xbox.getX2()) > 0.1 || Math.abs(OI.xbox.getY2()) > 0.1) {
+    		Robot.drive.arcadeDrive(OI.xbox.getX2(), OI.xbox.getY2());
+    		} else {
+    			Robot.drive.arcadeDrive(0, 0);
+    		}
     	}
     	if (Robot.oi.liftWithDrive.get()) {
 			if (lastHeld) {

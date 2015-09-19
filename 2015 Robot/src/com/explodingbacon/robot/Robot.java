@@ -16,6 +16,7 @@
 package com.explodingbacon.robot;
 
 import java.io.File;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.explodingbacon.robot.Lights.Action;
 import com.explodingbacon.robot.Lights.Color;
 import com.explodingbacon.robot.Lights.Strip;
@@ -34,6 +36,7 @@ import com.explodingbacon.robot.subsystems.DrawerSlideSubsystem;
 import com.explodingbacon.robot.subsystems.DriveSubsystem;
 import com.explodingbacon.robot.subsystems.IntakeSubsystem;
 import com.explodingbacon.robot.subsystems.LiftSubsystem;
+import com.explodingbacon.robot.subsystems.ToteStopSubsystem;
                                                                              
 public class Robot extends IterativeRobot {
 
@@ -41,6 +44,7 @@ public class Robot extends IterativeRobot {
 	public static IntakeSubsystem intake;
 	public static LiftSubsystem lift;
 	public static DrawerSlideSubsystem drawerSlides;
+	public static ToteStopSubsystem toteStop;
 	public static OI oi;
 	public static PowerDistributionPanel pdp;
 	public static DriverStation ds;
@@ -73,6 +77,7 @@ public class Robot extends IterativeRobot {
 		intake = new IntakeSubsystem();
 		lift = new LiftSubsystem();
 		drawerSlides = new DrawerSlideSubsystem();
+		toteStop = new ToteStopSubsystem();
 		oi = new OI();
 		pdp = new PowerDistributionPanel();
 		ds = DriverStation.getInstance();
@@ -93,9 +98,9 @@ public class Robot extends IterativeRobot {
 		chooserUpdater.start();
 		chooserUpdater.user.timer();
 		controlTypeChooser.initTable(NetworkTable.getTable("TableThing"));
-		controlTypeChooser.addDefault("Complex Controls (Experienced Driver)", ControlType.COMPLEX);
-		controlTypeChooser.addObject("Normal Controls (Team member)", ControlType.NORMAL);
-		controlTypeChooser.addObject("Simple Controls (New member/Guest driver)", ControlType.SIMPLE);
+		controlTypeChooser.addObject("Complex Controls (Experienced Driver)", ControlType.COMPLEX);
+		controlTypeChooser.addDefault("Normal Controls (Team member)", ControlType.NORMAL);
+		controlTypeChooser.addObject("Singleplayer Controls (Demo)", ControlType.SINGLEPLAYER);
 		SmartDashboard.putData("Control Type Chooser", controlTypeChooser);
 		SmartDashboard.putNumber("Delay", 0);
 		SmartDashboard.putBoolean("Arcade Drive", true);
@@ -123,7 +128,8 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 		if (autonomousCommand != null) autonomousCommand.cancel();  
-		init();		
+		init();
+		toteStop.set(true);
 	}
 
 	public void disabledInit(){
@@ -192,6 +198,6 @@ public class Robot extends IterativeRobot {
     public enum ControlType {
     	COMPLEX,
     	NORMAL,
-    	SIMPLE
+    	SINGLEPLAYER
     }
 }

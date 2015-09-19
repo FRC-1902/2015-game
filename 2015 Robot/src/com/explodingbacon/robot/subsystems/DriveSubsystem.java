@@ -71,9 +71,13 @@ public class DriveSubsystem extends Subsystem {
 	 * Uses a single joystick to drive the robot.
 	 **/
 	public void arcadeDrive(Joystick joy) {
-		double joyX = joy.getX();
-		double joyY = joy.getY();
-		
+		arcadeDrive(joy.getX(), joy.getY());
+	}
+	
+	/**
+	 * Uses x and y axis data to drive the robot.
+	 **/
+	public void arcadeDrive(double joyX, double joyY) {		
 		if(Robot.oi.driveSlow.get()){
 			joyX *= slow;
 			joyY *= slow;

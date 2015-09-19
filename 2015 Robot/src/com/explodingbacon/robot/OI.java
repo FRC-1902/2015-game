@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.InternalButton;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.Command;
 
 public class OI {
 	public static Joystick left;
@@ -24,45 +25,57 @@ public class OI {
 	public Button liftScoring;
 	public Button liftPiston;
 	public Button liftWithDrive;
+	public Button toteStop1;
+	public Button toteStop2;
 	
 	/**
 	 * Initializes all the buttons and their actions.
 	 */
 	public void initControls() {
-		left = new Joystick(0);
-		if (Robot.arcadeDrive) {
-			right = null;
-			xbox = new XboxController(1);
-		} else {			
-			right = new Joystick(1);
-			xbox = new XboxController(2);
+		if (Robot.controlType != ControlType.SINGLEPLAYER) {
+			left = new Joystick(0);
+			if (Robot.arcadeDrive) {
+				right = null;
+				xbox = new XboxController(1);
+			} else {			
+				right = new Joystick(1);
+				xbox = new XboxController(2);
+			}
+		} else {
+			left = null;
+			xbox = new XboxController(0);
 		}
 		
 		InternalButton none = new InternalButton(); //Effectively a button that is eternally not-pressed
 		
-		//TODO revise how the different control schemes work based off of input from team members	
-		driveSlow = new JoystickButton(left, 11);
-		intake = xbox.leftBumper;
-		reversedIntake = xbox.rightBumper;
-		intakeArms = xbox.x;
-		liftScoring = xbox.a;
+		if (Robot.controlType != ControlType.SINGLEPLAYER) {
+			driveSlow = new JoystickButton(left, 11);
+			liftPiston = new JoystickButton(left, 8);
+		} else {
+			driveSlow = none;
+			liftPiston = none;
+		}
+		
+		intake = none;
+		reversedIntake = none;		
+		intakeArms = none;
+		
 		
 		if (Robot.controlType == ControlType.COMPLEX) {
 			liftWithDrive = new JoystickButton(left, 6);
+			liftScoring = xbox.a;
+			toteStop1 = xbox.rightBumper;
+			toteStop2 = xbox.leftBumper;
 		} else {
 			liftWithDrive = none;
+			liftScoring = none;
+			toteStop1 = xbox.y;
+			toteStop2 = none;
 		}
 		
-		if (Robot.controlType != ControlType.SIMPLE) {
-			toteStack = xbox.start;
-			doToteStack = xbox.select;
-			toggleRoller = xbox.b;
-		} else {
-			toteStack = none;
-			doToteStack = none;
-			toggleRoller = none;
-		}
-		liftPiston = new JoystickButton(left, 8);
+		toteStack = xbox.start;
+		doToteStack = xbox.select;
+		toggleRoller = xbox.b;
 
 		//======================================================		
 		
@@ -87,6 +100,26 @@ public class OI {
 		    }
 		});
 		
+		Command toteStopCommand = new QuickCommand() {
+			@Override
+			protected void initialize() {
+				Robot.toteStop.set(false);
+			}
+			
+			@Override
+			protected boolean isFinished() {
+				return !toteStop1.get() && !toteStop2.get();
+			}
+			
+			@Override
+			protected void done() {
+				Robot.toteStop.set(true);
+			}
+		};
+
+		toteStop1.whenActive(toteStopCommand);
+		toteStop2.whenActive(toteStopCommand);
+		
 	}
 	
 	public OI() {
@@ -109,14 +142,11 @@ public class OI {
 	 * 
 	 * ==TYPE 2: NORMAL==
 	 * 
-	 * Normal currently is almost identical to Complex because I haven't gotten to talk to other team members about how they want this control scheme to work.
-	 * The only different currently is that the "liftWithDrive" button, which is a mostly untested and experimental feature, is disabled.
+	 * Normal changes the Complex controls a bit. You can move the lift to scoring position via the left and right DPad buttons, tote stops are now controlled by the Y button,
+	 * and the drawer slides are now controlled by the right Xbox joystick.
 	 * 
+	 * ==TYPE 3: SINGLEPLAYER==
 	 * 
-	 * ==TYPE 3: SIMPLE==
-	 * 
-	 * Simple is designed to be used by brand new members or guest drivers. Access to the automatic tote stacking buttons, the roller, and liftWithDrive have been disabled.	
-	 * In addition, control of the lift has been simplified to manual control via the upper-left joystick on the XBox controller.
-	 * 
+	 * Fits everything onto just the XBox controller. When not conflicting with changes necessary to fit everything onto one joystick, this uses Normal's controls. Do NOT use at competitions.
 	 */
 }
