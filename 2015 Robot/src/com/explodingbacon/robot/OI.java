@@ -2,9 +2,7 @@ package com.explodingbacon.robot;
 
 import com.explodingbacon.robot.Robot.ControlType;
 import com.explodingbacon.robot.commands.QuickCommand;
-
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.InternalButton;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -32,18 +30,17 @@ public class OI {
 	 * Initializes all the buttons and their actions.
 	 */
 	public void initControls() {
+		xbox = new XboxController(0);
 		if (Robot.controlType != ControlType.SINGLEPLAYER) {
-			left = new Joystick(0);
+			left = new Joystick(1);
 			if (Robot.arcadeDrive) {
 				right = null;
-				xbox = new XboxController(1);
 			} else {			
-				right = new Joystick(1);
-				xbox = new XboxController(2);
+				right = new Joystick(2);
 			}
 		} else {
 			left = null;
-			xbox = new XboxController(0);
+			right = null;
 		}
 		
 		InternalButton none = new InternalButton(); //Effectively a button that is eternally not-pressed
@@ -78,12 +75,6 @@ public class OI {
 		toggleRoller = xbox.b;
 
 		//======================================================		
-		
-		toggleRoller.whenPressed(new QuickCommand() {
-			protected void initialize() {
-				Robot.intake.setRoller(Robot.intake.roller.get() == Value.kOn ? false : true);
-			}
-		});
 		
 		//TODO Double check this works. It has supposedly worked in the past, but it looks like it shouldn't.
 		liftPiston.whenPressed(new QuickCommand() {

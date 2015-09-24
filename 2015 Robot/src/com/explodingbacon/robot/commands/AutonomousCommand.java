@@ -54,7 +54,7 @@ public class AutonomousCommand extends Command {
 					Robot.intake.leftIntake.set(Double.parseDouble(s[1]));
 					Robot.intake.rightIntake.set(Double.parseDouble(s[2]));
 				} else if (s[0].equals("roller")) {
-					Robot.intake.setRoller(Boolean.parseBoolean(s[1]));	
+					 //Robot.intake.setRoller(Boolean.parseBoolean(s[1]));	
 				} else if (s[0].equals("intakeArms")) {		
 					Robot.intake.arms.set(Boolean.parseBoolean(s[1]));
 				} else if (s[0].equals("lift")) {

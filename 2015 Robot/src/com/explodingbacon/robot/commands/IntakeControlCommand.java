@@ -1,6 +1,8 @@
 package com.explodingbacon.robot.commands;
 
+import com.explodingbacon.robot.OI;
 import com.explodingbacon.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 public class IntakeControlCommand extends Command {
@@ -35,6 +37,13 @@ public class IntakeControlCommand extends Command {
 					closed = false;
 				}
 			}
+			
+			if (OI.xbox.b.get()) {
+				Robot.intake.tempRoller.set(-1);
+			} else {
+				Robot.intake.tempRoller.set(1);
+			}
+			
 			Robot.intake.setMotors(speed);
 			Robot.intake.arms.set(closed);
 		}

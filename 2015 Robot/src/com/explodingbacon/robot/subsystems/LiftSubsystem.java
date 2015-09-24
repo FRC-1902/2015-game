@@ -85,7 +85,7 @@ public class LiftSubsystem extends Subsystem {
 			target = Position.BOTTOM;
 		}
 
-		if (Robot.oi.liftScoring.get() || (Robot.controlType == ControlType.NORMAL && (OI.xbox.getDPad().isLeft() || OI.xbox.getDPad().isRight()))) {
+		if (Robot.oi.liftScoring.get() || (Robot.controlType != ControlType.COMPLEX && (OI.xbox.getDPad().isLeft() || OI.xbox.getDPad().isRight()))) {
 			target = Position.SCORING;
 		}
 		
@@ -189,6 +189,7 @@ public class LiftSubsystem extends Subsystem {
     				target = 0;
     			}
     		}
+    		SmartDashboard.putNumber("Lift Position", liftEncoder.getRaw());
     		/*
     		SmartDashboard.putBoolean("Top Limit", topLimit.get());
     		SmartDashboard.putBoolean("Bottom Limit", bottomLimit.get());

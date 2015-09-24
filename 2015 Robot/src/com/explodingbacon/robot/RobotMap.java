@@ -39,6 +39,6 @@ public class RobotMap {
 	public static int liftTopLimit = 4; //ID 19
 	public static int liftBottomLimit = 5; //ID 20
 	
-	//Tote stops Value
+	//Tote stop Value
 	public static int toteStopSolenoid = 1;
 }

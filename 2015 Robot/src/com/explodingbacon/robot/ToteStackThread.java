@@ -18,7 +18,7 @@ public class ToteStackThread extends CodeThread {
 		if (Robot.oi.toteStack.get()) {
 			Robot.lift.setTarget(Position.TOP);
 			wasTrue = true;
-			Robot.intake.setRoller(true);
+			//Robot.intake.setRoller(true);
 			Strip.TOTE_CHUTE.chase(Color.WHITE, Color.GREEN);
 			boolean hasTote = false;
 			while (!(Robot.oi.doToteStack.get() || hasTote) && Robot.oi.toteStack.get()) {
@@ -35,7 +35,7 @@ public class ToteStackThread extends CodeThread {
 			}
 		} else {
 			if (wasTrue) {
-				Robot.intake.setRoller(false);
+				//Robot.intake.setRoller(false);
 				wasTrue = false;
 			}
 		}
