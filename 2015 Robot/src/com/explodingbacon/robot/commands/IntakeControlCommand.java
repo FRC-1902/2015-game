@@ -44,6 +44,8 @@ public class IntakeControlCommand extends Command {
 				Robot.intake.tempRoller.set(1);
 			}
 			
+			Robot.toteStop.set(!(Robot.oi.toteStop1.get() || Robot.oi.toteStop2.get()));
+			
 			Robot.intake.setMotors(speed);
 			Robot.intake.arms.set(closed);
 		}

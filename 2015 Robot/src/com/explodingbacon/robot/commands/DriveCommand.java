@@ -19,19 +19,19 @@ public class DriveCommand extends Command {
     boolean lastHeld = false;
 
     protected void execute() {
-    	if (Robot.controlType != ControlType.SINGLEPLAYER) {
-    		if (Robot.arcadeDrive) {
-    			Robot.drive.arcadeDrive(OI.left);
-    		} else {
+    	//if (Robot.controlType != ControlType.SINGLEPLAYER) {
+    		//if (Robot.arcadeDrive) {
+    			//Robot.drive.arcadeDrive(OI.left);
+    		//} else {
     			Robot.drive.tankDrive(OI.left.getY(), OI.right.getY());
-    		}
-    	} else {
-    		if (Math.abs(OI.xbox.getX2()) > 0.1 || Math.abs(OI.xbox.getY2()) > 0.1) {
-    		Robot.drive.arcadeDrive(OI.xbox.getX2(), OI.xbox.getY2());
-    		} else {
-    			Robot.drive.arcadeDrive(0, 0);
-    		}
-    	}
+    		//}
+    	//} else {
+    		//if (Math.abs(OI.xbox.getX2()) > 0.1 || Math.abs(OI.xbox.getY2()) > 0.1) {
+    		//Robot.drive.arcadeDrive(OI.xbox.getX2(), OI.xbox.getY2());
+    		//} else {
+    			//Robot.drive.arcadeDrive(0, 0);
+    		//}
+    	//}//
     	if (Robot.oi.liftWithDrive.get()) {
 			if (lastHeld) {
 				int driveChangeClicks = ((Robot.drive.leftEncoder.getRaw() + Robot.drive.rightEncoder.getRaw()) / 2);

@@ -154,6 +154,8 @@ public class Robot extends IterativeRobot {
 		OI.xbox.rumble(0.5f, 0.5f, 1);
 		teleopLights();       
 		lift.liftPiston.set(false);
+		
+		//Robot.lift.liftEncoder.reset();
     }
     
     public void periodic() {

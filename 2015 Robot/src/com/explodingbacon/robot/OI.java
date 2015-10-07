@@ -31,6 +31,9 @@ public class OI {
 	 */
 	public void initControls() {
 		xbox = new XboxController(0);
+		left = new Joystick(1);
+		right = new Joystick(2);
+		/*
 		if (Robot.controlType != ControlType.SINGLEPLAYER) {
 			left = new Joystick(1);
 			if (Robot.arcadeDrive) {
@@ -41,7 +44,7 @@ public class OI {
 		} else {
 			left = null;
 			right = null;
-		}
+		}*/
 		
 		InternalButton none = new InternalButton(); //Effectively a button that is eternally not-pressed
 		
@@ -60,7 +63,6 @@ public class OI {
 		
 		if (Robot.controlType == ControlType.COMPLEX) {
 			liftWithDrive = new JoystickButton(left, 6);
-			liftScoring = xbox.a;
 			toteStop1 = xbox.rightBumper;
 			toteStop2 = xbox.leftBumper;
 		} else {
@@ -69,6 +71,8 @@ public class OI {
 			toteStop1 = xbox.y;
 			toteStop2 = none;
 		}
+		
+		liftScoring = xbox.a;
 		
 		toteStack = xbox.start;
 		doToteStack = xbox.select;
@@ -90,7 +94,7 @@ public class OI {
 		    	Robot.lift.setPiston(false);
 		    }
 		});
-		
+		/*
 		Command toteStopCommand = new QuickCommand() {
 			@Override
 			protected void initialize() {
@@ -110,7 +114,7 @@ public class OI {
 
 		toteStop1.whenActive(toteStopCommand);
 		toteStop2.whenActive(toteStopCommand);
-		
+		*/
 	}
 	
 	public OI() {
