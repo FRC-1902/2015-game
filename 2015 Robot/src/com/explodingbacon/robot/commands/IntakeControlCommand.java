@@ -17,6 +17,7 @@ public class IntakeControlCommand extends Command {
 	@Override
 	protected void execute() {
 		if (Robot.intake.control) {
+			/*
 			double speed = 0;
 			boolean closed;
 			if (Robot.oi.intake.get()) {
@@ -38,16 +39,17 @@ public class IntakeControlCommand extends Command {
 				}
 			}
 			
-			if (OI.xbox.b.get()) {
-				Robot.intake.tempRoller.set(-1);
+			Robot.intake.setMotors(speed);
+			Robot.intake.arms.set(closed);
+			*/
+			
+			if (Robot.oi.roller.get()) {
+				Robot.intake.tempRoller.set(0);
 			} else {
 				Robot.intake.tempRoller.set(1);
 			}
 			
-			Robot.toteStop.set(!(Robot.oi.toteStop1.get() || Robot.oi.toteStop2.get()));
-			
-			Robot.intake.setMotors(speed);
-			Robot.intake.arms.set(closed);
+			Robot.toteStop.set(!Robot.oi.toteStop.get());
 		}
 	}
 

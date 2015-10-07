@@ -17,24 +17,20 @@ public class OI {
 	public Button intake;
 	public Button reversedIntake;
 	public Button intakeArms;
-	public Button toggleRoller;
 	public Button toteStack;
 	public Button doToteStack;
 	public Button liftScoring;
 	public Button liftPiston;
-	public Button liftWithDrive;
-	public Button toteStop1;
-	public Button toteStop2;
+	public Button toteStop;
+	public Button roller;
 	
 	/**
 	 * Initializes all the buttons and their actions.
 	 */
 	public void initControls() {
+		//Xbox controller is always 0, left is 1, right is 2
 		xbox = new XboxController(0);
-		left = new Joystick(1);
-		right = new Joystick(2);
-		/*
-		if (Robot.controlType != ControlType.SINGLEPLAYER) {
+		if (Robot.controlType == ControlType.NORMAL) {
 			left = new Joystick(1);
 			if (Robot.arcadeDrive) {
 				right = null;
@@ -44,11 +40,11 @@ public class OI {
 		} else {
 			left = null;
 			right = null;
-		}*/
+		}
 		
 		InternalButton none = new InternalButton(); //Effectively a button that is eternally not-pressed
 		
-		if (Robot.controlType != ControlType.SINGLEPLAYER) {
+		if (Robot.controlType == ControlType.NORMAL) {
 			driveSlow = new JoystickButton(left, 11);
 			liftPiston = new JoystickButton(left, 8);
 		} else {
@@ -60,27 +56,17 @@ public class OI {
 		reversedIntake = none;		
 		intakeArms = none;
 		
-		
-		if (Robot.controlType == ControlType.COMPLEX) {
-			liftWithDrive = new JoystickButton(left, 6);
-			toteStop1 = xbox.rightBumper;
-			toteStop2 = xbox.leftBumper;
-		} else {
-			liftWithDrive = none;
-			liftScoring = none;
-			toteStop1 = xbox.y;
-			toteStop2 = none;
-		}
-		
+		toteStop = xbox.y;
+			
 		liftScoring = xbox.a;
+		
+		roller = xbox.b;
 		
 		toteStack = xbox.start;
 		doToteStack = xbox.select;
-		toggleRoller = xbox.b;
 
 		//======================================================		
 		
-		//TODO Double check this works. It has supposedly worked in the past, but it looks like it shouldn't.
 		liftPiston.whenPressed(new QuickCommand() {
 			protected void initialize() {
 		    	Robot.lift.setPiston(true);
@@ -94,27 +80,6 @@ public class OI {
 		    	Robot.lift.setPiston(false);
 		    }
 		});
-		/*
-		Command toteStopCommand = new QuickCommand() {
-			@Override
-			protected void initialize() {
-				Robot.toteStop.set(false);
-			}
-			
-			@Override
-			protected boolean isFinished() {
-				return !toteStop1.get() && !toteStop2.get();
-			}
-			
-			@Override
-			protected void done() {
-				Robot.toteStop.set(true);
-			}
-		};
-
-		toteStop1.whenActive(toteStopCommand);
-		toteStop2.whenActive(toteStopCommand);
-		*/
 	}
 	
 	public OI() {
@@ -129,18 +94,11 @@ public class OI {
 	 * it goes into teleop mode.
 	 * 
 	 * 
-	 * ==TYPE 1: COMPLEX==
+	 * ==TYPE 1: NORMAL==
 	 * 
-	 * Complex is identical to Pork Lift's competition season controls: almost everything on your Xbox controller is mapped to something. It's suggested to only use this control
-	 * type if you have experience as a driver or have heavily used this control type already.
+	 * The new standard way of driving Pork Lift. If you've driven him since Panther Prowl, you've learned these controls.
 	 * 
-	 * 
-	 * ==TYPE 2: NORMAL==
-	 * 
-	 * Normal changes the Complex controls a bit. You can move the lift to scoring position via the left and right DPad buttons, tote stops are now controlled by the Y button,
-	 * and the drawer slides are now controlled by the right Xbox joystick.
-	 * 
-	 * ==TYPE 3: SINGLEPLAYER==
+	 * ==TYPE 2: SINGLEPLAYER==
 	 * 
 	 * Fits everything onto just the XBox controller. When not conflicting with changes necessary to fit everything onto one joystick, this uses Normal's controls. Do NOT use at competitions.
 	 */

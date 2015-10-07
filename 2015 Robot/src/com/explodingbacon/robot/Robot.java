@@ -50,10 +50,11 @@ public class Robot extends IterativeRobot {
 	public static double angle = 0;
 	public static SendableChooser autoChooser = new SendableChooser();	
 	public static SendableChooser controlTypeChooser = new SendableChooser();	
+	public static SendableChooser driveTypeChooser = new SendableChooser();	
 	public static ToteStackThread tst;
 	
 	public static boolean arcadeDrive = true;
-	public static ControlType controlType = ControlType.COMPLEX;
+	public static ControlType controlType = ControlType.NORMAL;
 
 	Timer chooserUpdater = new Timer(10, new TimerUser() {
 		@Override
@@ -95,13 +96,18 @@ public class Robot extends IterativeRobot {
 		}
 		chooserUpdater.start();
 		chooserUpdater.user.timer();
+		
 		controlTypeChooser.initTable(NetworkTable.getTable("TableThing"));
-		controlTypeChooser.addObject("Complex Controls (Experienced Driver)", ControlType.COMPLEX);
-		controlTypeChooser.addDefault("Normal Controls (Team member)", ControlType.NORMAL);
-		controlTypeChooser.addObject("Singleplayer Controls (Demo)", ControlType.SINGLEPLAYER);
-		SmartDashboard.putData("Control Type Chooser", controlTypeChooser);
+		controlTypeChooser.addDefault("Standard Controls", ControlType.NORMAL);
+		//controlTypeChooser.addObject("Singleplayer Controls (Xbox Controller Only)", ControlType.SINGLEPLAYER);
+		SmartDashboard.putData("Manipulator Controls", controlTypeChooser);
+		
+		driveTypeChooser.initTable(NetworkTable.getTable("TableThing"));
+		driveTypeChooser.addDefault("Arcade Drive (One Joystick)", true);
+		driveTypeChooser.addObject("Tank Drive (Two Joysticks)", false);
+		SmartDashboard.putData("Driver Controls", driveTypeChooser);
+		
 		SmartDashboard.putNumber("Delay", 0);
-		SmartDashboard.putBoolean("Arcade Drive", true);
 		disabled();
 		System.out.println("Pork Lift initialized!");
 	}
@@ -127,7 +133,15 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		if (autonomousCommand != null) autonomousCommand.cancel();  
 		init();
-		toteStop.set(true);
+		
+		//toteStop.set(true); Code should work without this because tote stops are now handled by a command that loops in teleop
+
+		controlType = (ControlType) controlTypeChooser.getSelected();
+		arcadeDrive = (Boolean) driveTypeChooser.getSelected();
+		
+		System.out.println("ControlType: " + controlType + ", Arcade Drive: " + arcadeDrive);
+		
+		oi.initControls();
 	}
 
 	public void disabledInit(){
@@ -147,19 +161,15 @@ public class Robot extends IterativeRobot {
     public void init() {
     	lift.startThread();
 		
-		arcadeDrive = SmartDashboard.getBoolean("Arcade Drive", true);		
-		controlType = (ControlType) controlTypeChooser.getSelected();
-		oi.initControls();
-		
 		OI.xbox.rumble(0.5f, 0.5f, 1);
 		teleopLights();       
 		lift.liftPiston.set(false);
 		
-		//Robot.lift.liftEncoder.reset();
+		//Robot.lift.liftEncoder.reset(); If the robot loses communications with the field, this runs and will royally screw up the lift
     }
     
     public void periodic() {
-    	SmartDashboard.putData("PDP", pdp);
+    	//SmartDashboard.putData("PDP", pdp);
     }
     
     public void disabled() {
@@ -196,8 +206,7 @@ public class Robot extends IterativeRobot {
     }
     
     public enum ControlType {
-    	COMPLEX,
-    	NORMAL,
-    	SINGLEPLAYER
+    	NORMAL
+    	//SINGLEPLAYER
     }
 }

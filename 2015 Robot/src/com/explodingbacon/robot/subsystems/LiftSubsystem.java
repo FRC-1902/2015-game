@@ -144,6 +144,7 @@ public class LiftSubsystem extends Subsystem {
     }
     
     public void stackTote() {
+    	/*
     	boolean oldControl = Robot.intake.control;
     	Robot.intake.control = false;
 		Strip.TOTE_CHUTE.fade(Color.ORANGE, Color.WHITE);		
@@ -155,7 +156,7 @@ public class LiftSubsystem extends Subsystem {
 		Robot.intake.arms.set(false);
 		Robot.lift.setTargetAndWait(Position.BOTTOM);
 		Robot.lift.setTargetAndWait(Position.TOP);
-		if (oldControl) Robot.intake.control = true;
+		if (oldControl) Robot.intake.control = true;*/
     }
     
     public void initDefaultCommand() {}
@@ -223,9 +224,11 @@ public class LiftSubsystem extends Subsystem {
     			if(target < 0) target = 0;
     		}   		
     		
+    		//Only use this if you want manual lift encoder resets to be available. Not suggested for newer drivers
+    		/*
     		if (OI.xbox.leftBumper.get()) {
     			liftEncoder.reset();
-    		}
+    		}*/
 
     		//TODO Comment this out if things break
     		//if(isManual && !OI.xbox.y.get()) target = liftEncoder.getRaw();
